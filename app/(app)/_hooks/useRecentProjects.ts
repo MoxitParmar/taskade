@@ -19,7 +19,6 @@ export const useRecentProjects = (userId: Id<"users">, orgId: Id<"organizations"
       resetDeps: [orgId, userId],
     });
     const projects = React.useMemo(() => {
-
       const projects = query.data.map((p) => ({
           title: p.name,
           url: `/project/${p._id}`,

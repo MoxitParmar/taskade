@@ -19,7 +19,6 @@ export const useRecentTasks = (userId: Id<"users">, orgId: Id<"organizations">)=
       resetDeps: [orgId, userId],
     });
     const tasks = React.useMemo(() => {
-        console.log("just logging tasks")
       const tasks = query.data.map((task) => ({
           title: task.name,
           url: `/task/${task._id}`,

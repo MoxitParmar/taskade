@@ -7,13 +7,9 @@ export  function useUserData() {
   
     if (isLoading) {
       return {
-        data: null,
+        data: undefined,
         isLoading: true,
       };
-    }
-    
-    if (!userdata) {
-        throw new Error("User data not found");
     }
     
     return {

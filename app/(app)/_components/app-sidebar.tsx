@@ -7,7 +7,7 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 import { NavPages } from "./nav-pages";
-import { pages } from "../_hooks/pages";
+
 
 import { useAppSidebar } from "../_hooks/useAppSidebar";
 import SidebarSkeleton from "./sidebar-skeleton";
@@ -15,9 +15,9 @@ import { OrgSwitcher } from "./org-switcher";
 import { NavDrop } from "./nav-dropdown";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { tasks, projects, isLoading, projectsEmpty, tasksEmpty } =
+  const { tasks, projects, isLoading, projectsEmpty, tasksEmpty, pages } =
     useAppSidebar();
-
+    console.log("just logging tasks")
   if (isLoading) {
     <SidebarSkeleton />
   }
