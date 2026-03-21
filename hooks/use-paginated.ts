@@ -79,7 +79,7 @@ export const usePaginatedQuery = <TData, TArgs extends object>({
 
     // This is a legitimate use case for setState in effect:
     // We're synchronizing React state with external data from the query
-    //eslint-disable-next-line
+    // eslint-disable-next-line
     setState({
       page,
       key: resetKey,
@@ -88,7 +88,7 @@ export const usePaginatedQuery = <TData, TArgs extends object>({
         [nextPage]: result.continueCursor,
       },
     });
-  }, []);
+  }, [result, page, resetKey, isReset, state.cursorMap]);
 
   // 🔄 Page navigation
   const setPage = (nextPage: number) => {
@@ -123,4 +123,3 @@ export const usePaginatedQuery = <TData, TArgs extends object>({
     hasPrev: page > 1,
   };
 };
-

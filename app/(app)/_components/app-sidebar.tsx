@@ -17,9 +17,8 @@ import { NavDrop } from "./nav-dropdown";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { tasks, projects, isLoading, projectsEmpty, tasksEmpty, pages } =
     useAppSidebar();
-    console.log("just logging tasks")
-  if (isLoading) {
-    <SidebarSkeleton />
+    if (isLoading) {
+    return <SidebarSkeleton />
   }
 
   // Normal sidebar rendering when not loading

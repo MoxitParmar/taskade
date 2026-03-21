@@ -66,7 +66,7 @@ export function NavDrop({
                   ) : (
                     <SidebarMenuSubItem>
                       <span className="text-sm text-muted-foreground">
-                        No tasks assigned
+                        Noting to show
                       </span>
                     </SidebarMenuSubItem>
                   )}
