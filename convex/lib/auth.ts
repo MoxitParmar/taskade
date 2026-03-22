@@ -1,5 +1,7 @@
 import { Id } from "../_generated/dataModel";
 import { MutationCtx, QueryCtx } from "../_generated/server";
+import { getOrgByClerkId } from "../organizations/queries";
+import { getUserByClerkId } from "../users/queries";
 
 
 export async function getUserDataQuery(ctx: MutationCtx | QueryCtx) {
@@ -9,17 +11,10 @@ export async function getUserDataQuery(ctx: MutationCtx | QueryCtx) {
     return null
   }
 
-  // if (!identity.orgId) {
-  //   throw new Error("Organization required");
-  // }
-
   const clerkUserId = identity.subject;
   const clerkOrgId = (identity as unknown as Record<string, string>).org_id ?? null;
   // find user
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", clerkUserId))
-    .unique();
+  const user = await getUserByClerkId(ctx, clerkUserId);
 
   if (!user) {
     return null
@@ -29,12 +24,7 @@ export async function getUserDataQuery(ctx: MutationCtx | QueryCtx) {
   if(clerkOrgId){
 
   // find organization
-   org = await ctx.db
-    .query("organizations")
-    .withIndex("by_clerk_org_id", (q) =>
-      q.eq("clerkOrgId", clerkOrgId as string),
-    )
-    .unique();
+   org = await getOrgByClerkId(ctx, clerkOrgId);
 
   if (!org) {
     return null

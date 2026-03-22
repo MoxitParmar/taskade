@@ -2,6 +2,10 @@ import { v } from "convex/values";
 import { Id } from "../_generated/dataModel";
 import { mutation } from "../_generated/server";
 import { MutationCtx } from "../_generated/server";
+import { getUserOrThrow } from "../users/models";
+import { getMembership } from "./models";
+import { getUserByClerkId } from "../users/queries";
+import { getOrgByClerkId } from "../organizations/queries";
 
 export async function createMembershipInternal(
   ctx: MutationCtx,
@@ -9,16 +13,9 @@ export async function createMembershipInternal(
   orgId: Id<"organizations">,
   role: "admin" | "member" = "member"
 ) {
-  const user = await ctx.db.get(userId);
-  if (!user) throw new Error("User not found");
+await getUserOrThrow(ctx, userId);
 
-  const existing = await ctx.db
-      .query("memberships")
-      // eslint-disable-next-line
-    .withIndex("by_user_org", (q: any) =>
-      q.eq("userId", userId).eq("orgId", orgId),
-    )
-    .unique();
+  const existing = await getMembership(ctx, userId, orgId);
 
   if (existing) return existing._id;
 
@@ -39,13 +36,7 @@ export async function updateMembershipRoleInternal(
   orgId: Id<"organizations">,
   role: "admin" | "member"
 ) {
-  const membership = await ctx.db
-      .query("memberships")
-      // eslint-disable-next-line
-    .withIndex("by_user_org", (q: any) =>
-      q.eq("userId", userId).eq("orgId", orgId),
-    )
-    .unique();
+  const membership = await getMembership(ctx, userId, orgId);
 
   if (!membership) {
     throw new Error("Membership not found");
@@ -64,13 +55,7 @@ export async function deleteMembershipInternal(
   userId: Id<"users">,
   orgId: Id<"organizations">,
 ) {
-  const membership = await ctx.db
-      .query("memberships")
-      // eslint-disable-next-line
-    .withIndex("by_user_org", (q: any) =>
-      q.eq("userId", userId).eq("orgId", orgId),
-    )
-    .unique();
+  const membership = await getMembership(ctx, userId, orgId);
 
   if (!membership) {
     throw new Error("Membership not found");
@@ -91,17 +76,15 @@ export const createMembership = mutation({
   },
 
   handler: async (ctx, args) => {
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_user_id", (q) =>
-        q.eq("clerkUserId", args.clerkUserId),
-      )
-      .first();
+    const user = await getUserByClerkId(
+      ctx,
+      args.clerkUserId
+    );
 
-    const org = await ctx.db
-      .query("organizations")
-      .withIndex("by_clerk_org_id", (q) => q.eq("clerkOrgId", args.clerkOrgId))
-      .unique();
+    const org = await getOrgByClerkId(
+      ctx,
+      args.clerkOrgId
+    );
 
     if (!user) throw new Error("User not found");
     if (!org) throw new Error("Organization not found");
@@ -121,17 +104,15 @@ export const updateMembershipRole = mutation({
   },
 
   handler: async (ctx, args) => {
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_user_id", (q) =>
-        q.eq("clerkUserId", args.clerkUserId),
-      )
-      .first();
+    const user = await getUserByClerkId(
+      ctx,
+      args.clerkUserId
+    );
 
-    const org = await ctx.db
-      .query("organizations")
-      .withIndex("by_clerk_org_id", (q) => q.eq("clerkOrgId", args.clerkOrgId))
-      .unique();
+    const org = await getOrgByClerkId(
+      ctx,
+      args.clerkOrgId
+    );
 
     if (!user) throw new Error("User not found");
     if (!org) throw new Error("Organization not found");
@@ -147,17 +128,15 @@ export const deleteMembership = mutation({
   },
 
   handler: async (ctx, args) => {
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_user_id", (q) =>
-        q.eq("clerkUserId", args.clerkUserId),
-      )
-      .first();
+    const user = await getUserByClerkId(
+      ctx,
+      args.clerkUserId
+    );
 
-    const org = await ctx.db
-      .query("organizations")
-      .withIndex("by_clerk_org_id", (q) => q.eq("clerkOrgId", args.clerkOrgId))
-      .unique();
+    const org = await getOrgByClerkId(
+      ctx,
+      args.clerkOrgId
+    );
 
     if (!user) throw new Error("User not found");
     if (!org) throw new Error("Organization not found");

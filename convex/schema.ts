@@ -68,7 +68,7 @@ export default defineSchema({
       .index("by_user", ["userId"])
       .index("by_org", ["orgId"])
   .index("by_org_user", ["orgId","userId"])
-  .index("by_org_user_project", ["orgId","userId","projectId"]),
+  .index("by_org_project_user", ["orgId","projectId","userId"]),
 
   tasks: defineTable({
     orgId: v.id("organizations"),
@@ -98,7 +98,7 @@ export default defineSchema({
     updatedAt: v.number(),
   })
   // .index("by_project", ["projectId"])
-  // .index("by_org", ["orgId"])
+  .index("by_org", ["orgId"])
   .index("by_assignee", ["assignee"])
   // .index("by_project_assignee", ["projectId","assignee"])
   .index("by_org_project", ["orgId","projectId"])

@@ -1,5 +1,6 @@
 import { Id } from "../_generated/dataModel";
 import { MutationCtx } from "../_generated/server";
+// import { getActivityLogs } from "../activityLogs/queries";
 
 
 export type ActivityType =
@@ -59,20 +60,20 @@ export async function logActivity(
   });
 
   // Get all activity logs for this user, ordered by creation date (newest first)
-  const userLogs = await ctx.db
-    .query("activityLogs")
-    .withIndex("by_org_user", (q) => q.eq("orgId", params.orgId).eq("userId", params.userId))
-    .order("desc")
-    .collect();
+  // const userLogs = await getActivityLogs(ctx, {
+  //   orgId: params.orgId,
+  //     userIdFilter: params.userId,
+  //     limit: 500, 
+  // });
 
-  // If there are more than 100 logs, delete the oldest ones
-  if (userLogs.length > 100) {
-    const logsToDelete = userLogs.slice(100); // Get everything after the first 100
+  // // If there are more than 100 logs, delete the oldest ones
+  // if (userLogs.length > 500) {
+  //   const logsToDelete = userLogs.slice(500); // Get everything after the first 100
 
-    for (const log of logsToDelete) {
-      await ctx.db.delete(log._id);
-    }
-  }
+  //   for (const log of logsToDelete) {
+  //     await ctx.db.delete(log._id);
+  //   }
+  // }
 
   return activityLogId;
 }

@@ -1,32 +1,44 @@
-import { pages } from "./pages";
-import { useRecentTasks } from "./useRecentTasks";
-import { useRecentProjects } from "./useRecentProjects";
-import { useUserData } from "./useUserData";
-import { Settings } from "lucide-react";
+
+import { api } from "@/convex/_generated/api";
+import { pages, pagesSetting } from "./pages";
 import { useOrganization } from "@clerk/nextjs";
+
+import { usePaginatedQuery } from "@/hooks/use-paginated";
 
 export const useAppSidebar = () => {
     const { membership } = useOrganization();
-    const isAdmin = membership?.role === "admin";
+    const isAdmin = membership?.role === "org:admin";
+    const pagesWithSettings = isAdmin ? pagesSetting : pages;
     
-    const pagesWithSettings = [
-      ...pages.filter(p => p.name !== "Settings"),
-      ...(isAdmin
-        ? [{ name: "Settings", url: "/settings", icon: Settings }]
-        : []),
-    ];
+    const { data, isLoading, isEmpty } = usePaginatedQuery({
+        query: api.sidebar.queries.getSidebarData,
+        args: {},
+      mode: "simple",
+    });
+    const { projects, tasks} = data ?? {};
+    
+    // let projects;
+    // let tasks;
+    // const formatedData = React.useMemo(() => {
+    //   projects = data.project.map((p) => ({
+    //       title: p.name,
+    //       url: `/project/${p._id}`,
+    //     }));
+    //   return [
+    //     {
+    //       title: "My Projects",
+    //       url: "#",
+    //       icon: FolderOpen,
+    //       isActive: true,
+    //       items: projects,
+    //     },
+    //   ];
+    // }, [query.data]);
 
-    const { data, isLoading: userLoading } = useUserData();
-    const userId = data?.userId;
-    const orgId = data?.orgId;
-    const {tasks, isLoading: tasksLoading, isEmpty: tasksEmpty} = useRecentTasks(userId!, orgId!);
-    const { projects, isLoading: projectsLoading, isEmpty: projectsEmpty } = useRecentProjects(userId!, orgId!);
-    
     
     return {
-      tasks,
-      projects,
-      isLoading: tasksLoading || projectsLoading || userLoading,
-      tasksEmpty,projectsEmpty, pages: pagesWithSettings,
+     projects, tasks,
+      isLoading,
+      isEmpty, pages: pagesWithSettings,
     };
 }

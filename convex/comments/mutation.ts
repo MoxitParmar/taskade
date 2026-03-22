@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { mutation } from "../_generated/server";
 
 import { logActivity, createCommentMetadata } from "../lib/activityLogs";
+import { getCommentOrThrow } from "./models";
 
 // create comment
 export const createComment = mutation({
@@ -56,26 +57,19 @@ export const updateComment = mutation({
     },
 
     handler: async (ctx, args) => {
-        const { userId, orgId } = args;
+        const { userId, orgId, commentId } = args;
         const now = Date.now();
 
         // fetch comment
-        const comment = await ctx.db.get("taskComments", args.commentId);
+        const comment = await getCommentOrThrow(ctx, commentId, orgId);
 
-        if(!comment){
-            throw new Error("Comment not found");
-        }
-
-        if(comment.orgId !== orgId){
-            throw new Error("Unauthorized");
-        }
 
         if(comment.createdBy !== userId){
             throw new Error("Only the creator can update the comment");
         }
 
         // update comment
-        await ctx.db.patch("taskComments", args.commentId, {
+        await ctx.db.patch("taskComments", commentId, {
             content: args.content,
             updatedAt: now,
         });
@@ -93,18 +87,10 @@ export const deleteComment = mutation({
     },
 
     handler: async (ctx, args) => {
-        const { userId, orgId } = args
+        const { userId, orgId, commentId } = args
 
         // fetch comment
-        const comment = await ctx.db.get("taskComments", args.commentId);
-
-        if(!comment){
-            throw new Error("Comment not found");
-        }
-
-        if(comment.orgId !== orgId){
-            throw new Error("Unauthorized");
-        }
+        const comment = await getCommentOrThrow(ctx, commentId, orgId);
 
         if(comment.createdBy !== userId){
             throw new Error("Only the creator can delete the comment");

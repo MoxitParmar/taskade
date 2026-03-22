@@ -18,8 +18,7 @@ import {
 } from "@/components/ui/sidebar";
 
 export function NavDrop({
-  items,
-  empty,
+  items
 }: {
   items: {
     title: string;
@@ -31,7 +30,6 @@ export function NavDrop({
       url: string;
     }[];
   }[];
-  empty: boolean;
 }) {
   return (
     <SidebarGroup>
@@ -53,8 +51,8 @@ export function NavDrop({
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
-                  {!empty ? (
-                    item?.items?.map((subItem, i) => (
+                  {item?.items?.length ? (
+                    item.items.map((subItem, i) => (
                       <SidebarMenuSubItem key={`${subItem.title}-${i}`}>
                         <SidebarMenuSubButton asChild>
                           <a href={subItem.url}>

@@ -1,27 +1,21 @@
-import { query } from "../_generated/server";
+import { MutationCtx, QueryCtx } from "../_generated/server";
+type Ctx = QueryCtx | MutationCtx;
 
 
-
-import { v } from "convex/values";
-
-
-export const getOrgIdByClerkId = query({
-  args: {
-    clerkOrgId: v.string(),
-  },
-
-  handler: async (ctx, args) => {
-    const org = await ctx.db
-      .query("organizations")
-      .withIndex("by_clerk_org_id", (q) =>
-        q.eq("clerkOrgId", args.clerkOrgId)
-      )
-      .unique();
-
+export async function getOrgByClerkId(
+  ctx: Ctx,
+  clerkOrgId: string
+) {
+   const org = await ctx.db
+    .query("organizations")
+    .withIndex("by_clerk_org_id", (q) =>
+      q.eq("clerkOrgId", clerkOrgId)
+    )
+    .unique();
+   
     if (!org) {
-      throw new Error("Organization not found");
+        throw new Error("Organization not found");
     }
-
-    return org._id;
-  },
-});
+    
+    return org;
+}

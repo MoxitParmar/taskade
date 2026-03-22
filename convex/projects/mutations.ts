@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation } from "../_generated/server";
 import { isAdmin, isLead } from "../lib/permissions";
+import {  getProjectMembershipsByUser, getProjectOrThrow } from "./models";
 
 
 // create project
@@ -78,15 +79,8 @@ export const updateProject = mutation({
         const now = Date.now();
 
         // find project
-        const project = await ctx.db.get("projects", args.projectId);
+        const project = await getProjectOrThrow(ctx, args.projectId, args.orgId);
 
-        if(!project){
-            throw new Error("Project not found");
-        }
-
-        if(project.orgId !== args.orgId){
-            throw new Error("You do not have access to this project");
-        }
 
         // update project
         await ctx.db.patch("projects", args.projectId, {
@@ -112,16 +106,7 @@ export const deleteProject = mutation({
             throw new Error("You do not have permission to delete this project");
         }
 
-        // find project
-        const project = await ctx.db.get("projects", args.projectId);
-
-        if(!project){
-            throw new Error("Project not found");
-        }
-
-        if(project.orgId !== args.orgId){
-            throw new Error("You do not have access to this project");
-        }
+        getProjectOrThrow(ctx, args.projectId, args.orgId);
         
         // delete project
         await ctx.db.delete("projects", args.projectId);
@@ -153,23 +138,14 @@ export const addProjectMember = mutation({
         const now = Date.now();
 
         // find project
-        const project = await ctx.db.get("projects", args.projectId);
-
-        if(!project){
-            throw new Error("Project not found");
-        }
-
-        if(project.orgId !== args.orgId){
-            throw new Error("You do not have access to this project");
-        }
+        await getProjectOrThrow(ctx, args.projectId, args.orgId);
 
         // prevent duplicate membership
-        const existingMembership = await ctx.db
-            .query("projectMemberships")
-            .withIndex("by_org_user_project", (q) =>
-                q.eq("orgId", args.orgId).eq("userId", args.userId).eq("projectId", args.projectId),
-            )
-            .first();
+        const existingMembership = await getProjectMembershipsByUser(ctx, {
+            orgId: args.orgId,
+            userId: args.userId,
+            projectId: args.projectId,
+        });
 
         if (existingMembership) {
             throw new Error("User is already a member of this project");
@@ -199,22 +175,14 @@ export const removeProjectMember = mutation({
         }
 
         // find project
-        const project = await ctx.db.get("projects", args.projectId);
-
-        if(!project){
-            throw new Error("Project not found");
-        }
-
-        if(project.orgId !== args.orgId){
-            throw new Error("You do not have access to this project");
-        }
+        await getProjectOrThrow(ctx, args.projectId, args.orgId);
 
         // remove project member
-        const membership = await ctx.db.query("projectMemberships")
-            .withIndex("by_org_user_project", (q) =>
-                q.eq("orgId", args.orgId).eq("userId", args.userId).eq("projectId", args.projectId),
-            )
-            .first();
+        const membership = await getProjectMembershipsByUser(ctx, {
+            orgId: args.orgId,
+            userId: args.userId,
+            projectId: args.projectId,
+        });
         
         if(membership){
             await ctx.db.delete("projectMemberships", membership._id);

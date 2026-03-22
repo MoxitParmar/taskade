@@ -1,6 +1,8 @@
 import { v } from "convex/values";
 import { mutation } from "../_generated/server";
 import { logActivity, createTaskMetadata, deleteActivityLogs } from "../lib/activityLogs";
+import { getTaskOrThrow } from "./models";
+import { getTaskComments } from "../comments/queries";
 
 
 
@@ -84,15 +86,7 @@ export const updateTask = mutation({
         const now = Date.now();
 
         // find task
-        const task = await ctx.db.query("tasks").withIndex("by_id", (q) => q.eq("_id", args.taskId)).first();
-
-        if (!task) {
-            throw new Error("Task not found");
-        }
-
-        if (task.orgId !== orgId) {
-            throw new Error("You do not have access to this task");
-        }
+        const task = await getTaskOrThrow(ctx, args.taskId, orgId);
         
         // Track changes for metadata
         // eslint-disable-next-line 
@@ -149,27 +143,20 @@ export const updateTask = mutation({
 export const deleteTask = mutation({
     args: {
         taskId: v.id("tasks"),
-          orgId: v.id("organizations"),
+        orgId: v.id("organizations"),
     },
 
     handler: async (ctx, args) => {
         const { orgId } = args;
 
         // find task
-        const task = await ctx.db.query("tasks").withIndex("by_id", (q) => q.eq("_id", args.taskId)).first();
-
-        if (!task) {
-            throw new Error("Task not found");
-        }
-
-        if (task.orgId !== orgId) {
-            throw new Error("You do not have access to this task");
-        }
-
+        const task = await getTaskOrThrow(ctx, args.taskId, orgId);
+        const comments = await getTaskComments(ctx, { orgId, taskId: args.taskId, limit: 1000 });
         
         // delete task
         await ctx.db.delete("tasks",task._id);
         await deleteActivityLogs(ctx, { orgId }, args.taskId);
+        await Promise.all(comments.page.map(comment => ctx.db.delete("taskComments", comment.id)));
 
         return true;
     },

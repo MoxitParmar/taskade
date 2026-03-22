@@ -1,5 +1,7 @@
 import { Id } from "../_generated/dataModel";
 import { MutationCtx, QueryCtx } from "../_generated/server";
+import { getMembership } from "../memberships/models";
+import { getProjectById } from "../projects/queries";
 
 
 export async function isAdmin(
@@ -8,10 +10,7 @@ export async function isAdmin(
   orgId: Id<"organizations">,
 ) {
   // find membership
-  const membership = await ctx.db
-    .query("memberships")
-    .withIndex("by_user_org", (q) => q.eq("userId", userId).eq("orgId", orgId))
-    .unique();
+  const membership = await getMembership(ctx, userId, orgId);
 
   if (membership?.role === "admin") {
     return true;
@@ -24,12 +23,12 @@ export async function isLead(ctx: MutationCtx | QueryCtx,
     projectId: Id<"projects">,
     orgId: Id<"organizations">,) {
 
-  const project = await ctx.db.get(projectId);
+  const project = await getProjectById(ctx, projectId, orgId);
 
   if (await isAdmin(ctx, userId, orgId)) {
       return true;
   }
-  if (project?.lead == userId) {
+  if (project?.lead?.id == userId) {
       return true;
   }
   return false;

@@ -1,6 +1,8 @@
 
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
+import { getOrgOrThrow } from "./models";
+import { getOrgByClerkId } from "./queries";
 
 
 export const createOrganization = mutation({
@@ -12,12 +14,10 @@ export const createOrganization = mutation({
 
     handler: async (ctx, args) => {
 
-        const existing = await ctx.db
-            .query("organizations")
-            .withIndex("by_clerk_org_id", (q) =>
-                q.eq("clerkOrgId", args.clerkOrgId)
-            )
-            .unique();
+        const existing = await getOrgByClerkId(
+            ctx,
+            args.clerkOrgId
+        );
 
         if (existing) {
             return existing._id;
@@ -47,11 +47,7 @@ export const updateOrganization = mutation({
   },
 
   handler: async (ctx, args) => {
-    const org = await ctx.db.get(args.orgId);
-
-    if (!org) {
-      throw new Error("Organization not found");
-    }
+    const org = await getOrgOrThrow(ctx, args.orgId);
 
     await ctx.db.patch(args.orgId, {
       orgName: args.orgName ?? org.orgName,
@@ -69,44 +65,32 @@ export const updateOrganization = mutation({
 //   },
 
 //   handler: async (ctx, args) => {
-//     const org = await ctx.db.get(args.orgId);
-
-
-//     if (!org) {
-//       throw new Error("Organization not found");
-//     }
+//     await getOrgOrThrow(ctx, args.orgId);
 
 //     /* ---------------- PROJECTS ---------------- */
 
-//     const projects = await ctx.db
-//       .query("projects")
-//       .withIndex("by_org", (q) => q.eq("orgId", args.orgId))
-//       .collect();
+//     const projects = await getProjects(ctx, { orgId: args.orgId , limit: 100});
 
-//     for (const project of projects) {
+//     for (const project of projects.page) {
 
 //       /* project memberships */
-//       const pms = await ctx.db
-//         .query("projectMemberships")
-//         .withIndex("by_org_project", (q) => q.eq("orgId", args.orgId).eq("projectId", project._id))
-//         .collect();
+//       const pms = await getProjectMembers(ctx, { projectId: project.id, orgId: args.orgId, limit: 500 });
 
-//       for (const pm of pms) {
-//         await ctx.db.delete(pm._id);
+//         for (const pm of pms.page) {
+//           if (pm) {
+//               await ctx.db.delete(pm.id);
+//           }
 //       }
 
 //       /* tasks */
-//       const tasks = await ctx.db
-//         .query("tasks")
-//         .withIndex("by_org_project", (q) => q.eq("orgId", args.orgId).eq("projectId", project._id))
-//         .collect();
+//     const tasks = await getTasks(ctx, { projectId: project.id, orgId: args.orgId, limit: 500 });
 
-//       for (const task of tasks) {
+//       for (const task of tasks.page) {
 
 //         /* comments */
 //         const comments = await ctx.db
 //           .query("taskComments")
-//           .withIndex("by_task", (q) => q.eq("taskId", task._id))
+//           .withIndex("by_task", (q) => q.eq("taskId", task.id))
 //           .collect();
 
 //         for (const comment of comments) {

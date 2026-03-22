@@ -2,6 +2,8 @@
 import { Id } from "../_generated/dataModel";
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
+import { getUserByClerkId } from "./queries";
+import { getUserOrThrow } from "./models";
 
 export const createUser = mutation({
   args: {
@@ -12,12 +14,10 @@ export const createUser = mutation({
   },
 
   handler: async (ctx, args) => {
-    const existingUser = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_user_id", (q) =>
-        q.eq("clerkUserId", args.clerkUserId)
-      )
-      .unique();
+      const existingUser = await getUserByClerkId(
+        ctx,
+        args.clerkUserId
+      );
 
     if (existingUser) {
       return existingUser._id;
@@ -25,16 +25,11 @@ export const createUser = mutation({
 
     const now = Date.now();
 
-    const userId = await ctx.db.insert("users", {
-      clerkUserId: args.clerkUserId,
-      name: args.name,
-      imageUrl: args.imageUrl,
-      email: args.email,
+    return await ctx.db.insert("users", {
+      ...args,
       createdAt: now,
       updatedAt: now,
     });
-
-    return userId;
   },
 });
 
@@ -48,97 +43,88 @@ export const updateUser = mutation({
 
   handler: async (ctx, args) => {
     const { userId, ...fields } = args;
-    const user  = ctx.db.get(userId);
-
-    if (!user) {
-      throw new Error("User not found");
-    }
+    await getUserOrThrow(ctx, userId);
 
     await ctx.db.patch(userId as Id<"users">, {
       ...fields,
       updatedAt: Date.now(),
     });
-
-    return ;
   },
 });
 
-// export const deleteUser = mutation({
-//   args: {
-//     userId: v.id("users"),
-//   },
+export const deleteUser = mutation({
+  args: {
+    userId: v.id("users"),
+  },
 
-//   handler: async (ctx, args) => {
-//     const user = await ctx.db.get(args.userId);
+  handler: async (ctx, args) => {
+    await getUserOrThrow(ctx, args.userId);
 
-//     if (!user) {
-//       throw new Error("User not found");
-//     }
 
-//     /* ---------------- MEMBERSHIPS ---------------- */
+    /* ---------------- MEMBERSHIPS ---------------- */
 
-//     const memberships = await ctx.db
-//       .query("memberships")
-//       .withIndex("by_user", (q) => q.eq("userId", args.userId))
-//       .collect();
+    const memberships = await ctx.db
+      .query("memberships")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .collect();
 
-//     for (const membership of memberships) {
-//       await ctx.db.delete(membership._id);
-//     }
-//     /* ---------------- PROJECT MEMBERSHIPS ---------------- */
+    for (const membership of memberships) {
+      await ctx.db.delete(membership._id);
+    }
+    /* ---------------- PROJECT MEMBERSHIPS ---------------- */
 
-//     const projectMemberships = await ctx.db
-//       .query("projectMemberships")
-//       .withIndex("by_org_user", (q) => q.eq("orgId", memberships[0]?.orgId).eq("userId", args.userId))
-//       .collect();
+    const projectMemberships = await ctx.db
+      .query("projectMemberships")
+      .withIndex("by_org_user", (q) => q.eq("orgId", memberships[0]?.orgId).eq("userId", args.userId))
+      .collect();
 
-//     for (const pm of projectMemberships) {
-//       await ctx.db.delete(pm._id);
-//     }
+    for (const pm of projectMemberships) {
+      await ctx.db.delete(pm._id);
+    }
 
-//     /* ---------------- TASKS ASSIGNED ---------------- */
+    /* ---------------- TASKS ASSIGNED ---------------- */
 
-//     const assignedTasks = await ctx.db
-//       .query("tasks")
-//       .withIndex("by_org_assignee", (q) => q.eq("orgId", memberships[0]?.orgId).eq("assignee", args.userId))
-//       .collect();
+    const assignedTasks = await ctx.db
+      .query("tasks")
+      .withIndex("by_org_assignee", (q) => q.eq("orgId", memberships[0]?.orgId).eq("assignee", args.userId))
+      .collect();
 
-//     for (const task of assignedTasks) {
-//       await ctx.db.patch(task._id, {
-//         assignee: task.createdBy,
-//         updatedAt: Date.now(),
-//       });
-//     }
+    for (const task of assignedTasks) {
+      await ctx.db.patch(task._id, {
+        assignee: task.createdBy,
+        updatedAt: Date.now(),
+      });
+    }
 
-//     /* ---------------- COMMENTS ---------------- */
+    /* ---------------- COMMENTS ---------------- */
 
-//     const comments = await ctx.db
-//       .query("taskComments")
-//       .withIndex("by_org", (q) => q.eq("orgId", memberships[0]?.orgId))
-//       .collect();
+    const comments = await ctx.db
+      .query("taskComments")
+      .withIndex("by_org", (q) => q.eq("orgId", memberships[0]?.orgId))
+      .collect();
 
-//     for (const comment of comments) {
-//       if (comment.createdBy === args.userId) {
-//         await ctx.db.delete(comment._id);
-//       }
-//     }
+    for (const comment of comments) {
+      if (comment.createdBy === args.userId) {
+        await ctx.db.delete(comment._id);
+      }
+    }
 
-//     /* ---------------- ACTIVITY LOGS ---------------- */
+    /* ---------------- ACTIVITY LOGS ---------------- */
 
-//     const logs = await ctx.db
-//       .query("activityLogs")
-//       .withIndex("by_org_user", (q) => q.eq("orgId", memberships[0]?.orgId).eq("userId", args.userId))
-//       .collect();
+    const logs = await ctx.db
+      .query("activityLogs")
+      .withIndex("by_org_user", (q) => q.eq("orgId", memberships[0]?.orgId).eq("userId", args.userId))
+      .collect();
 
-//     for (const log of logs) {
-//       await ctx.db.delete(log._id);
-//     }
+    for (const log of logs) {
+      await ctx.db.delete(log._id);
+    }
     
 
-//     /* ---------------- DELETE USER ---------------- */
+    /* ---------------- DELETE USER ---------------- */
 
-//     await ctx.db.delete(args.userId);
+    await ctx.db.delete(args.userId);
 
-//     return { success: true };
-//   },
-// });
+    return { success: true };
+  },
+});
