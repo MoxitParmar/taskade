@@ -10,7 +10,7 @@ type Options<T> = {
     //eslint-disable-next-line
   query: any; // Convex query builder
   ctx: QueryCtx;
-  limit: number;
+  limit?: number;
   cursor?: string;
     paginate?: boolean;
   //eslint-disable-next-line
@@ -44,10 +44,12 @@ export async function paginateOrTake<T>({
   /* -------------------------------------------------- */
   /* ⚡ NON-PAGINATED */
   /* -------------------------------------------------- */
-  const items = await query.take(limit);
-
+  const safeLimit = Math.min(limit ?? 50, 100);
+  
+  const items = await query.take(safeLimit);
+  
   const page = await Promise.all(items.map(map));
-
+  
   return {
     page,
     continueCursor: null,

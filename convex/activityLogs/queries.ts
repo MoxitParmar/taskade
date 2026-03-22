@@ -7,7 +7,7 @@ export async function getActivityLogs(
   ctx: QueryCtx,
   args: {
     cursor?: string;
-    limit: number;
+    limit?: number;
     orgId: Id<"organizations">;
     entityType?: string;
     type?: string;

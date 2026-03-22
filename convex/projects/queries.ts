@@ -10,7 +10,7 @@ export async function getProjects(
     orgId: Id<"organizations">;
     userId?: Id<"users">;
     cursor?: string;
-      limit: number;
+      limit?: number;
       paginate?: boolean
   }
 ) {
@@ -50,7 +50,7 @@ export async function getProjectMembers(
     projectId: Id<"projects">;
     search?: string;
     cursor?: string;
-      limit: number;
+      limit?: number;
         paginate?: boolean;
   }
 ) {

@@ -9,7 +9,7 @@ export async function getTaskComments(
   ctx: QueryCtx,
   args: {
     cursor?: string;
-    limit: number;
+    limit?: number;
     orgId: Id<"organizations">;
       taskId: Id<"tasks">;
         paginate?: boolean;

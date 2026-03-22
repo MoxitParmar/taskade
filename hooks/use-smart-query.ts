@@ -148,7 +148,7 @@ type Options<TArgs> = {
   mode?: "paginated" | "simple";
 };
 
-export const usePaginatedQuery = <TData, TArgs extends object>({
+export const useSmartQuery = <TData, TArgs extends object>({
   query,
   args,
   pageSize = 10,

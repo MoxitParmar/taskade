@@ -13,6 +13,7 @@ import type * as activityLogs_queries from "../activityLogs/queries.js";
 import type * as comments_models from "../comments/models.js";
 import type * as comments_mutation from "../comments/mutation.js";
 import type * as comments_queries from "../comments/queries.js";
+import type * as dashboard_queries from "../dashboard/queries.js";
 import type * as http from "../http.js";
 import type * as lib_activityLogs from "../lib/activityLogs.js";
 import type * as lib_auth from "../lib/auth.js";
@@ -47,6 +48,7 @@ declare const fullApi: ApiFromModules<{
   "comments/models": typeof comments_models;
   "comments/mutation": typeof comments_mutation;
   "comments/queries": typeof comments_queries;
+  "dashboard/queries": typeof dashboard_queries;
   http: typeof http;
   "lib/activityLogs": typeof lib_activityLogs;
   "lib/auth": typeof lib_auth;

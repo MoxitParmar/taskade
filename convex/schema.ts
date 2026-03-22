@@ -12,7 +12,7 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
-  .index("by_clerk_user_id", ["clerkUserId"]),
+        .index("by_clerk_user_id", ["clerkUserId"]),
 
   organizations: defineTable({
     clerkOrgId: v.string(),

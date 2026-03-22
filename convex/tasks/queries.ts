@@ -7,7 +7,7 @@ export async function getTasks(
     ctx: QueryCtx,
     args: {
         cursor?: string;
-        limit: number;
+        limit?: number;
         orgId: Id<"organizations">;
         userId?: Id<"users">;
         projectId?: Id<"projects">;
