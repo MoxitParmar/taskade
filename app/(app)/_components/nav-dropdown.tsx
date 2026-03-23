@@ -30,11 +30,11 @@ export function NavDrop({
       url: string;
     }[];
   }[];
-}) {
+    }) {
   return (
     <SidebarGroup>
       <SidebarMenu>
-        {items.map((item) => (
+        {items?.map((item) => (
           <Collapsible
             key={item.title}
             asChild

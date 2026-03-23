@@ -1,38 +1,49 @@
 // features/projects/forms/use-project-form.ts
 import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
-import { useFormHandler } from "@/hooks/use-smart-form";
-import { formSchema } from "./project-form-schema";
+import { useSmartForm } from "@/hooks/use-smart-form";
+import {
+  formSchema,
+  toCreatePayload,
+  toUpdatePayload,
+} from "./project-form-schema";
+import { type z } from "zod";
+import { Id } from "@/convex/_generated/dataModel";
 
 type Type = "create" | "update";
+type FormInput = z.input<typeof formSchema>;
+type FormOutput = z.output<typeof formSchema>;
+export type initialData = (FormInput & { _id: Id<"projects"> }) | undefined;
 
 export const useProjectForm = ({
   type,
   initialData,
+  userId,
+  orgId,
 }: {
-    type: Type;
-    //eslint-disable-next-line
-  initialData?: any;
+  type: Type;
+  initialData?: (FormInput & { _id: Id<"projects"> }) | undefined;
+  userId: Id<"users">;
+  orgId: Id<"organizations">;
 }) => {
   const create = useMutation(api.projects.mutations.createProject);
-    const update = useMutation(api.projects.mutations.updateProject);
+  const update = useMutation(api.projects.mutations.updateProject);
 
-  return useFormHandler({
+  return useSmartForm<FormInput, FormOutput>({
     schema: formSchema,
-      defaultValues: initialData,
+    defaultValues: initialData,
 
     onSubmit: async (values) => {
       if (type === "create") {
-        await create(values);
-      } else {
-        await update({ ...values, id: initialData._id });
+        await create(toCreatePayload(values, userId, orgId));
+      } else if (!initialData?._id && type === "update") {
+        throw new Error("Missing project id for update");
+      } else if (initialData?._id) {
+        await update(toUpdatePayload(values, initialData._id, userId, orgId));
       }
     },
 
-    successMessage:
-      type === "create"
-        ? "Project created"
-        : "Project updated",
+    successMessage: type === "create" ? "Project created" : "Project updated",
 
     errorMessage:
       type === "create"

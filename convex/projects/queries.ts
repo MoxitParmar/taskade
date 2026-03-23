@@ -14,15 +14,37 @@ export async function getProjects(
       paginate?: boolean
   }
 ) {
-  const query = buildOrgProjectsQuery(ctx, args);
-
+   
+    if (args.userId) {
+        const membershipQuery = buildOrgProjectsQuery(ctx, {
+            orgId: args.orgId,
+            userId: args.userId,
+        });
+  
+        return await paginateOrTake({
+            query: membershipQuery,
+            ctx,
+            limit: args.limit,
+            cursor: args.cursor,
+            paginate: args.paginate,
+            map: async (membership) => {
+                // membership.projectId -> load actual project
+                return await getProjectById(ctx, membership.projectId, args.orgId);
+            },
+        });
+    }
+    
+    const query = buildOrgProjectsQuery(ctx, {
+        orgId: args.orgId,
+    });
+    
   return await paginateOrTake({
     query,
     ctx,
     limit: args.limit,
     cursor: args.cursor,
     paginate: args.paginate,
-    map: (task) => formatProject(ctx, task),
+    map: (p) => formatProject(ctx, p),
   });
 }
 

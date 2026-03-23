@@ -1,40 +1,53 @@
-// lib/forms/use-form-handler.ts
-import { useForm, FieldValues, DefaultValues } from "react-hook-form";
+import { useEffect } from "react";
+import { useForm, type DefaultValues, type FieldValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { z } from "zod";
 
-
-type Options<TSchema, TValues> = {
-  schema: TSchema;
-  defaultValues?: DefaultValues<TValues>;
-  onSubmit: (values: TValues) => Promise<void>;
+type Options<
+  TInput extends FieldValues,
+  TOutput extends FieldValues = TInput,
+> = {
+  schema: z.ZodType<TOutput, TInput>;
+  defaultValues?: DefaultValues<TInput>;
+  values?: Partial<TInput>;
+  onSubmit: (values: TOutput) => Promise<void>;
   successMessage?: string;
-    errorMessage?: string;
+  errorMessage?: string;
 };
 
-export function useFormHandler<TValues extends FieldValues>({
+export function useSmartForm<
+  TInput extends FieldValues,
+  TOutput extends FieldValues = TInput,
+>({
   schema,
   defaultValues,
+  values,
   onSubmit,
   successMessage,
-    errorMessage,
-  //eslint-disable-next-line
-}: Options<any,TValues>) {
-  const form = useForm<TValues>({
+  errorMessage,
+}: Options<TInput, TOutput>) {
+  const form = useForm<TInput, unknown, TOutput>({
     resolver: zodResolver(schema),
     defaultValues,
   });
 
-  const handleSubmit = form.handleSubmit(async (values) => {
+  useEffect(() => {
+    if (values) {
+      form.reset(values as DefaultValues<TInput>);
+    }
+  }, [values, form]);
+
+  const handleSubmit = form.handleSubmit(async (submittedValues) => {
     try {
-      await onSubmit(values);
+      await onSubmit(submittedValues);
 
-      if (successMessage) toast(successMessage);
+      if (successMessage) toast.success(successMessage);
 
-      form.reset();
+      form.reset(submittedValues as DefaultValues<TInput>);
     } catch (err) {
-        if (errorMessage) toast(errorMessage);
-        console.error("error from catch",err);
+      if (errorMessage) toast.error(errorMessage);
+      console.error(err);
     }
   });
 
@@ -42,6 +55,7 @@ export function useFormHandler<TValues extends FieldValues>({
     form,
     onSubmit: handleSubmit,
     isSubmitting: form.formState.isSubmitting,
-      isSuccess: form.formState.isSubmitSuccessful
+    isSuccess: form.formState.isSubmitSuccessful,
   };
 }
+

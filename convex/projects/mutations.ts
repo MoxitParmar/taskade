@@ -10,8 +10,9 @@ export const createProject = mutation({
     name: v.string(),
     description: v.string(),
     status: v.string(),
-        lead: v.id("users"),
-    userId: v.id("users"),   orgId: v.id("organizations"),
+    lead: v.id("users"),
+    userId: v.id("users"),
+    orgId: v.id("organizations"),
   },
 
   handler: async (ctx, args) => {

@@ -12,7 +12,7 @@ export const getSidebarData = query({
         const {userId, orgId} = user ?? {};
         if (orgId && userId) {
             const tasks = await getTasks(ctx, { userId,  orgId, limit: 5,  paginate: false });
-            const projects = await getProjects(ctx, { userId,  orgId, limit: 5,  paginate: false });
+            const projects = await getProjects(ctx, {  orgId,userId, limit: 5, paginate: false });
             return { tasks, projects };
         }
   },

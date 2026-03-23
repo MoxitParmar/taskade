@@ -49,11 +49,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       ];
     }, [tasks]);
 
-    if (isLoading) {
+if (isLoading) {
     return <SidebarSkeleton />;
   }
 
-  return (
+    return (
     <Sidebar collapsible="offcanvas" variant="floating" {...props}>
       <SidebarHeader>
         <OrgSwitcher />

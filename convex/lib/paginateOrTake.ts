@@ -12,7 +12,7 @@ type Options<T> = {
   ctx: QueryCtx;
   limit?: number;
   cursor?: string;
-    paginate?: boolean;
+  paginate?: boolean;
   //eslint-disable-next-line
   map: (item: any) => Promise<T>;
 };
@@ -46,9 +46,10 @@ export async function paginateOrTake<T>({
   /* -------------------------------------------------- */
   const safeLimit = Math.min(limit ?? 50, 100);
   
-  const items = await query.take(safeLimit);
+    const items = await query.take(safeLimit);
+    
   
-  const page = await Promise.all(items.map(map));
+    const page = await Promise.all(items.map(map));
   
   return {
     page,

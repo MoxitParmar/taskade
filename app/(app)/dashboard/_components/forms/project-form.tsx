@@ -1,7 +1,5 @@
 "use client";
-import * as z from "zod";
-import { formSchema } from "./project-form-schema";
-import {  Controller } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { motion } from "motion/react";
 import { Check } from "lucide-react";
 import {
@@ -20,20 +18,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  MultiSelect,
-  MultiSelectContent,
-  MultiSelectItem,
-  MultiSelectTrigger,
-  MultiSelectValue,
-} from "@/components/ui/multi-select";
-import { useProjectForm } from "./use-project-form";
+import { initialData, useProjectForm } from "./use-project-form";
+import { Id } from "@/convex/_generated/dataModel";
 
-type Schema = z.infer<typeof formSchema>;
+export type options = {
+  label: string;
+  value: string;
+};
 
-export function ProjectForm({ type, initialData }: { type: "create" | "update"; initialData?: Schema }) {
-
-   const { form, onSubmit, isSubmitting, isSuccess } = useProjectForm({ type, initialData });
+export function ProjectForm({
+  type,
+  initialData,
+  userId,
+  orgId,
+  members,
+}: {
+  type: "create" | "update";
+  initialData?: initialData;
+  userId: Id<"users">;
+  orgId: Id<"organizations">;
+  members: options[];
+}) {
+  const { form, onSubmit, isSubmitting, isSuccess } = useProjectForm({
+    type,
+    initialData,
+    userId,
+    orgId,
+  });
 
   if (isSuccess) {
     return (
@@ -61,7 +72,7 @@ export function ProjectForm({ type, initialData }: { type: "create" | "update"; 
             Thank you
           </h2>
           <p className="text-center text-lg text-pretty text-muted-foreground">
-            Form submitted successfully, we will get back to you soon
+            Form submitted successfully.
           </p>
         </motion.div>
       </div>
@@ -75,7 +86,7 @@ export function ProjectForm({ type, initialData }: { type: "create" | "update"; 
       <FieldGroup className="grid md:grid-cols-6 gap-4 mb-6">
         <h2 className="mt-4 mb-1 font-bold text-2xl tracking-tight col-span-full">
           {" "}
-          Create New Project
+          Project Details
         </h2>
 
         <Controller
@@ -89,6 +100,7 @@ export function ProjectForm({ type, initialData }: { type: "create" | "update"; 
               <FieldLabel htmlFor="name">Project name *</FieldLabel>
               <Input
                 {...field}
+                value={field.value ?? ""}
                 id="name"
                 type="text"
                 onChange={(e) => {
@@ -114,6 +126,7 @@ export function ProjectForm({ type, initialData }: { type: "create" | "update"; 
               <FieldLabel htmlFor="description">Description </FieldLabel>
               <Textarea
                 {...field}
+                value={field.value ?? ""}
                 aria-invalid={fieldState.invalid}
                 id="description"
                 placeholder="Enter your project description."
@@ -129,9 +142,10 @@ export function ProjectForm({ type, initialData }: { type: "create" | "update"; 
           control={form.control}
           render={({ field, fieldState }) => {
             const options = [
-              { value: "todo", label: "todo" },
-              { value: "in-progress", label: "in-progress" },
-              { value: "done", label: "done" },
+              { value: "planning", label: "Planning" },
+              { value: "active", label: "Active" },
+              { value: "on-hold", label: "On Hold" },
+              { value: "completed", label: "Completed" },
             ];
             return (
               <Field
@@ -140,8 +154,11 @@ export function ProjectForm({ type, initialData }: { type: "create" | "update"; 
               >
                 <FieldLabel htmlFor="status">Status *</FieldLabel>
 
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger className="w-full">
+                <Select
+                  value={field.value ?? ""}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger id="status" className="w-full">
                     <SelectValue placeholder="task status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -164,12 +181,7 @@ export function ProjectForm({ type, initialData }: { type: "create" | "update"; 
           name="lead"
           control={form.control}
           render={({ field, fieldState }) => {
-            const options = [
-              { value: "option-1", label: "Option 1" },
-              { value: "option-2", label: "Option 2" },
-              { value: "option-3", label: "Option 3" },
-              { value: "option-4", label: "Option 4" },
-            ];
+            const options = members;
             return (
               <Field
                 data-invalid={fieldState.invalid}
@@ -177,8 +189,11 @@ export function ProjectForm({ type, initialData }: { type: "create" | "update"; 
               >
                 <FieldLabel htmlFor="lead">Project Lead *</FieldLabel>
 
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger className="w-full">
+                <Select
+                  value={field.value ?? ""}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger id="lead" className="w-full">
                     <SelectValue placeholder="Select Project Lead" />
                   </SelectTrigger>
                   <SelectContent>
@@ -197,48 +212,6 @@ export function ProjectForm({ type, initialData }: { type: "create" | "update"; 
           }}
         />
 
-        <Controller
-          name="members"
-          control={form.control}
-          render={({ field, fieldState }) => {
-            const options = [
-              { value: "monday", label: "Monday" },
-              { value: "tuesday", label: "Tuesday" },
-              { value: "wednesday", label: "Wednesday" },
-              { value: "thursday", label: "Thursday" },
-              { value: "friday", label: "Friday" },
-              { value: "saturday", label: "Saturday" },
-              { value: "sunday", label: "Sunday" },
-            ];
-            return (
-              <Field
-                data-invalid={fieldState.invalid}
-                className="gap-1 [&_p]:pb-1 col-span-full"
-              >
-                <FieldLabel htmlFor="members">Team Members </FieldLabel>
-
-                <MultiSelect
-                  values={field.value ?? []}
-                  onValuesChange={(value) => field.onChange(value ?? [])}
-                >
-                  <MultiSelectTrigger>
-                    <MultiSelectValue placeholder="Pick one or more team members" />
-                  </MultiSelectTrigger>
-                  <MultiSelectContent>
-                    {options.map(({ label, value }) => (
-                      <MultiSelectItem key={value} value={value}>
-                        {label}
-                      </MultiSelectItem>
-                    ))}
-                  </MultiSelectContent>
-                </MultiSelect>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            );
-          }}
-        />
       </FieldGroup>
       <div className="flex justify-end items-center w-full">
         <Button disabled={isSubmitting}>

@@ -68,12 +68,10 @@ export async function buildTasksQuery(
   }
     
     if ( userId) {
-        const targetUserId =  userId;
-
         return ctx.db
             .query("tasks")
             .withIndex("by_org_assignee", (q) =>
-                q.eq("orgId", orgId).eq("assignee", targetUserId)
+                q.eq("orgId", orgId).eq("assignee", userId)
             )
             .order("desc");
     } else if (assigneeId) {

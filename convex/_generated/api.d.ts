@@ -21,6 +21,7 @@ import type * as lib_paginateOrTake from "../lib/paginateOrTake.js";
 import type * as lib_permissions from "../lib/permissions.js";
 import type * as memberships_models from "../memberships/models.js";
 import type * as memberships_mutations from "../memberships/mutations.js";
+import type * as memberships_queries from "../memberships/queries.js";
 import type * as organizations_models from "../organizations/models.js";
 import type * as organizations_mutations from "../organizations/mutations.js";
 import type * as organizations_queries from "../organizations/queries.js";
@@ -56,6 +57,7 @@ declare const fullApi: ApiFromModules<{
   "lib/permissions": typeof lib_permissions;
   "memberships/models": typeof memberships_models;
   "memberships/mutations": typeof memberships_mutations;
+  "memberships/queries": typeof memberships_queries;
   "organizations/models": typeof organizations_models;
   "organizations/mutations": typeof organizations_mutations;
   "organizations/queries": typeof organizations_queries;
