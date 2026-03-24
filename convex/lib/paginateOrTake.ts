@@ -14,7 +14,7 @@ type Options<T> = {
   cursor?: string;
   paginate?: boolean;
   //eslint-disable-next-line
-  map: (item: any) => Promise<T>;
+  map?: (item: any) => Promise<T>;
 };
 
 export async function paginateOrTake<T>({

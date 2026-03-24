@@ -25,6 +25,7 @@ import type * as memberships_queries from "../memberships/queries.js";
 import type * as organizations_models from "../organizations/models.js";
 import type * as organizations_mutations from "../organizations/mutations.js";
 import type * as organizations_queries from "../organizations/queries.js";
+import type * as projectPage_queries from "../projectPage/queries.js";
 import type * as projects_models from "../projects/models.js";
 import type * as projects_mutations from "../projects/mutations.js";
 import type * as projects_queries from "../projects/queries.js";
@@ -61,6 +62,7 @@ declare const fullApi: ApiFromModules<{
   "organizations/models": typeof organizations_models;
   "organizations/mutations": typeof organizations_mutations;
   "organizations/queries": typeof organizations_queries;
+  "projectPage/queries": typeof projectPage_queries;
   "projects/models": typeof projects_models;
   "projects/mutations": typeof projects_mutations;
   "projects/queries": typeof projects_queries;

@@ -17,7 +17,7 @@ import { DropdownMenuContentProps } from "@radix-ui/react-dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProfileForm1 from "./profile-form-1";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose, DialogTrigger, } from '@/components/ui/dialog'
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export type UserDropdown1Props = {
   /**

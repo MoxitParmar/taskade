@@ -33,18 +33,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ClerkProvider>
-          <ConvexClientProvider>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              <TooltipProvider>
-                <UserContextProvider>
-                    {children}
-                </UserContextProvider>
-              </TooltipProvider>{" "}
-              <Toaster />
-            </ThemeProvider>
-          </ConvexClientProvider>
-        </ClerkProvider>
+          <ClerkProvider>
+            <ConvexClientProvider>
+              <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                <TooltipProvider>
+                  <UserContextProvider>{children}</UserContextProvider>
+                  <Toaster />
+                </TooltipProvider>
+              </ThemeProvider>
+            </ConvexClientProvider>
+          </ClerkProvider>
       </body>
     </html>
   );

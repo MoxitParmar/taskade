@@ -2,50 +2,51 @@ import { Id } from "../_generated/dataModel";
 import { QueryCtx } from "../_generated/server";
 import { paginateOrTake } from "../lib/paginateOrTake";
 import { formatUser, getUserSafe } from "../users/models";
-import { buildOrgProjectsQuery, buildProjectMembers,   formatProject, getProjectOrThrow } from "./models";
+import { buildOrgProjectsQuery, buildProjectMembers,   formatProject, getProjectOrThrow, getUsersMembershipsInternal } from "./models";
 
 export async function getProjects(
   ctx: QueryCtx,
   args: {
     orgId: Id<"organizations">;
     userId?: Id<"users">;
-    cursor?: string;
+      cursor?: string;
+      search?: string;
+      status?: string;
       limit?: number;
       paginate?: boolean
   }
 ) {
    
     if (args.userId) {
-        const membershipQuery = buildOrgProjectsQuery(ctx, {
+        const membershipQuery = getUsersMembershipsInternal(ctx, {
             orgId: args.orgId,
             userId: args.userId,
+            search: args.search,
+            status: args.status,
         });
-  
         return await paginateOrTake({
             query: membershipQuery,
             ctx,
             limit: args.limit,
             cursor: args.cursor,
             paginate: args.paginate,
-            map: async (membership) => {
-                // membership.projectId -> load actual project
-                return await getProjectById(ctx, membership.projectId, args.orgId);
-            },
+            map: (p) => formatProject(ctx, p),
+        });
+    } else {
+    
+        const query = buildOrgProjectsQuery(ctx, {
+            orgId: args.orgId,
+        });
+    
+        return await paginateOrTake({
+            query,
+            ctx,
+            limit: args.limit,
+            cursor: args.cursor,
+            paginate: args.paginate,
+            map: (p) => formatProject(ctx, p),
         });
     }
-    
-    const query = buildOrgProjectsQuery(ctx, {
-        orgId: args.orgId,
-    });
-    
-  return await paginateOrTake({
-    query,
-    ctx,
-    limit: args.limit,
-    cursor: args.cursor,
-    paginate: args.paginate,
-    map: (p) => formatProject(ctx, p),
-  });
 }
 
 /* -------------------------------------------------- */
