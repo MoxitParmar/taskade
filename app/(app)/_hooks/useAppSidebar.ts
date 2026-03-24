@@ -1,6 +1,6 @@
 
 import { api } from "@/convex/_generated/api";
-import { pages, pagesSetting } from "./pages";
+import { pages, pagesSetting } from "../_config/pages";
 import { useOrganization } from "@clerk/nextjs";
 
 import { useSmartQuery } from "@/hooks/use-smart-query";

@@ -6,8 +6,13 @@ import { HeaderSkeleton } from "./_components/skeleton/header";
 import React from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { DashboardCard } from "./_components/dashboardCard";
-import { dashboardCardData } from "./_hooks/cardObject";
+import { dashboardCardData } from "./_config/cardObject";
 import { DashboardCardsSkeleton } from "./_components/skeleton/dashboardCard";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ProjectOverview } from "./_components/project-overview";
+import { RecentActivity } from "./_components/recent-activity";
+import { TaskSummaryCard } from "./_components/task-summary";
+import { mapUserTasksToSummary } from "./_config/task-summary";
 
 export type MemberSelectOption = {
   value: Id<"users">;
@@ -15,7 +20,7 @@ export type MemberSelectOption = {
 };
 
 export default function Dashboard() {
-    const { userId, isAdmin, orgId, members, isLoading, user, cardData } = useDashboard();
+    const { userId, isAdmin, orgId, members, isLoading, user, cardData, projects, orgActivity, userTasks } = useDashboard();
     const memberOptions = React.useMemo(() => {
         return (
             (members?.page ?? [])
@@ -56,7 +61,7 @@ export default function Dashboard() {
                 return card;
             }
         })
-
+    const taskSummaryData = mapUserTasksToSummary(userTasks?.page);
     return (
     <>
       {isLoading ? (
@@ -85,7 +90,32 @@ export default function Dashboard() {
         )}
         </div>
             
-            
+        <div className="grid grid-cols-1 gap-4 px-4 mt-6 sm:px-8 md:grid-cols-[2fr_1fr]">
+          {/* Left Column */}
+          <div className="flex flex-col gap-4">
+            {isLoading ? (
+              <Skeleton className="h-64 w-full rounded-xl" />
+            ) : (
+              <ProjectOverview data={projects?.page} />
+            )}
+            {isLoading ? (
+              <Skeleton className="h-64 w-full rounded-xl" />
+            ) : (
+              <RecentActivity data={orgActivity?.page} />
+            )}
+          </div>
+  
+          {/* Right Column */}
+          <div className="flex flex-col gap-4">
+            {isLoading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton key={i} className="h-40 w-full rounded-xl" />
+                ))
+              : taskSummaryData.map((config) => (
+                  <TaskSummaryCard key={config.title} config={config} />
+                ))}
+          </div>
+        </div>    
     </>
   );
 }

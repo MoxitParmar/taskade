@@ -3,6 +3,10 @@ import { getUserDataQuery } from "@/convex/lib/auth";
 import { getOrgMembers } from "../memberships/queries";
 import { getUsersMemberships } from "../projects/models";
 import { buildTasksQuery } from "../tasks/models";
+import { getProjects } from "../projects/queries";
+import { formatDate } from "@/lib/utils";
+import { getActivityLogs } from "../activityLogs/queries";
+import { getTasks } from "../tasks/queries";
 
 export const getDashboardData = query({
   args: {},
@@ -43,11 +47,29 @@ export const getDashboardData = query({
             OverdueTasks,
         }
         
+        const projectsData = await getProjects(ctx, { orgId, userId, limit: 3, paginate: false });
+        
+        const projects = {
+          ...projectsData,
+          page: projectsData.page.map((p) => ({
+            ...p,
+              createdAt: formatDate(p.createdAt),
+              updatedAt: formatDate(p.updatedAt),
+          })),
+        };
+        
+        const orgActivity = await getActivityLogs(ctx, { orgId, limit: 8, paginate: false });
+        
+        const userTasks = await getTasks(ctx, { orgId, userId, limit: 4, paginate: false });
+        
         return {
         userId,
         orgId,
         members,
         cardData,
+        projects,
+        orgActivity,
+        userTasks,
       };
     }
   },

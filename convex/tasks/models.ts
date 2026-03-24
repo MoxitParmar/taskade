@@ -6,7 +6,7 @@ import { formatUser, getUserSafe } from "../users/models";
 import { formatProject, getProjectOrThrow } from "../projects/models";
 
 type Ctx = QueryCtx | MutationCtx;
-type Task = Doc<"tasks">;
+export type Task = Doc<"tasks">;
 
 
 export async function getTaskOrThrow(

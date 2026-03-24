@@ -15,11 +15,12 @@ export const useDashboard = () => {
         args: {},
       mode: "simple",
     });
-    const { orgId, userId, members, cardData} = data ?? {};
-
+    const { orgId, userId, members, cardData, projects, orgActivity, userTasks } = data ?? {};
+    
+    
     
     return {
-         userId, orgId, members,user,cardData,
+         userId, orgId, members,user,cardData,projects,orgActivity, userTasks,
         isLoading,
         isAdmin,
     };

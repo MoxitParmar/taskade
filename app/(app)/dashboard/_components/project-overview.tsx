@@ -1,0 +1,78 @@
+import Link from "next/link";
+import { ArrowRight, Users, CalendarDays } from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardAction,
+} from "@/components/ui/card";
+
+import { cn } from "@/lib/utils";
+import type { Project } from "../_config/projects";
+import { projectStatusStyles } from "../_config/projects";
+
+function ProjectItem({ project }: { project: Project }) {
+  const config = projectStatusStyles[project.status];
+
+  return (
+    <div className="border-t border-border px-6 py-5 w-full transition-colors duration-150 hover:bg-accent/50 cursor-pointer">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <h3 className="font-semibold truncate">{project.name}</h3>
+          <p className="mt-1 text-sm text-muted-foreground line-clamp-1">
+            {project.description}
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <span
+            className={cn(
+              "rounded-md px-2.5 py-0.5 text-xs font-semibold",
+              config?.badgeClass,
+            )}
+          >
+            {config?.label}
+          </span>
+
+        </div>
+      </div>
+
+      <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
+        <span className="flex items-center gap-1.5">
+          <Users className="size-3.5" />
+          {project.members} members
+        </span>
+        <span className="flex items-center gap-1.5">
+          <CalendarDays className="size-3.5" />
+          {project.createdAt}
+        </span>
+      </div>
+
+    </div>
+  );
+}
+
+export function ProjectOverview({ data }: { data: Project[] }) {
+  return (
+    <Card className="gap-0 py-0 overflow-hidden cursor-pointer transition-colors duration-200 hover:border-accent-foreground/40">
+      <CardHeader className="py-4">
+        <CardTitle className="text-base font-semibold">
+          Project Overview
+        </CardTitle>
+        <CardAction>
+          <Link
+            href="/projects"
+            className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            View all
+            <ArrowRight className="size-4" />
+          </Link>
+        </CardAction>
+      </CardHeader>
+      {data?.slice(0, 3).map((project) => (
+        <Link key={project.id} href={`/projects/${project.id}`} className="w-full">
+          <ProjectItem key={project.id} project={project} />
+        </Link>
+      ))}
+    </Card>
+  );
+}
