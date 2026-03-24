@@ -1,35 +1,34 @@
 import { Id } from "../_generated/dataModel";
-import { MutationCtx, QueryCtx } from "../_generated/server";
+import { MutationCtx, query, QueryCtx } from "../_generated/server";
 import { getOrgByClerkId } from "../organizations/queries";
 import { getUserByClerkId } from "../users/queries";
 
-
-export async function getUserDataQuery(ctx: MutationCtx | QueryCtx) {
+export async function getUserData(ctx: MutationCtx | QueryCtx) {
   const identity = await ctx.auth.getUserIdentity();
 
   if (!identity) {
-    return null
+    return null;
   }
 
   const clerkUserId = identity.subject;
-  const clerkOrgId = (identity as unknown as Record<string, string>).org_id ?? null;
+  const clerkOrgId =
+    (identity as unknown as Record<string, string>).org_id ?? null;
   // find user
   const user = await getUserByClerkId(ctx, clerkUserId);
 
   if (!user) {
-    return null
+    return null;
   }
   let org;
 
-  if(clerkOrgId){
+  if (clerkOrgId) {
+    // find organization
+    org = await getOrgByClerkId(ctx, clerkOrgId);
 
-  // find organization
-   org = await getOrgByClerkId(ctx, clerkOrgId);
-
-  if (!org) {
-    return null
+    if (!org) {
+      return null;
+    }
   }
-}
 
   return {
     clerkUserId,
@@ -40,3 +39,10 @@ export async function getUserDataQuery(ctx: MutationCtx | QueryCtx) {
     org,
   };
 }
+
+export const getViewerContext = query({
+  args: {},
+  handler: async (ctx) => {
+    return await getUserData(ctx);
+  },
+});

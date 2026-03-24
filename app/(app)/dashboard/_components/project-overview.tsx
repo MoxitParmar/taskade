@@ -1,15 +1,12 @@
 import Link from "next/link";
 import { ArrowRight, Users, CalendarDays } from "lucide-react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardAction,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardAction } from "@/components/ui/card";
 
 import { cn } from "@/lib/utils";
 import type { Project } from "../_config/projects";
 import { projectStatusStyles } from "../_config/projects";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useDashboardProjectData } from "../_hooks/useDashboardProjectData";
 
 function ProjectItem({ project }: { project: Project }) {
   const config = projectStatusStyles[project.status];
@@ -32,7 +29,6 @@ function ProjectItem({ project }: { project: Project }) {
           >
             {config?.label}
           </span>
-
         </div>
       </div>
 
@@ -46,33 +42,58 @@ function ProjectItem({ project }: { project: Project }) {
           {project.createdAt}
         </span>
       </div>
-
     </div>
   );
 }
 
-export function ProjectOverview({ data }: { data: Project[] }) {
+export function ProjectOverview() {
+    const { data, isLoading } = useDashboardProjectData();
+    
   return (
-    <Card className="gap-0 py-0 overflow-hidden cursor-pointer transition-colors duration-200 hover:border-accent-foreground/40">
-      <CardHeader className="py-4">
-        <CardTitle className="text-base font-semibold">
-          Project Overview
-        </CardTitle>
-        <CardAction>
-          <Link
-            href="/projects"
-            className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            View all
-            <ArrowRight className="size-4" />
-          </Link>
-        </CardAction>
-      </CardHeader>
-      {data?.slice(0, 3).map((project) => (
-        <Link key={project.id} href={`/projects/${project.id}`} className="w-full">
-          <ProjectItem key={project.id} project={project} />
-        </Link>
-      ))}
-    </Card>
+    <>
+      {isLoading ? (
+          <Skeleton className="h-64 w-full rounded-xl" />
+      ) : (
+        <Card className="gap-0 py-0 overflow-hidden cursor-pointer transition-colors duration-200 hover:border-accent-foreground/40">
+          <CardHeader className="py-4">
+            <CardTitle className="text-base font-semibold">
+              Project Overview
+            </CardTitle>
+            <CardAction>
+              <Link
+                href="/projects"
+                className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                View all
+                <ArrowRight className="size-4" />
+              </Link>
+            </CardAction>
+          </CardHeader>
+          {data?.page?.slice(0, 3).map((project: Project) => (
+            <Link
+              key={project.id}
+              href={`/projects/${project.id}`}
+              className="w-full"
+            >
+              <ProjectItem key={project.id} project={project} />
+            </Link>
+          ))}
+        </Card>
+      )}
+    </>
   );
 }
+//         <div className="grid grid-cols-1 gap-4 px-4 mt-6 sm:px-8 md:grid-cols-[2fr_1fr]">
+//           {/* Left Column */}
+//           <div className="flex flex-col gap-4">
+//             {isLoading ? (
+//               <Skeleton className="h-64 w-full rounded-xl" />
+//             ) : (
+//               <ProjectOverview data={projects?.page} />
+//             )}
+//             {isLoading ? (
+//               <Skeleton className="h-64 w-full rounded-xl" />
+//             ) : (
+//               <RecentActivity data={orgActivity?.page} />
+//             )}
+//           </div>

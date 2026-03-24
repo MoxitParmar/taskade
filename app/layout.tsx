@@ -3,10 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
+import { UserContextProvider } from "@/components/userContextProvider";
 import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "@/components/ui/sonner"; 
-
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,11 +33,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ClerkProvider 
-        >
+        <ClerkProvider>
           <ConvexClientProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              <TooltipProvider>{children}</TooltipProvider>          <Toaster />
+              <TooltipProvider>
+                <UserContextProvider>
+                    {children}
+                </UserContextProvider>
+              </TooltipProvider>{" "}
+              <Toaster />
             </ThemeProvider>
           </ConvexClientProvider>
         </ClerkProvider>

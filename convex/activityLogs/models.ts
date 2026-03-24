@@ -5,7 +5,7 @@ import { Doc, Id } from "../_generated/dataModel";
 import { formatUser, getUserSafe } from "../users/models";
 
 type Ctx = QueryCtx | MutationCtx;
-type ActivityLogs = Doc<"activityLogs">;
+export type ActivityLogs = Doc<"activityLogs">;
 
 
 export async function getEntitySafe(

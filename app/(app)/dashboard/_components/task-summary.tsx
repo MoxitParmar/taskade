@@ -10,8 +10,10 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import type { TaskSummaryConfig, TaskPriority } from "../_config/task-summary";
+import { type TaskSummaryConfig, type TaskPriority, mapUserTasksToSummary } from "../_config/task-summary";
 import { useRouter } from 'next/navigation'
+import { useUserTasksData } from "../_hooks/useUserTasksData";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const MAX_VISIBLE = 3;
 
@@ -27,7 +29,8 @@ export function TaskSummaryCard({ config }: { config: TaskSummaryConfig }) {
     const remaining = totalCount - MAX_VISIBLE;
     const router = useRouter();
 
-  return (
+    return (
+      
     <Card className="gap-0 py-0 overflow-hidden cursor-pointer transition-colors duration-200 hover:border-accent-foreground/40">
       {/* Header */}
       <CardHeader className="py-4">
@@ -90,5 +93,27 @@ export function TaskSummaryCard({ config }: { config: TaskSummaryConfig }) {
         </CardFooter>
       )}
     </Card>
+  );
+}
+
+
+
+export default function TaskSummary() {
+    const { data, isLoading } = useUserTasksData(); 
+    const taskSummaryData = mapUserTasksToSummary(data?.page);   
+  return (
+    <div>
+      
+          {/* Right Column */}
+          <div className="flex flex-col gap-4">
+            {isLoading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton key={i} className="h-40 w-full rounded-xl" />
+                ))
+              : taskSummaryData.map((config) => (
+                  <TaskSummaryCard key={config.title} config={config} />
+                ))}
+          </div>
+    </div>
   );
 }

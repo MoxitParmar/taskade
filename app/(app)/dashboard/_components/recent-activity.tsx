@@ -13,16 +13,23 @@ import {
   activityTypeConfig,
   activityStatusConfig,
 } from "../_config/recent-activity";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useOrgActivityData } from "../_hooks/useOrgActivityData";
 
 function ActivityRow({ item }: { item: ActivityItem }) {
   const typeConfig = activityTypeConfig[item.type];
   const statusConfig = activityStatusConfig[item.status];
-    // const initial = item.assignee.charAt(0);
-    const router = useRouter();
+  // const initial = item.assignee.charAt(0);
+  const router = useRouter();
 
   return (
-      <div className="border-t border-border cursor-pointer px-4 py-4 sm:px-6 sm:py-5 transition-colors duration-150 hover:bg-accent/50 " onClick={() => {router.push(`task/${item.id}`)}}>
+    <div
+      className="border-t border-border cursor-pointer px-4 py-4 sm:px-6 sm:py-5 transition-colors duration-150 hover:bg-accent/50 "
+      onClick={() => {
+        router.push(`task/${item.id}`);
+      }}
+    >
       <div className="flex items-start sm:items-center justify-between gap-3 sm:gap-4">
         {/* Left: Icon + Info */}
         <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0 flex-1">
@@ -54,13 +61,7 @@ function ActivityRow({ item }: { item: ActivityItem }) {
               </span>
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
-
               <span className="flex items-center gap-1.5">
-                {/* <Avatar size="sm" className="size-5">
-                  <AvatarFallback className="text-[10px] font-semibold">
-                    {initial}
-                  </AvatarFallback>
-                </Avatar> */}
                 <span className="hidden xs:inline sm:inline">
                   {item.assignee}
                 </span>
@@ -84,29 +85,37 @@ function ActivityRow({ item }: { item: ActivityItem }) {
   );
 }
 
-export function RecentActivity({ data }: { data: ActivityItem[] }) {
+export function RecentActivity() {
+    const {data, isLoading} = useOrgActivityData();
+    
   return (
-    <Card className="gap-0 py-0 overflow-hidden  transition-colors duration-200 hover:border-accent-foreground/40">
-      <CardHeader className="py-4">
-        <CardTitle className="text-base font-semibold">
-          Recent Activity
-        </CardTitle>
-        <CardAction>
-          <Link
-            href="/activity"
-            className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            View all
-            <ArrowRight className="size-4" />
-          </Link>
-        </CardAction>
-      </CardHeader>
+    <>
+      {isLoading ? (
+        <Skeleton className="h-64 w-full rounded-xl" />
+      ) : (
+        <Card className="gap-0 py-0 overflow-hidden  transition-colors duration-200 hover:border-accent-foreground/40">
+          <CardHeader className="py-4">
+            <CardTitle className="text-base font-semibold">
+              Recent Activity
+            </CardTitle>
+            <CardAction>
+              <Link
+                href="/activity"
+                className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                View all
+                <ArrowRight className="size-4" />
+              </Link>
+            </CardAction>
+          </CardHeader>
 
-      <CardContent className="px-0 pb-0">
-          {data.slice(0, 7).map((item, i) => (
-            <ActivityRow key={`${item.title}-${i}`} item={item} />
-          ))}
-      </CardContent>
-    </Card>
+          <CardContent className="px-0 pb-0">
+            {data?.page.slice(0, 7).map((item: ActivityItem) => (
+              <ActivityRow key={`${item.id}`} item={item} />
+            ))}
+          </CardContent>
+        </Card>
+      )}
+    </>
   );
 }

@@ -113,7 +113,7 @@ export function getUsersMemberships(
   return ctx.db
     .query("projectMemberships")
     .withIndex("by_org_user", (q) =>
-      q.eq("orgId", args.orgId).eq("userId", args.userId),
+      q.eq("orgId", args?.orgId).eq("userId", args?.userId),
     )
     .order("desc");
 }
