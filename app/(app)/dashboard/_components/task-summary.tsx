@@ -98,8 +98,8 @@ export function TaskSummaryCard({ config }: { config: TaskSummaryConfig }) {
 
 
 
-export default function TaskSummary() {
-    const { data, isLoading } = useUserTasksData(); 
+export default function TaskSummary({userId, orgId}: {userId: string, orgId: string}) {
+    const { data, isLoading } = useUserTasksData({userId, orgId}); 
     const taskSummaryData = mapUserTasksToSummary(data?.page);   
   return (
     <div>

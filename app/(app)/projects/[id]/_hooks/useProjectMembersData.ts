@@ -18,3 +18,18 @@ export const useProjectMembersData = ({ projectId, orgId }: { projectId: string;
     };
 }
 
+export const useProjectData = ({ projectId, orgId }: { projectId: string; orgId: string }) => {
+
+    
+    const { data, isLoading } = useSmartQuery({
+        query: api.projectDash.queries.getProject,
+        args: { projectId, orgId },
+      mode: "simple",
+    });
+
+    return {
+        data,
+        isLoading,
+    };
+}
+

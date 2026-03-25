@@ -46,8 +46,8 @@ function ProjectItem({ project }: { project: Project }) {
   );
 }
 
-export function ProjectOverview() {
-    const { data, isLoading } = useDashboardProjectData();
+export function ProjectOverview({userId, orgId}: {userId: string, orgId: string}) {
+    const { data, isLoading } = useDashboardProjectData({userId, orgId});
     
   return (
     <>

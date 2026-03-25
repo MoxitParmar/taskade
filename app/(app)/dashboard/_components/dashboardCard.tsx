@@ -19,8 +19,8 @@ interface DashboardCardItem {
   bgColor?: string;
 }
 
-export function DashboardCard() {
-  const { data, isLoading } = useDashboardCardData();
+export function DashboardCard({userId, orgId}: {userId: string, orgId: string}) {
+  const { data, isLoading } = useDashboardCardData({userId, orgId});
   const CardData = dashboardCardData?.map((card) => {
     if (card.title === "Total Projects") {
       return {

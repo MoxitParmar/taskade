@@ -25,7 +25,7 @@ export function ProjectDialog({
   userId: Id<"users">;
 }) {
   const [open, setOpen] = React.useState(false);
-  const { data} = useOrgMembersData();
+  const { data} = useOrgMembersData({orgId, userId});
     const memberOptions = React.useMemo(() => {
       return (
         (data?.page ?? [])

@@ -2,14 +2,13 @@
 import { useOrganization } from "@clerk/nextjs";
 import { ProjectDialog } from "../../dashboard/_components/forms/project-form-dialog";
 import { PageHeader } from "../../dashboard/_components/header";
-import { HeaderSkeleton } from "../../dashboard/_components/skeleton/header";
-import { useUserContext } from "@/hooks/use-user-context";
+import { Id } from "@/convex/_generated/dataModel";
 
-export default function ProjectHeader() {
+export default function ProjectHeader({userId, orgId}: { userId: Id<"users">; orgId: Id<"organizations"> }) {
 
   const { membership } = useOrganization();
   const isAdmin = membership?.role === "org:admin";
-  const userData = useUserContext()?.data;
+
 
   return (
     <>
@@ -20,10 +19,10 @@ export default function ProjectHeader() {
           title={`Projects`}
           subtitle="Manage and track your projects"
           action={
-            isAdmin && userData?.userId && userData?.orgId ? (
+            isAdmin && userId && orgId ? (
               <ProjectDialog
-                userId={userData.userId}
-                orgId={userData.orgId}
+                userId={userId }
+                orgId={orgId}
               />
             ) : null
           }

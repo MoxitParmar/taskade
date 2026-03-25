@@ -1,14 +1,12 @@
 import { api } from "@/convex/_generated/api";
 
 import { useSmartQuery } from "@/hooks/use-smart-query";
-import { useUserContext } from "@/hooks/use-user-context";
 
-export const useDashboardCardData = () => {
-    const user = useUserContext()?.data;
+export const useDashboardCardData = ({userId, orgId}: {userId: string, orgId: string}) => {
     
     const { data, isLoading } = useSmartQuery({
         query: api.dashboard.queries.getCardData,
-        args: {userId: user?.userId , orgId: user?.orgId },
+        args: {userId, orgId },
       mode: "simple",
     });
 

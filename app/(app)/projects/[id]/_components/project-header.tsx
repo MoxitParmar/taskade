@@ -5,33 +5,32 @@ import { useOrganization } from "@clerk/nextjs";
 import { useUserContext } from "@/hooks/use-user-context";
 import { TaskDialog } from "./form/task-form-dialog";
 import { Id } from "@/convex/_generated/dataModel";
+import { Project } from "@/convex/projects/models";
+import { ProjectStatus } from "@/app/(app)/dashboard/_config/projects";
 
-export default function ProjectHeader({ projectId }: { projectId: Id<"projects"> }) {
-  const userData = useUserContext()?.data;
+export default function ProjectHeader({ project , userId, orgId }: { project: Project; userId: Id<"users">; orgId: Id<"organizations"> }) {
+
   const { membership } = useOrganization();
   const isAdmin = membership?.role === "org:admin";
 
   return (
     <>
-      {/* {userData?.userId && userData?.orgId ? (
-        <HeaderSkeleton />
-      ) : ( */}
         <PageHeader
-          title={`Projects`}
-          subtitle="Manage and track your projects"
+          title={`${project?.name}`}
+          subtitle={project?.description ?? "No description provided"}
           back={true}
-          badge={`active`}
+          badge={project?.status as ProjectStatus}
           action={
-            isAdmin && userData?.userId && userData?.orgId ? (
+            isAdmin && userId && orgId ? (
               <TaskDialog
-                userId={userData.userId}
-                orgId={userData.orgId}
-                projectId={projectId}
+                userId={userId}
+                orgId={orgId}
+                projectId={project?._id}
               />
             ) : null
           }
         />
-      {/* )} */}
+
     </>
   );
 }

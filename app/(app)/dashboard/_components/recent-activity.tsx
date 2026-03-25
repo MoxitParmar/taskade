@@ -86,8 +86,8 @@ function ActivityRow({ item }: { item: ActivityItem }) {
   );
 }
 
-export function RecentActivity() {
-    const {data, isLoading} = useOrgActivityData();
+export function RecentActivity({orgId}: {orgId: string}) {
+    const {data, isLoading} = useOrgActivityData({orgId});
     
   return (
     <>

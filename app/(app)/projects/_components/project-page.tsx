@@ -6,18 +6,28 @@ import { Project } from "../../dashboard/_config/projects";
 import { ProjectCard } from "./project-card";
 import PaginationControls from "../../_components/paginate";
 import CardSkeleton from "./card-skeleton";
+import { useUserContext } from "@/hooks/use-user-context";
+import { Id } from "@/convex/_generated/dataModel";
 
 export default function ProjectPage({
   search,
   status,
+  userId,
+  orgId,
 }: {
   search: string;
   status: string;
+  userId: Id<"users">;
+  orgId: Id<"organizations">;
 }) {
-  const { data, isLoading, page, hasNext, hasPrev, goPrev, goNext, setPage } = useProjectsData({
-    search,
-    status,
-  });
+
+  const { data, isLoading, page, hasNext, hasPrev, goPrev, goNext, setPage } =
+    useProjectsData({
+      search,
+      status,
+      userId,
+      orgId,
+    });
 
   const [showLoading, setShowLoading] = React.useState(isLoading);
 
