@@ -91,6 +91,12 @@ export const useSmartQuery = <TData, TArgs extends object>({
     });
   }, [result, page, resetKey, isReset, state.cursorMap, mode]);
 
+  const goPrev = () => {
+    if (page > 1) setPage(page - 1);
+  };
+  const goNext = () => {
+    setPage(page + 1);
+  };
   const setPage = (nextPage: number) => {
     if (mode !== "paginated") return; // ❗ no-op in simple mode
 
@@ -107,14 +113,13 @@ export const useSmartQuery = <TData, TArgs extends object>({
 
     const nextCursor = cursorMap[nextPage];
     if (!nextCursor) return;
-
+    
     setState({
       page: nextPage,
       cursorMap: state.cursorMap,
       key: resetKey,
     });
   };
-
   if (mode === "simple") {
     return {
       data: result ?? null, 
@@ -138,5 +143,7 @@ export const useSmartQuery = <TData, TArgs extends object>({
     setPage,
     hasNext: query ? !typed?.isDone : false,
     hasPrev: page > 1,
+    goPrev,
+    goNext,
   };
 };

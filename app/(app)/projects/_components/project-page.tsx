@@ -1,35 +1,63 @@
-"use client"
+"use client";
 
+import React from "react";
 import { useProjectsData } from "../_hooks/useProjectsData";
 import { Project } from "../../dashboard/_config/projects";
 import { ProjectCard } from "./project-card";
 import PaginationControls from "../../_components/paginate";
 import CardSkeleton from "./card-skeleton";
 
+export default function ProjectPage({
+  search,
+  status,
+}: {
+  search: string;
+  status: string;
+}) {
+  const { data, isLoading, page, hasNext, hasPrev, goPrev, goNext, setPage } = useProjectsData({
+    search,
+    status,
+  });
 
-export default function ProjectPage({ search, status }: { search: string, status: string }) {
-    const { data, isLoading, page, hasNext, hasPrev, goPrev, goNext } = useProjectsData({ search, status }); 
+  const [showLoading, setShowLoading] = React.useState(isLoading);
+
+  React.useEffect(() => {
+    if (isLoading) {
+      setShowLoading(true);
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setShowLoading(false);
+    }, 70);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [isLoading]);
+
   return (
     <div>
+      {showLoading ? (
+        <CardSkeleton />
+      ) : (
+        <div className="grid grid-cols-1 mt-8 mx-8 gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+          {data?.map((p: Project) => (
+            <ProjectCard key={p.id} project={p} />
+          ))}
+        </div>
+      )}
 
-          {isLoading ? (
-            <CardSkeleton/>
-                )
-              : <div className="grid grid-cols-1 mt-8 mx-8 gap-4 sm:grid-cols-2  lg:grid-cols-2 xl:grid-cols-3">{data?.map((p: Project) => (
-                  
-                  <ProjectCard key={p.id} project={p} />
-              ))}
-                  </div>}
-            
-            <PaginationControls
-              page={page}
-              isFirstPage={!hasPrev}        
-              hasNextPage={hasNext}
-              goPrev={goPrev}
-              goNext={goNext}
-              className="mt-8 px-8"
-            />
-      </div>
-    // </div>
+      <PaginationControls
+        page={page}
+        isFirstPage={!hasPrev}
+        hasNextPage={hasNext}
+        goPrev={goPrev as () => void}
+        goNext={goNext as () => void}
+        syncWithUrl
+        urlPageParam="page"
+        onPageFromUrl={setPage}
+        resetKeys={["search", "status"]}
+        className="mt-8 px-8"
+      />
+    </div>
   );
 }
