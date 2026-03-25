@@ -39,7 +39,7 @@ export async function formatTask(ctx: Ctx, task: Task) {
     priority: task.priority,
     isOverdue: task.dueDate ? Date.now() > task.dueDate : false,
     dueDate: task.dueDate,
-    project: formatProject(ctx, project),
+    project: await formatProject(ctx, project),
     assignee: formatUser(assignee),
   };
 }

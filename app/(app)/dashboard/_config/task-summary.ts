@@ -37,8 +37,8 @@ function mapType(status: string | undefined): TaskType {
 }
 
 
-export function mapUserTasksToSummary(userTasks: { page?: Task[] } | undefined) {
-  const tasks = userTasks?.page ?? [];
+export function mapUserTasksToSummary(userTasks: Task[]  | undefined) {
+  const tasks = userTasks ?? [];
 
   const myTasks: TaskSummaryItem[] = tasks
     .filter((t) => t?.status !== "done")

@@ -101,6 +101,10 @@ export function useSmartFilters<T extends FiltersShape>({
   const defaultsRef = React.useRef<T>(defaults);
   const prevFiltersRef = React.useRef<T | null>(null);
   const debounceTimerRef = React.useRef<number | null>(null);
+  const onChangeRef = React.useRef<((filters: T) => void) | undefined>(onChange);
+React.useEffect(() => {
+  onChangeRef.current = onChange;
+}, [onChange]);
 
   // maintain defaults ref
   React.useEffect(() => {
@@ -121,14 +125,24 @@ export function useSmartFilters<T extends FiltersShape>({
   );
 
   // URL -> local state (back/forward/manual)
-  React.useEffect(() => {
-    const parsed = parseFromUrl(new URLSearchParams(paramsString), defaultsRef.current);
-    setFilters((prev) =>
-      shallowEqual(prev as Record<string, unknown>, parsed as Record<string, unknown>)
-        ? prev
-        : parsed,
-    );
-  }, [paramsString]);
+React.useEffect(() => {
+  const parsed = parseFromUrl(new URLSearchParams(paramsString), defaultsRef.current);
+
+  setFilters((prev) => {
+    if (shallowEqual(prev as Record<string, unknown>, parsed as Record<string, unknown>)) {
+      // If this is the first time (prevFiltersRef not set), notify parent once.
+      if (prevFiltersRef.current === null) {
+        prevFiltersRef.current = parsed;
+        onChangeRef.current?.(parsed);
+      }
+      return prev;
+    }
+    // update prevFiltersRef and notify parent
+    prevFiltersRef.current = parsed;
+    onChangeRef.current?.(parsed);
+    return parsed;
+  });
+}, [paramsString]);
 
   // local state -> URL (debounced per changed keys)
   React.useEffect(() => {
@@ -161,7 +175,7 @@ export function useSmartFilters<T extends FiltersShape>({
         else router.push(nextUrl, { scroll: false });
       }
 
-      onChange?.(next);
+      onChangeRef.current?.(next);
     };
 
     // clear previous timer if any

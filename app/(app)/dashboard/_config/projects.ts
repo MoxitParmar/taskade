@@ -28,13 +28,13 @@ export const projectStatusStyles: Record<
     progressBarClass: string;
   }
 > = {
-  planning: {
+  "planning": {
     label: "PLANNING",
     badgeClass: "bg-blue-500/20 text-blue-400 border-blue-500/30",
     dotClass: "bg-violet-400",
     progressBarClass: "[&>[data-slot=progress-indicator]]:bg-blue-500",
   },
-  active: {
+  "active": {
     label: "ACTIVE",
     badgeClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
     dotClass: "bg-amber-400",
@@ -46,7 +46,7 @@ export const projectStatusStyles: Record<
     dotClass: "bg-yellow-400",
     progressBarClass: "[&>[data-slot=progress-indicator]]:bg-amber-500",
   },
-  completed: {
+  "completed": {
     label: "COMPLETED",
     badgeClass: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
     dotClass: "bg-blue-400",

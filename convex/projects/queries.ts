@@ -55,10 +55,13 @@ export async function getProjects(
 
 export async function getProjectById(
   ctx: QueryCtx,
+  args: {
     projectId: Id<"projects">,
-    orgId: Id<"organizations">
+    orgId: Id<"organizations">,
+    userId?: Id<"users">
+  }
 ) {
-    const project = await getProjectOrThrow(ctx, projectId, orgId);
+    const project = await getProjectOrThrow(ctx, args.projectId, args.orgId);
     return await formatProject(ctx, project);
 }
 

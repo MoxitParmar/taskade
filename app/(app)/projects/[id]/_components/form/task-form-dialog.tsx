@@ -12,17 +12,22 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import {  ProjectForm } from "./project-form";
+
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Id } from "@/convex/_generated/dataModel";
-import { useOrgMembersData } from "../../_hooks/useOrgMembersData";
+import { useOrgMembersData } from "@/app/(app)/dashboard/_hooks/useOrgMembersData";
+import { TaskForm } from "./task-form";
 
-export function ProjectDialog({
+
+export function TaskDialog({
   orgId,
   userId,
+  projectId
 }: {
   orgId: Id<"organizations">;
   userId: Id<"users">;
+  projectId: Id<"projects">;
+
 }) {
   const [open, setOpen] = React.useState(false);
   const { data} = useOrgMembersData();
@@ -44,19 +49,20 @@ export function ProjectDialog({
       <DialogTrigger asChild>
         <Button variant="default" className="cursor-pointer">
           <Plus />
-          New Project
+          New Task
         </Button>
       </DialogTrigger>
 
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg p-0">
         <VisuallyHidden>
-            <DialogTitle>Create New Project</DialogTitle>
+            <DialogTitle>Create New Task</DialogTitle>
         </VisuallyHidden>
-        <ProjectForm
+        <TaskForm
           type="create"
           orgId={orgId}
           userId={userId}
           members={memberOptions}
+          projectId={projectId}
         />
       </DialogContent>
     </Dialog>

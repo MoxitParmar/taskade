@@ -15,7 +15,7 @@ export default function ProjectPage({ search, status }: { search: string, status
           {isLoading ? (
             <CardSkeleton/>
                 )
-              : <div className="grid grid-cols-1 mt-8 mx-8 gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">{data?.map((p: Project) => (
+              : <div className="grid grid-cols-1 mt-8 mx-8 gap-4 sm:grid-cols-2  lg:grid-cols-2 xl:grid-cols-3">{data?.map((p: Project) => (
                   
                   <ProjectCard key={p.id} project={p} />
               ))}

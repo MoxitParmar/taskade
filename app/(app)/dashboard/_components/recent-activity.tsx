@@ -7,7 +7,7 @@ import {
   CardAction,
   CardContent,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import type { ActivityItem } from "../_config/recent-activity";
 import {
   activityTypeConfig,
@@ -18,10 +18,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useOrgActivityData } from "../_hooks/useOrgActivityData";
 
 function ActivityRow({ item }: { item: ActivityItem }) {
-  const typeConfig = activityTypeConfig[item.type];
+  const typeConfig = activityTypeConfig[item.entityType];
   const statusConfig = activityStatusConfig[item.status];
   // const initial = item.assignee.charAt(0);
   const router = useRouter();
+  const Icon = typeConfig?.icon; 
 
   return (
     <div
@@ -37,11 +38,11 @@ function ActivityRow({ item }: { item: ActivityItem }) {
           <div
             className={cn(
               "flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-lg mt-0.5 sm:mt-0",
-              typeConfig.bgColor,
+              typeConfig?.bgColor,
             )}
           >
-            <typeConfig.icon
-              className={cn("size-4", typeConfig.iconColor)}
+            <Icon
+              className={cn("size-4", typeConfig?.iconColor)}
               strokeWidth={2}
             />
           </div>
@@ -49,24 +50,24 @@ function ActivityRow({ item }: { item: ActivityItem }) {
           {/* Title + Meta */}
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-2 sm:justify-start">
-              <h4 className="text-sm font-semibold truncate">{item.title}</h4>
+              <h4 className="text-sm font-semibold truncate">{item?.metadata?.name}</h4>
               {/* Badge visible only on small screens, inline with title */}
               <span
                 className={cn(
                   "shrink-0 rounded-md px-2.5 py-0.5 text-[10px] sm:hidden font-bold tracking-wide",
-                  statusConfig.badgeClass,
+                  statusConfig?.badgeClass,
                 )}
               >
-                {statusConfig.label}
+                {statusConfig?.label}
               </span>
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <span className="hidden xs:inline sm:inline">
-                  {item.assignee}
+                  {item?.metadata?.assigneeName}
                 </span>
               </span>
-              <span>{item.date}</span>
+              <span>{formatDate(item?.createdAt)}</span>
             </div>
           </div>
         </div>
@@ -75,10 +76,10 @@ function ActivityRow({ item }: { item: ActivityItem }) {
         <span
           className={cn(
             "hidden sm:inline-flex shrink-0 rounded-md px-3 py-1 text-xs font-bold tracking-wide",
-            statusConfig.badgeClass,
+            statusConfig?.badgeClass,
           )}
         >
-          {statusConfig.label}
+          {statusConfig?.label}
         </span>
       </div>
     </div>

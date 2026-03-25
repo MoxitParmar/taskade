@@ -3,16 +3,29 @@ import {  MessageSquare,  CheckCircle } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export type ActivityType = "Task" | "Comment" ;
+export type ActivityType = "task" | "comment" ;
 export type ActivityStatus = "TODO" | "IN_PROGRESS" | "DONE";
 
 export interface ActivityItem {
-    title: string;
-    id: Id<"tasks">;
-  type: ActivityType;
+  id: Id<"tasks">;
+  entityId: Id<"tasks">;
+  entityType: ActivityType;
+  type: string;
   status: ActivityStatus;
-  assignee: string;
-  date: string;
+  metadata: {
+    name: string;
+    assigneeName: string;
+    priority: string;
+    status: string;
+  };
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    imageUrl: string;
+  };
+  createdAt: number;
+  updatedAt: number;
 }
 
 // ─── Type icon config ────────────────────────────────────────────────────────
@@ -21,12 +34,12 @@ export const activityTypeConfig: Record<
   ActivityType,
   { icon: React.ElementType; iconColor: string; bgColor?: string }
 > = {
-  Task: {
+  task: {
     icon: CheckCircle,
     iconColor: "text-emerald-400",
     // bgColor: "bg-emerald-500/15",
   },
-  Comment: {
+  comment: {
     icon: MessageSquare,
     iconColor: "text-amber-400",
     // bgColor: "bg-amber-500/15",
