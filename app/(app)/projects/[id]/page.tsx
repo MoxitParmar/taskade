@@ -3,7 +3,7 @@ import { use } from 'react';
 import ProjectHeader from './_components/project-header';
 import { Id } from '@/convex/_generated/dataModel';
 import { useUserContext } from '@/hooks/use-user-context';
-import { useProjectData } from './_hooks/useProjectMembersData';
+import { useProjectData } from './_hooks/useProject';
 import { HeaderSkeleton } from '../../dashboard/_components/skeleton/header';
 
 export default function ProjectDetail({

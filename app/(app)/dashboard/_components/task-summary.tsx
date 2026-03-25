@@ -12,8 +12,9 @@ import {
 import { cn } from "@/lib/utils";
 import { type TaskSummaryConfig, type TaskPriority, mapUserTasksToSummary } from "../_config/task-summary";
 import { useRouter } from 'next/navigation'
-import { useUserTasksData } from "../_hooks/useUserTasksData";
+
 import { Skeleton } from "@/components/ui/skeleton";
+import { useUserTasksData } from "../_hooks/useDashboard";
 
 const MAX_VISIBLE = 3;
 

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { DashboardCardsSkeleton } from "./skeleton/dashboardCard";
-import { useDashboardCardData } from "../_hooks/useDashboardCardData";
+import { useDashboardCardData } from "../_hooks/useDashboard";
 import { dashboardCardData } from "../_config/cardObject";
 
 interface DashboardCardItem {

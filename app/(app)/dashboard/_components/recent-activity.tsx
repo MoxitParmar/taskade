@@ -15,7 +15,8 @@ import {
 } from "../_config/recent-activity";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useOrgActivityData } from "../_hooks/useOrgActivityData";
+import { useOrgActivityData } from "../_hooks/useDashboard";
+
 
 function ActivityRow({ item }: { item: ActivityItem }) {
   const typeConfig = activityTypeConfig[item.entityType];

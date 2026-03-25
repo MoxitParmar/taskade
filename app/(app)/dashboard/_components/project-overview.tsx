@@ -6,7 +6,8 @@ import { cn } from "@/lib/utils";
 import type { Project } from "../_config/projects";
 import { projectStatusStyles } from "../_config/projects";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useDashboardProjectData } from "../_hooks/useDashboardProjectData";
+import { useDashboardProjectData } from "../_hooks/useDashboard";
+
 
 function ProjectItem({ project }: { project: Project }) {
   const config = projectStatusStyles[project.status];

@@ -1,12 +1,11 @@
 "use client";
 
 import React from "react";
-import { useProjectsData } from "../_hooks/useProjectsData";
+import { useProjectsData } from "../_hooks/useProjects";
 import { Project } from "../../dashboard/_config/projects";
 import { ProjectCard } from "./project-card";
 import PaginationControls from "../../_components/paginate";
 import CardSkeleton from "./card-skeleton";
-import { useUserContext } from "@/hooks/use-user-context";
 import { Id } from "@/convex/_generated/dataModel";
 
 export default function ProjectPage({
