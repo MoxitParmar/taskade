@@ -1,12 +1,10 @@
 import { api } from "../_generated/api";
-import { ActionCtx, httpAction, MutationCtx, QueryCtx } from "../_generated/server";
+import { httpAction } from "../_generated/server";
 import { verifyWebhook } from '@clerk/backend/webhooks'
-import { getUserByClerkId } from "../users/queries";
-import { getOrgByClerkId } from "../organizations/queries";
-type Ctx = ActionCtx| MutationCtx | QueryCtx ;
 
 
-export const clerkWebhook = httpAction(async (ctx: Ctx, request) => {
+
+export const clerkWebhook = httpAction(async (ctx, request) => {
   const event = await verifyWebhook(request);
   if (!event) {
     return new Response("Error occured", { status: 400 });
@@ -18,7 +16,7 @@ export const clerkWebhook = httpAction(async (ctx: Ctx, request) => {
     
     
     case "user.created": {
-      await (ctx as MutationCtx).runMutation(api.users.mutations.createUser, {
+      await ctx.runMutation(api.users.mutations.createUser, {
         clerkUserId: data.id,
         email: data.email_addresses?.[0]?.email_address ?? "",
         name: `${data.first_name ?? ""} ${data.last_name ?? ""}`,
@@ -27,10 +25,11 @@ export const clerkWebhook = httpAction(async (ctx: Ctx, request) => {
       break;
     }
     case "user.updated": {
-      const user = await getUserByClerkId(ctx as QueryCtx, data.id);
-      const userId = user?._id;
+      const userId = await ctx.runQuery(api.users.queries.getUserIdByClerkId, {
+        clerkUserId: data.id,
+      });
       if (userId) {
-        await (ctx as MutationCtx).runMutation(api.users.mutations.updateUser, {
+        await ctx.runMutation(api.users.mutations.updateUser, {
           userId,
           email: data.email_addresses?.[0]?.email_address ?? "",
           name: `${data.first_name ?? ""} ${data.last_name ?? ""}`,
@@ -40,10 +39,11 @@ export const clerkWebhook = httpAction(async (ctx: Ctx, request) => {
       break;
     }
     case "user.deleted": {
-      const user = await getUserByClerkId(ctx as QueryCtx, data.id);
-      const userId = user?._id;
+      const userId = await ctx.runQuery(api.users.queries.getUserIdByClerkId, {
+        clerkUserId: data.id,
+      });
       if (userId) {
-        await (ctx as MutationCtx).runMutation(api.users.mutations.deleteUser, {
+        await ctx.runMutation(api.users.mutations.deleteUser, {
           userId,
         });
       }
@@ -51,7 +51,7 @@ export const clerkWebhook = httpAction(async (ctx: Ctx, request) => {
     }
 
     case "organization.created": {
-      await (ctx as MutationCtx).runMutation(api.organizations.mutations.createOrganization, {
+      await ctx.runMutation(api.organizations.mutations.createOrganization, {
         clerkOrgId: data.id,
         orgName: data.name,
         imageUrl: data.image_url ?? "",
@@ -60,10 +60,11 @@ export const clerkWebhook = httpAction(async (ctx: Ctx, request) => {
     }
 
     case "organization.updated": {
-      const org = await getOrgByClerkId(ctx as QueryCtx, data.id);
-      const orgId = org?._id;
+      const orgId = await ctx.runQuery(api.organizations.queries.getOrgIdByClerkId, {
+        clerkOrgId: data.id,
+      });
       if (orgId) {
-        await (ctx as MutationCtx).runMutation(api.organizations.mutations.updateOrganization, {
+        await ctx.runMutation(api.organizations.mutations.updateOrganization, {
           orgId,
           orgName: data.name,
           imageUrl: data.image_url ?? "",
@@ -85,21 +86,21 @@ export const clerkWebhook = httpAction(async (ctx: Ctx, request) => {
     case "organizationMembership.created": {
       const orgRole = (data.role as string).replace("org:", "");
      // Ensure organization exists even if organization.created webhook arrives later
-  await (ctx as MutationCtx).runMutation(api.organizations.mutations.createOrganization, {
+  await ctx.runMutation(api.organizations.mutations.createOrganization, {
     clerkOrgId: data.organization.id,
     orgName: data.organization.name ?? "Unnamed Organization",
     imageUrl: data.organization.image_url ?? "",
   });
 
   // Ensure user exists as well (same race can happen for user.created)
-  await (ctx as MutationCtx).runMutation(api.users.mutations.createUser, {
+  await ctx.runMutation(api.users.mutations.createUser, {
     clerkUserId: data.public_user_data.user_id,
     email: data.public_user_data.identifier ?? "",
     name: `${data.public_user_data.first_name ?? ""} ${data.public_user_data.last_name ?? ""}`.trim(),
     imageUrl: data.public_user_data.image_url ?? "",
   });
 
-  await (ctx as MutationCtx).runMutation(api.memberships.mutations.createMembership, {
+  await ctx.runMutation(api.memberships.mutations.createMembership, {
     clerkUserId: data.public_user_data.user_id,
     clerkOrgId: data.organization.id,
     role: orgRole as "admin" | "member",
@@ -109,7 +110,7 @@ export const clerkWebhook = httpAction(async (ctx: Ctx, request) => {
 
     case "organizationMembership.updated": {
       const orgRole = (data.role as string).replace("org:", "");
-      await (ctx as MutationCtx).runMutation(api.memberships.mutations.updateMembershipRole, {
+      await ctx.runMutation(api.memberships.mutations.updateMembershipRole, {
         clerkUserId: data.public_user_data.user_id,
         clerkOrgId: data.organization.id,
         role: orgRole as "admin" | "member",
@@ -118,7 +119,7 @@ export const clerkWebhook = httpAction(async (ctx: Ctx, request) => {
     }
 
     case "organizationMembership.deleted": {
-      await (ctx as MutationCtx).runMutation(api.memberships.mutations.deleteMembership, {
+      await ctx.runMutation(api.memberships.mutations.deleteMembership, {
         clerkUserId: data.public_user_data.user_id,
         clerkOrgId: data.organization.id,
       });

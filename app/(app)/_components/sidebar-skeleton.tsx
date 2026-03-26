@@ -4,21 +4,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function SidebarSkeleton() {
   return (
-    <div>
-        <Sidebar collapsible="offcanvas" variant="floating" >
-          <SidebarHeader>
-            <div className="p-3">
-              {/* small header placeholder */}
-              <Skeleton className="h-10 w-40 rounded-full" />
-            </div>
-          </SidebarHeader>
-  
-          <SidebarContent>
-            <div className="p-3">
-              <Skeleton className="w-full rounded-md h-[calc(100vh-10rem)]" />
-            </div>
-          </SidebarContent>
-        </Sidebar>
+    <div className="flex flex-col gap-3">
+      <Skeleton className="h-7 w-45 mx-3 mt-9" />
+      <Skeleton className="h-7 w-45 mx-3 " />
+      <Skeleton className="h-7 w-45 mx-3 " />
+      <Skeleton className="h-7 w-45 mx-3 " />
+      <Skeleton className="h-7 w-45 mx-3 mt-9" />
+      <Skeleton className="h-5 w-30 mx-3 " />
+      <Skeleton className="h-5 w-30 mx-3 " />
+      <Skeleton className="h-5 w-30 mx-3 " />
+      <Skeleton className="h-7 w-45 mx-3 mt-9" />
+      <Skeleton className="h-5 w-30 mx-3 " />
+      <Skeleton className="h-5 w-30 mx-3 " />
+      <Skeleton className="h-5 w-30 mx-3 " />
+
     </div>
   );
 }
