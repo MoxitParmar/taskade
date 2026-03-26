@@ -20,7 +20,7 @@ export default function ProjectDetail({
   return (
     <div className="app-page">
       {isLoading ? (<HeaderSkeleton />) : (
-        <ProjectHeader project={data} userId={userId} orgId={orgId} />
+        <ProjectHeader project={data} userId={userId} orgId={orgId} projectId={id as Id<"projects">} />
       )}
 
       <div className="mt-8">

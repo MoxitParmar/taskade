@@ -23,12 +23,12 @@ export async function isLead(ctx: MutationCtx | QueryCtx,
     projectId: Id<"projects">,
     orgId: Id<"organizations">,) {
 
-  const project = await getProjectById(ctx, projectId, orgId);
+  const project = await getProjectById(ctx, { projectId, orgId });
 
   if (await isAdmin(ctx, userId, orgId)) {
       return true;
   }
-  if (project?.lead?.id == userId) {
+  if (project?.lead?._id == userId) {
       return true;
   }
   return false;

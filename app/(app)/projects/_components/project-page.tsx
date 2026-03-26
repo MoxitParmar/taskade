@@ -2,11 +2,11 @@
 
 import React from "react";
 import { useProjectsData } from "../_hooks/useProjects";
-import { Project } from "../../dashboard/_config/projects";
 import { ProjectCard } from "./project-card";
 import PaginationControls from "../../_components/paginate";
 import CardSkeleton from "./card-skeleton";
 import { Id } from "@/convex/_generated/dataModel";
+import { Project } from "@/convex/projects/models";
 
 export default function ProjectPage({
   search,
@@ -50,7 +50,7 @@ export default function ProjectPage({
       ) : (
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
           {data?.map((p: Project) => (
-            <ProjectCard key={p.id} project={p} />
+            <ProjectCard key={p._id} project={p} />
           ))}
         </div>
       )}

@@ -7,7 +7,25 @@ import schema from "../schema";
 import { stream } from "convex-helpers/server/stream";
 
 type Ctx = QueryCtx | MutationCtx;
-export type Project = Doc<"projects">;
+type ProjectI = Doc<"projects">;
+export interface Project {
+  _id: Id<"projects">;
+  name: string;
+  description: string;
+  status: ProjectStatus;
+  createdAt: number;
+  updatedAt: number;
+  lead: ReturnType<typeof formatUser>;
+  createdBy: ReturnType<typeof formatUser>;
+  org: ReturnType<typeof formatOrg>;
+  members?: number | string[] | null | undefined;
+}
+
+export type ProjectStatus =
+  | "planning"
+  | "active"
+  | "on-hold"
+  | "completed"
 
 export async function getProjectOrThrow(
   ctx: Ctx,
@@ -28,19 +46,14 @@ export async function getProjectSafe(ctx: Ctx, projectId: Id<"projects">) {
   return await ctx.db.get(projectId);
 }
 
-export async function formatProject(ctx: Ctx, project: Project) {
-    if (!project) return null;
-    if (!(project as Project)._id) {
-      // Already formatted (no _id), return directly
-      return project as Project;
-    }
+export async function formatProject(ctx: Ctx, project: ProjectI) {
   const [lead, createdBy, org] = await Promise.all([
     await getUserSafe(ctx, project.lead),
     await getUserSafe(ctx, project.createdBy),
     await getOrgSafe(ctx, project.orgId),
   ]);
   return {
-    id: project._id,
+    _id: project._id,
     name: project.name,
     description: project.description,
     status: project.status,
@@ -51,6 +64,8 @@ export async function formatProject(ctx: Ctx, project: Project) {
     org: formatOrg(org),
   };
 }
+
+
 
 
 
@@ -144,7 +159,7 @@ export function getUserProjectMemberships(
     // Use filterWith to filter projects based on search and status.
     if (args?.search) {
         const searchLower = args.search.toLowerCase();
-        q = q.filterWith(async (p: Project | null) => {
+        q = q.filterWith(async (p: ProjectI | null) => {
             if (!p) return false;
             return p.name.toLowerCase().includes(searchLower);
         });
@@ -152,7 +167,7 @@ export function getUserProjectMemberships(
     
     if (args?.status) {
         const status = args.status;
-        q = q.filterWith(async (p: Project | null) => {
+        q = q.filterWith(async (p: ProjectI | null) => {
             if (!p) return false;
             return p.status === status;
         });

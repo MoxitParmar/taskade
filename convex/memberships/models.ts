@@ -5,7 +5,14 @@ import { getUserSafe, formatUser } from "../users/models";
 
 
 type Ctx = QueryCtx | MutationCtx;
-export type Membership = Doc<"memberships">;
+type MembershipI = Doc<"memberships">;
+export interface Membership {
+  _id: Id<"memberships">;
+  createdAt: number;
+  role: string;
+  org: ReturnType<typeof formatOrg>;
+  user: ReturnType<typeof formatUser>;
+}
 
 export async function getMembership(
   ctx: Ctx,
@@ -20,14 +27,14 @@ export async function getMembership(
     .unique();
 }
 
-export async function formatMembership(ctx: Ctx, members: Membership) {
+export async function formatMembership(ctx: Ctx, members: MembershipI) {
   const [user, org] = await Promise.all([
     getUserSafe(ctx, members.userId),
     getOrgSafe(ctx, members.orgId)
   ]);
   
   return {
-    id: members._id,
+    _id: members._id,
     createdAt: members._creationTime,
     role: members.role,
     org: formatOrg(org),

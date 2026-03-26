@@ -1,17 +1,13 @@
 import { Id } from "@/convex/_generated/dataModel";
-import { Task } from "@/convex/tasks/models";
+import { Task, TaskPriority } from "@/convex/tasks/models";
 import { Users, AlertTriangle, Clock } from "lucide-react";
-// import { Duplex } from "stream";
 
-export type TaskPriority = "HIGH" | "MEDIUM" | "LOW";
-export type TaskType = "TASK" | "FEATURE" | "IMPROVEMENT" | "OTHER";
 
 export interface TaskSummaryItem {
   title: string;
-  type: TaskType;
     priority: TaskPriority;
-    dueDate: string | number | Date;
-    id: Id<"tasks">;
+    dueDate: number | undefined;
+    _id: Id<"tasks">;
 }
 
 export interface TaskSummaryConfig {
@@ -30,11 +26,6 @@ function mapPriority(priority: string | undefined): TaskPriority {
   return "LOW";
 }
 
-function mapType(status: string | undefined): TaskType {
-  if (status === "feature") return "FEATURE";
-  if (status === "improvement") return "IMPROVEMENT";
-  return "TASK";
-}
 
 
 export function mapUserTasksToSummary(userTasks: Task[]  | undefined) {
@@ -45,8 +36,7 @@ export function mapUserTasksToSummary(userTasks: Task[]  | undefined) {
     .map((t) => ({
       title: t?.name,
       dueDate: t?.dueDate,
-      type: mapType( t?.status),
-      id:  t?._id,
+      _id:  t?._id,
       priority: mapPriority(t?.priority),
     }));
 
@@ -55,8 +45,7 @@ export function mapUserTasksToSummary(userTasks: Task[]  | undefined) {
     .map((t) => ({
       title: t?.name,
       dueDate: t?.dueDate,
-      type: mapType( t?.status),
-      id:  t?._id,
+      _id:  t?._id,
       priority: mapPriority(t?.priority),
     }));
 
@@ -65,8 +54,7 @@ export function mapUserTasksToSummary(userTasks: Task[]  | undefined) {
     .map((t) => ({
       title: t?.name,
       dueDate: t?.dueDate,
-      id:  t?._id,
-      type: mapType( t?.status),
+      _id:  t?._id,
       priority: mapPriority(t?.priority),
     }));
 

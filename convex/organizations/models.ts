@@ -28,7 +28,7 @@ export function formatOrg(org: Organization | null) {
   if (!org) return "Unknown";
 
   return {
-    id: org._id,
+    _id: org._id,
       name: org.orgName,
       imageUrl: org.imageUrl,
     clerkOrgId: org.clerkOrgId,

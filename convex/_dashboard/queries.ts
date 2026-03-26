@@ -91,6 +91,6 @@ export const getOrgActivityData = query({
 export const getUserTasksData = query({
   args,
   handler: async (ctx, { orgId, userId }) => {
-    return await getTasks(ctx, { orgId, userId, limit: 4, paginate: false });
+    return await getTasks(ctx, { orgId, userId, paginate: false });
   },
 });

@@ -1,19 +1,4 @@
-export type ProjectStatus =
-  | "planning"
-  | "active"
-  | "on-hold"
-  | "completed"
-
-
-export interface Project {
-  id: string;
-  name: string;
-  description: string;
-  status: ProjectStatus;
-  lead: string;
-  members: number | string[] | null | undefined;
-  createdAt: string;
-}
+import { ProjectStatus } from "@/convex/projects/models";
 
 // ---------------------------------------------------------------------------
 // Centralized style configs — used by project-card, detail-header, overview

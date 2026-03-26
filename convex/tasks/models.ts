@@ -6,8 +6,21 @@ import { formatUser, getUserSafe } from "../users/models";
 import { formatProject, getProjectOrThrow } from "../projects/models";
 
 type Ctx = QueryCtx | MutationCtx;
-export type Task = Doc<"tasks">;
 
+export type TaskPriority = "HIGH" | "MEDIUM" | "LOW";
+type TaskI = Doc<"tasks">;
+export interface Task {
+  _id: Id<"tasks">;
+  createdAt: number;
+  name: string;
+  description?: string;
+  status: string;
+  priority: TaskPriority;
+  isOverdue: boolean;
+  dueDate?: number;
+  project: Awaited<ReturnType<typeof formatProject>>;
+  assignee: ReturnType<typeof formatUser>;
+}
 
 export async function getTaskOrThrow(
   ctx: Ctx,
@@ -24,12 +37,7 @@ export async function getTaskOrThrow(
 }
 
 
-export async function formatTask(ctx: Ctx, task: Task) {
-      if (!task) return null;
-      if (!(task as Task)._id) {
-        // Already formatted (no _id), return directly
-        return task as Task;
-      }
+export async function formatTask(ctx: Ctx, task: TaskI) {
       
   const [assignee, project] = await Promise.all([
     getUserSafe(ctx, task.assignee),
@@ -37,7 +45,7 @@ export async function formatTask(ctx: Ctx, task: Task) {
   ]);
   
   return {
-    id: task._id,
+    _id: task._id,
     createdAt: task._creationTime,
     name: task.name,
     description: task.description,
@@ -48,6 +56,7 @@ export async function formatTask(ctx: Ctx, task: Task) {
     project: await formatProject(ctx, project),
     assignee: formatUser(assignee),
   };
+
 }
 
 

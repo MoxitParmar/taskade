@@ -1,32 +1,6 @@
-import { Id } from "@/convex/_generated/dataModel";
+import { ActivityType, ActivityStatus } from "@/convex/activityLogs/models";
 import {  MessageSquare,  CheckCircle } from "lucide-react";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-
-export type ActivityType = "task" | "comment" ;
-export type ActivityStatus = "TODO" | "IN_PROGRESS" | "DONE";
-
-export interface ActivityItem {
-  id: Id<"tasks">;
-  entityId: Id<"tasks">;
-  entityType: ActivityType;
-  type: string;
-  status: ActivityStatus;
-  metadata: {
-    name: string;
-    assigneeName: string;
-    priority: string;
-    status: string;
-  };
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    imageUrl: string;
-  };
-  createdAt: number;
-  updatedAt: number;
-}
 
 // ─── Type icon config ────────────────────────────────────────────────────────
 

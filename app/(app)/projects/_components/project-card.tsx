@@ -11,28 +11,16 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Project, projectStatusStyles } from "../../dashboard/_config/projects";
-import { User } from "@/convex/users/models";
+import { Project } from "@/convex/projects/models";
+import { projectStatusStyles } from "../../dashboard/_config/projects";
 
-interface ProjectCardProps {
-  project: Project;
-}
-function getLeadName(lead: unknown) {
-  if (!lead) return "—";
-  if (typeof lead === "string") return lead;
-  if (typeof lead === "object" && lead !== null && "name" in lead) {
-    const maybeName = (lead as User).name;
-    if (typeof maybeName === "string") return maybeName;
-  }
-  return "—";
-}
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard( {project } : { project: Project }) {
   const status = projectStatusStyles[project.status];
-  const leadName = getLeadName(project.lead);
+  const leadName = project?.lead?.name;
 
   return (
-    <Link href={`/projects/${project.id}`} className="block h-full">
+    <Link href={`/projects/${project._id}`} className="block h-full">
       <Card className="h-full gap-4 cursor-pointer transition-colors duration-200 hover:border-accent-foreground/40">
         <CardHeader className="gap-0 pb-2">
           <CardTitle className="text-lg font-bold text-accent-400">

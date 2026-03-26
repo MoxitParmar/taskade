@@ -89,7 +89,7 @@ export function TaskForm({
             Thank you
           </h2>
           <p className="text-center text-lg text-pretty text-muted-foreground">
-            Form submitted successfully, we will get back to you soon
+            Form submitted successfully.
           </p>
         </motion.div>
       </div>
@@ -116,6 +116,7 @@ export function TaskForm({
               <FieldLabel htmlFor="taskName">Title *</FieldLabel>
               <Input
                 {...field}
+                value={field.value ?? ""}
                 id="taskName"
                 type="text"
                 onChange={(e) => {
@@ -141,6 +142,7 @@ export function TaskForm({
               <FieldLabel htmlFor="taskDescription">Description </FieldLabel>
               <Textarea
                 {...field}
+                value={field.value ?? ""}
                 aria-invalid={fieldState.invalid}
                 id="taskDescription"
                 placeholder="Describe the task."
@@ -167,7 +169,7 @@ export function TaskForm({
               >
                 <FieldLabel htmlFor="taskPriority">Priority *</FieldLabel>
 
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select value={field.value ?? ""} onValueChange={field.onChange}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select Priority" />
                   </SelectTrigger>
@@ -199,7 +201,7 @@ export function TaskForm({
               >
                 <FieldLabel htmlFor="taskAssignee">Assignee *</FieldLabel>
 
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select value={field.value ?? ""} onValueChange={field.onChange}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select Assignee" />
                   </SelectTrigger>
@@ -235,7 +237,7 @@ export function TaskForm({
               >
                 <FieldLabel htmlFor="taskStatus">Status *</FieldLabel>
 
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select value={field.value ?? ""} onValueChange={field.onChange}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select Status" />
                   </SelectTrigger>
@@ -259,7 +261,7 @@ export function TaskForm({
           name="dueDate"
           control={form.control}
           render={({ field, fieldState }) => {
-            const selectedDate = field.value;
+            const selectedDate = field.value ?? "";
             return (
               <Field
                 data-invalid={fieldState.invalid}

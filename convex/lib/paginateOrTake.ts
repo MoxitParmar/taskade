@@ -44,7 +44,7 @@ export async function paginateOrTake<T>({
   /* -------------------------------------------------- */
   /* ⚡ NON-PAGINATED */
   /* -------------------------------------------------- */
-  const safeLimit = Math.min(limit ?? 50, 100);
+  const safeLimit = Math.min(limit ?? 50, 1000);
   
     const items = await query.take(safeLimit);
     

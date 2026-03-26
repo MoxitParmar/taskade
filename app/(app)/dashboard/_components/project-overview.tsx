@@ -3,10 +3,10 @@ import { ArrowRight, Users, CalendarDays } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardAction } from "@/components/ui/card";
 
 import { cn } from "@/lib/utils";
-import type { Project } from "../_config/projects";
 import { projectStatusStyles } from "../_config/projects";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDashboardProjectData } from "../_hooks/useDashboard";
+import { Project } from "@/convex/projects/models";
 
 
 function ProjectItem({ project }: { project: Project }) {
@@ -72,11 +72,11 @@ export function ProjectOverview({userId, orgId}: {userId: string, orgId: string}
           </CardHeader>
           {data?.page?.slice(0, 3).map((project: Project) => (
             <Link
-              key={project.id}
-              href={`/projects/${project.id}`}
+              key={project._id}
+              href={`/projects/${project._id}`}
               className="w-full"
             >
-              <ProjectItem key={project.id} project={project} />
+              <ProjectItem key={project._id} project={project} />
             </Link>
           ))}
         </Card>

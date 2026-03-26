@@ -1,15 +1,14 @@
 
 import { Id } from "@/convex/_generated/dataModel";
 import { useOrganization, useUser } from "@clerk/nextjs";
-import React from "react";
 import { ReactNode } from "react";
 import { ProjectDialog } from "./forms/project-form-dialog";
 import { HeaderSkeleton } from "./skeleton/header";
 import { Badge } from "@/components/ui/badge";
-import { ProjectStatus, projectStatusStyles } from "../_config/projects";
+import { projectStatusStyles } from "../_config/projects";
 import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
-import { useOrgMembersData } from "../_hooks/useDashboard";
+import { ProjectStatus } from "@/convex/projects/models";
 
 type PageHeaderProps = {
   title: string;

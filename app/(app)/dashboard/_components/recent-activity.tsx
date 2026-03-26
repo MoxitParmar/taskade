@@ -8,7 +8,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { cn, formatDate } from "@/lib/utils";
-import type { ActivityItem } from "../_config/recent-activity";
+
 import {
   activityTypeConfig,
   activityStatusConfig,
@@ -16,12 +16,14 @@ import {
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useOrgActivityData } from "../_hooks/useDashboard";
+import { ActivityLogs } from "@/convex/activityLogs/models";
 
 
-function ActivityRow({ item }: { item: ActivityItem }) {
+
+
+function ActivityRow({ item }: { item: ActivityLogs }) {
   const typeConfig = activityTypeConfig[item.entityType];
-  const statusConfig = activityStatusConfig[item.status];
-  // const initial = item.assignee.charAt(0);
+  const statusConfig = activityStatusConfig[ item.status ?? "TODO" ];
   const router = useRouter();
   const Icon = typeConfig?.icon; 
 
@@ -29,7 +31,7 @@ function ActivityRow({ item }: { item: ActivityItem }) {
     <div
       className="border-t border-border cursor-pointer px-4 py-4 sm:px-6 sm:py-5 transition-colors duration-150 hover:bg-accent/50 "
       onClick={() => {
-        router.push(`task/${item.id}`);
+        router.push(`task/${item._id}`);
       }}
     >
       <div className="flex items-start sm:items-center justify-between gap-3 sm:gap-4">
@@ -68,7 +70,7 @@ function ActivityRow({ item }: { item: ActivityItem }) {
                   {item?.metadata?.assigneeName}
                 </span>
               </span>
-              <span>{formatDate(item?.createdAt)}</span>
+              <span>{formatDate(item?.createdAt ?? 0)}</span>
             </div>
           </div>
         </div>
@@ -112,8 +114,8 @@ export function RecentActivity({orgId}: {orgId: string}) {
           </CardHeader>
 
           <CardContent className="px-0 pb-0">
-            {data?.page.slice(0, 7).map((item: ActivityItem) => (
-              <ActivityRow key={`${item.id}`} item={item} />
+            {data?.page.slice(0, 7).map((item: ActivityLogs ) => (
+              <ActivityRow key={`${item._id}`} item={item} />
             ))}
           </CardContent>
         </Card>

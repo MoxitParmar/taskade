@@ -5,8 +5,24 @@ import { Doc, Id } from "../_generated/dataModel";
 import { formatUser, getUserSafe } from "../users/models";
 
 type Ctx = QueryCtx | MutationCtx;
-export type ActivityLogs = Doc<"activityLogs">;
-
+type ActivityLogsI = Doc<"activityLogs">;
+export type ActivityType = "task" | "comment" ;
+export type ActivityStatus = "TODO" | "IN_PROGRESS" | "DONE";
+export interface ActivityLogs {
+  _id: Id<"activityLogs">;
+  _creationTime: number;
+  orgId: Id<"organizations">;
+  status?: ActivityStatus;
+  userId: Id<"users">;
+  entityId: string;
+  entityType: ActivityType;
+  type: string;
+  metadata: Record<string, any> | null;
+  user: ReturnType<typeof formatUser>;
+  entityDetails: Doc<any> | null;
+  createdAt?: number;
+  updatedAt?: number;
+}
 
 export async function getEntitySafe(
     ctx: Ctx,
@@ -82,7 +98,7 @@ export function buildActivityLogsQuery(
 /* 📦 Formatting */
 /* -------------------------------------------------- */
 
-export async function formatActivityLog(ctx: Ctx, log: ActivityLogs) {
+export async function formatActivityLog(ctx: Ctx, log: ActivityLogsI) {
   const [user, entityDetails] = await Promise.all([
     getUserSafe(ctx, log.userId),
     getEntitySafe(ctx,  log.entityId),
@@ -95,3 +111,4 @@ export async function formatActivityLog(ctx: Ctx, log: ActivityLogs) {
     metadata: parseMetadata(log.metadata),
   };
 }
+
