@@ -67,28 +67,13 @@ export type MemberSelectOption = {
 };
 
 export default function DashboardHeader({userId, orgId}: {userId: Id<"users">, orgId: Id<"organizations">}) {
-  const { data, isLoading } = useOrgMembersData({orgId, userId});
   const { membership } = useOrganization();
   const isAdmin = membership?.role === "org:admin";
   const { user } = useUser();
 
-
-  const memberOptions = React.useMemo(() => {
-    return (
-      (data?.page ?? [])
-        //eslint-disable-next-line
-        .filter((m: any) => m?.user?.id && m?.user?.name)
-        //eslint-disable-next-line
-        .map((m: any) => ({
-          value: m.user.id,
-          label: m.user.name,
-        }))
-    );
-  }, [data?.page]);
-
   return (
     <>
-      {isLoading ? (
+      {!user?.firstName ? (
         <HeaderSkeleton />
       ) : (
         <PageHeader

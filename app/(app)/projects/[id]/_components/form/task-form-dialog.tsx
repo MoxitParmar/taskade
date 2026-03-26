@@ -15,8 +15,8 @@ import {
 
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Id } from "@/convex/_generated/dataModel";
-import { useOrgMembersData } from "@/app/(app)/dashboard/_hooks/useOrgMembersData";
 import { TaskForm } from "./task-form";
+import { useOrgMembersData } from "@/app/(app)/dashboard/_hooks/useDashboard";
 
 
 export function TaskDialog({

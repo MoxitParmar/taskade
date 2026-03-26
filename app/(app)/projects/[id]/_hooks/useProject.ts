@@ -7,7 +7,7 @@ export const useProjectMembersData = ({ projectId, orgId }: { projectId: string;
 
     
     const { data, isLoading } = useSmartQuery({
-        query: api.projectDash.queries.getMembersData,
+        query: api._project_id.queries.getMembersData,
         args: { orgId, projectId },
       mode: "simple",
     });
@@ -22,7 +22,7 @@ export const useProjectData = ({ projectId, orgId }: { projectId: string; orgId:
 
     
     const { data, isLoading } = useSmartQuery({
-        query: api.projectDash.queries.getProject,
+        query: api._project_id.queries.getProject,
         args: { projectId, orgId },
       mode: "simple",
     });
@@ -33,3 +33,17 @@ export const useProjectData = ({ projectId, orgId }: { projectId: string; orgId:
     };
 }
 
+export const useProjectCardData = ({ projectId, orgId }: { projectId: string; orgId: string }) => {
+
+    
+    const { data, isLoading } = useSmartQuery({
+        query: api._project_id.queries.getCardData,
+        args: { projectId, orgId },
+      mode: "simple",
+    });
+
+    return {
+        data,
+        isLoading,
+    };
+}

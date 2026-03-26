@@ -52,29 +52,22 @@ export async function formatProject(ctx: Ctx, project: Project) {
   };
 }
 
-/* -------------------------------------------------- */
-/* 🧠 Query Builders */
-/* -------------------------------------------------- */
+
 
 export  function buildOrgProjectsQuery(
   ctx: QueryCtx,
   args: {
     orgId: Id<"organizations">;
-    // userId?: Id<"users">;
   },
 ) {
-  // if (args.userId) {
-  //    return  getUsersMemberships(ctx, {
-  //     orgId: args.orgId,
-  //     userId: args.userId,
-  //   });
-  // }
+
   return ctx.db
     .query("projects")
     .withIndex("by_org", (q) => q.eq("orgId", args.orgId))
     .order("desc");
 }
 
+// get all project members
 export function buildProjectMembers(
   ctx: QueryCtx,
   args: {
@@ -90,7 +83,8 @@ export function buildProjectMembers(
     .order("desc");
 }
 
-export function getProjectMembershipsByUser(
+// check if user is a member of the project
+export function getProjectMembershipVerification(
   ctx: QueryCtx,
   args: {
     orgId: Id<"organizations">;
@@ -109,22 +103,24 @@ export function getProjectMembershipsByUser(
     .first();
 }
 
-export function getUsersMemberships(
-  ctx: QueryCtx,
-  args: {
-    orgId: Id<"organizations">;
-    userId: Id<"users">;
-  },
-) {
-  return ctx.db
-    .query("projectMemberships")
-    .withIndex("by_org_user", (q) =>
-      q.eq("orgId", args?.orgId).eq("userId", args?.userId),
-    )
-    .order("desc");
-}
+// // get all projects a user is a member of
+// export function getUserProjectMemberships(
+//   ctx: QueryCtx,
+//   args: {
+//     orgId: Id<"organizations">;
+//     userId: Id<"users">;
+//   },
+// ) {
+//   return ctx.db
+//     .query("projectMemberships")
+//     .withIndex("by_org_user", (q) =>
+//       q.eq("orgId", args?.orgId).eq("userId", args?.userId),
+//     )
+//     .order("desc");
+// }
 
-export function getUsersMembershipsInternal(
+// get all projects a user is a member of with search and status filter
+export function getUserProjectMemberships(
     ctx: QueryCtx,
     args: {
         orgId: Id<"organizations">;
@@ -133,8 +129,8 @@ export function getUsersMembershipsInternal(
         status?: string;
     },
 ) {
-    // Build a stream of project membership documents, then map to raw project docs (or null).
-    // Use getProjectSafe to get raw DB project doc (so downstream formatting works as expected).
+    
+    // first of all get all the project memberships for the user.
     const baseStream = stream(ctx.db, schema)
       .query("projectMemberships")
       .withIndex("by_org_user", (q) =>
@@ -142,10 +138,10 @@ export function getUsersMembershipsInternal(
       )
       .order("desc");
 
-    // Map to raw project documents (Doc<"projects"> | null)
+    // now here we get all the projects from the projectIds.
     let q = baseStream.map((m) => getProjectSafe(ctx, m.projectId));
 
-    // Use filterWith (async-aware) over raw project docs.
+    // Use filterWith to filter projects based on search and status.
     if (args?.search) {
         const searchLower = args.search.toLowerCase();
         q = q.filterWith(async (p: Project | null) => {

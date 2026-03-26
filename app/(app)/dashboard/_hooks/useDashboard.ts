@@ -5,7 +5,7 @@ import { useSmartQuery } from "@/hooks/use-smart-query";
 export const useDashboardCardData = ({userId, orgId}: {userId: string, orgId: string}) => {
     
     const { data, isLoading } = useSmartQuery({
-        query: api.dashboard.queries.getCardData,
+        query: api._dashboard.queries.getCardData,
         args: {userId, orgId },
       mode: "simple",
     });
@@ -20,7 +20,7 @@ export const useDashboardProjectData = ({userId, orgId}: {userId: string, orgId:
 
     
     const { data, isLoading } = useSmartQuery({
-        query: api.dashboard.queries.getProjectData,
+        query: api._dashboard.queries.getProjectData,
         args: {userId, orgId },
       mode: "simple",
     });
@@ -35,7 +35,7 @@ export const useOrgActivityData = ({orgId}: {orgId: string}) => {
 
     
     const { data, isLoading } = useSmartQuery({
-        query: api.dashboard.queries.getOrgActivityData,
+        query: api._dashboard.queries.getOrgActivityData,
         args: { orgId },
       mode: "simple",
     });
@@ -50,7 +50,7 @@ export const useOrgMembersData = ({orgId, userId}: {orgId: string, userId: strin
 
     
     const { data, isLoading } = useSmartQuery({
-        query: api.dashboard.queries.getMembersData,
+        query: api._dashboard.queries.getMembersData,
         args: { orgId, userId },
       mode: "simple",
     });
@@ -65,7 +65,7 @@ export const useOrgMembersData = ({orgId, userId}: {orgId: string, userId: strin
 export const useUserTasksData = ({userId, orgId}: {userId: string, orgId: string}) => {
     
     const { data, isLoading } = useSmartQuery({
-        query: api.dashboard.queries.getUserTasksData,
+        query: api._dashboard.queries.getUserTasksData,
         args: {userId, orgId },
       mode: "simple",
     });

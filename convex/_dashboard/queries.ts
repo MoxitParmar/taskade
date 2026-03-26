@@ -1,6 +1,6 @@
 import { query } from "@/convex/_generated/server";
 import { getOrgMembers } from "../memberships/queries";
-import { getUsersMemberships } from "../projects/models";
+import { getUserProjectMemberships } from "../projects/models";
 import { buildTasksQuery } from "../tasks/models";
 import { getProjects } from "../projects/queries";
 import { formatDate } from "@/lib/utils";
@@ -18,7 +18,7 @@ const args = {
 export const getMembersData = query({
   args,
   handler: async (ctx, { orgId }) => {
-    return getOrgMembers(ctx, { orgId, paginate: false });
+    return await getOrgMembers(ctx, { orgId, paginate: false });
   },
 });
 
@@ -27,29 +27,29 @@ export const getCardData = query({
   handler: async (ctx, { orgId, userId }) => {
     const now = Date.now();
  
-    const usersProjectsP = getUsersMemberships(ctx, { orgId, userId })
+    const usersProjectsP = await getUserProjectMemberships(ctx, { orgId, userId })
       .collect()
       .then((rows) => rows.length);
 
-    const activeP = buildTasksQuery(ctx, { orgId, userId }).then((q) =>
+    const activeP = await buildTasksQuery(ctx, { orgId, userId }).then((q) =>
       q.filter((q) => q.eq(q.field("status"), "in-progress"))
         .collect()
         .then((rows) => rows.length)
     );
 
-    const completedP = buildTasksQuery(ctx, { orgId, userId }).then((q) =>
+    const completedP = await buildTasksQuery(ctx, { orgId, userId }).then((q) =>
       q.filter((q) => q.eq(q.field("status"), "completed"))
         .collect()
         .then((rows) => rows.length)
     );
 
-    const overdueP = buildTasksQuery(ctx, { orgId, userId }).then((q) =>
+    const overdueP = await buildTasksQuery(ctx, { orgId, userId }).then((q) =>
       q.filter((q) => q.lt(q.field("dueDate"), now))
         .collect()
         .then((rows) => rows.length)
     );
 
-    const [usersProjects, ActiveTasks, CompletedTasks, OverdueTasks] = await Promise.all([
+    const [usersProjects, ActiveTasks, CompletedTasks, OverdueTasks] = ([
       usersProjectsP,
       activeP,
       completedP,
@@ -84,13 +84,13 @@ export const getProjectData = query({
 export const getOrgActivityData = query({
   args,
   handler: async (ctx, { orgId }) => {
-    return getActivityLogs(ctx, { orgId, limit: 8, paginate: false });
+    return await getActivityLogs(ctx, { orgId, limit: 8, paginate: false });
   },
 });
 
 export const getUserTasksData = query({
   args,
   handler: async (ctx, { orgId, userId }) => {
-    return getTasks(ctx, { orgId, userId, limit: 4, paginate: false });
+    return await getTasks(ctx, { orgId, userId, limit: 4, paginate: false });
   },
 });

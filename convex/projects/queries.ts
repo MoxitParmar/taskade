@@ -2,7 +2,7 @@ import { Id } from "../_generated/dataModel";
 import { QueryCtx } from "../_generated/server";
 import { paginateOrTake } from "../lib/paginateOrTake";
 import { formatUser, getUserSafe } from "../users/models";
-import { buildOrgProjectsQuery, buildProjectMembers,   formatProject, getProjectOrThrow, getUsersMembershipsInternal } from "./models";
+import { buildOrgProjectsQuery, buildProjectMembers,   formatProject, getProjectOrThrow, getUserProjectMemberships } from "./models";
 
 export async function getProjects(
   ctx: QueryCtx,
@@ -18,7 +18,7 @@ export async function getProjects(
 ) {
    
     if (args.userId) {
-        const membershipQuery = getUsersMembershipsInternal(ctx, {
+        const membershipQuery = getUserProjectMemberships(ctx, {
             orgId: args.orgId,
             userId: args.userId,
             search: args.search,
@@ -49,10 +49,6 @@ export async function getProjects(
     }
 }
 
-/* -------------------------------------------------- */
-/* 🔍 Single Project */
-/* -------------------------------------------------- */
-
 export async function getProjectById(
   ctx: QueryCtx,
   args: {
@@ -64,10 +60,6 @@ export async function getProjectById(
     const project = await getProjectOrThrow(ctx, args.projectId, args.orgId);
     return await formatProject(ctx, project);
 }
-
-/* -------------------------------------------------- */
-/* 👥 Project Members */
-/* -------------------------------------------------- */
 
 export async function getProjectMembers(
   ctx: QueryCtx,

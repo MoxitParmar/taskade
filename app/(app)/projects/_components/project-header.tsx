@@ -3,6 +3,7 @@ import { useOrganization } from "@clerk/nextjs";
 import { ProjectDialog } from "../../dashboard/_components/forms/project-form-dialog";
 import { PageHeader } from "../../dashboard/_components/header";
 import { Id } from "@/convex/_generated/dataModel";
+import { HeaderSkeleton } from "../../dashboard/_components/skeleton/header";
 
 export default function ProjectHeader({userId, orgId}: { userId: Id<"users">; orgId: Id<"organizations"> }) {
 
@@ -12,9 +13,9 @@ export default function ProjectHeader({userId, orgId}: { userId: Id<"users">; or
 
   return (
     <>
-      {/* {userData ? (
+      {!userId && !orgId ? (
         <HeaderSkeleton />
-      ) : ( */}
+      ) : (
         <PageHeader
           title={`Projects`}
           subtitle="Manage and track your projects"
@@ -27,7 +28,7 @@ export default function ProjectHeader({userId, orgId}: { userId: Id<"users">; or
             ) : null
           }
         />
-      {/* )} */}
+      )}
     </>
   );
 }

@@ -46,6 +46,7 @@ export function DashboardCard({userId, orgId}: {userId: string, orgId: string}) 
       return card;
     }
   });
+  
   return (
     <>
       {isLoading ? (

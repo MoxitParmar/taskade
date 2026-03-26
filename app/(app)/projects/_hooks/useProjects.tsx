@@ -6,7 +6,7 @@ export const useProjectsData = ({search, status, userId, orgId}: {search: string
     
     
     const { data, isLoading, page, hasNext,hasPrev,setPage, goPrev, goNext } = useSmartQuery({
-        query: api.projectsPage.queries.getProjectData,
+        query: api._projects.queries.getProjectData,
         args: {userId, orgId, search, status },
         mode: "paginated",
         pageSize: 9,

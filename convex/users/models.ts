@@ -14,6 +14,11 @@ export async function getUserOrThrow(ctx: Ctx, userId: Id<"users">) {
   return user;
 }
 
+export async function getUserSafe(ctx: Ctx, userId?: Id<"users"> | null) {
+  if (!userId) return null;
+  return await ctx.db.get(userId);
+}
+
 export function formatUser(user: User | null) {
   if (!user) return null;
 
@@ -23,9 +28,4 @@ export function formatUser(user: User | null) {
     email: user.email,
     imageUrl: user.imageUrl,
   };
-}
-
-export async function getUserSafe(ctx: Ctx, userId?: Id<"users"> | null) {
-  if (!userId) return null;
-  return await ctx.db.get(userId);
 }

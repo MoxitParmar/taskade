@@ -5,6 +5,7 @@ import { Id } from '@/convex/_generated/dataModel';
 import { useUserContext } from '@/hooks/use-user-context';
 import { useProjectData } from './_hooks/useProject';
 import { HeaderSkeleton } from '../../dashboard/_components/skeleton/header';
+import { ProjectCards } from './_components/projectCards';
 
 export default function ProjectDetail({
   params,
@@ -21,6 +22,8 @@ export default function ProjectDetail({
       {isLoading ? (<HeaderSkeleton />) : (
         <ProjectHeader project={data} userId={userId} orgId={orgId} />
       )}
+
+      <ProjectCards orgId={orgId} projectId={id as Id<"projects">} />
 
     </div>
   )

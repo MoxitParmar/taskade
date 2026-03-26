@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { mutation } from "../_generated/server";
 import { isAdmin, isLead } from "../lib/permissions";
-import {  getProjectMembershipsByUser, getProjectOrThrow } from "./models";
+import {  getProjectMembershipVerification, getProjectOrThrow } from "./models";
 
 
 // create project
@@ -142,7 +142,7 @@ export const addProjectMember = mutation({
         await getProjectOrThrow(ctx, args.projectId, args.orgId);
 
         // prevent duplicate membership
-        const existingMembership = await getProjectMembershipsByUser(ctx, {
+        const existingMembership = await getProjectMembershipVerification(ctx, {
             orgId: args.orgId,
             userId: args.userId,
             projectId: args.projectId,
@@ -179,7 +179,7 @@ export const removeProjectMember = mutation({
         await getProjectOrThrow(ctx, args.projectId, args.orgId);
 
         // remove project member
-        const membership = await getProjectMembershipsByUser(ctx, {
+        const membership = await getProjectMembershipVerification(ctx, {
             orgId: args.orgId,
             userId: args.userId,
             projectId: args.projectId,

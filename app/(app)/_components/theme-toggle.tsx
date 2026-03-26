@@ -568,8 +568,8 @@ export const useThemeToggle = ({
 
 export const ThemeToggleButton = ({
   className = "",
-  variant = "circle",
-  start = "center",
+  variant = "polygon",
+  start = "left-right",
   blur = false,
   gifUrl = "",
 }: {

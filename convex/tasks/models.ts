@@ -25,6 +25,12 @@ export async function getTaskOrThrow(
 
 
 export async function formatTask(ctx: Ctx, task: Task) {
+      if (!task) return null;
+      if (!(task as Task)._id) {
+        // Already formatted (no _id), return directly
+        return task as Task;
+      }
+      
   const [assignee, project] = await Promise.all([
     getUserSafe(ctx, task.assignee),
     getProjectOrThrow(ctx, task.projectId, task.orgId),

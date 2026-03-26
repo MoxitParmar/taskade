@@ -13,7 +13,7 @@ export const useAppSidebar = () => {
     const user = useUserContext()?.data;
     
     const { data, isLoading } = useSmartQuery({
-        query: api.sidebar.queries.getSidebarData,
+        query: api._sidebar.queries.getSidebarData,
         args: {userId: user?.userId , orgId: user?.orgId },
       mode: "simple",
     });
