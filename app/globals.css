@@ -192,3 +192,9 @@
     letter-spacing: var(--tracking-normal);
   }
 }
+
+@layer utilities {
+  .app-page {
+    @apply px-4 sm:px-8;
+  }
+}

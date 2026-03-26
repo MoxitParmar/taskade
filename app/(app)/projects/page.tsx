@@ -16,7 +16,7 @@ export default function Projects() {
     const orgId = userData?.orgId as Id<"organizations">;
     
   return (
-    <div>
+    <div className="app-page">
           <ProjectHeader userId={userId} orgId={orgId} />
           <ProjectToolbar setSearch={setSearch} setStatus={setStatus} />
           

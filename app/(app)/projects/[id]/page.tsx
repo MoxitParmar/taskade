@@ -18,12 +18,14 @@ export default function ProjectDetail({
   const orgId = userData?.orgId as Id<"organizations">;
   const {data , isLoading} = useProjectData({ projectId: id as Id<"projects">, orgId });
   return (
-    <div >
+    <div className="app-page">
       {isLoading ? (<HeaderSkeleton />) : (
         <ProjectHeader project={data} userId={userId} orgId={orgId} />
       )}
 
-      <ProjectCards orgId={orgId} projectId={id as Id<"projects">} />
+      <div className="mt-8">
+        <ProjectCards orgId={orgId} projectId={id as Id<"projects">} />
+      </div>
 
     </div>
   )

@@ -24,7 +24,7 @@ export function PageHeader({ title, subtitle, action, badge, back }: PageHeaderP
   const config = badge ? projectStatusStyles[badge] : undefined;
 
 return (
-  <div className="mt-8 flex flex-col gap-4 px-8 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+  <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
     <div className="flex items-start gap-3">
       {back && (
         <button

@@ -1,8 +1,6 @@
 "use client"
 import { PageHeader } from "@/app/(app)/dashboard/_components/header";
-import { HeaderSkeleton } from "@/app/(app)/dashboard/_components/skeleton/header";
 import { useOrganization } from "@clerk/nextjs";
-import { useUserContext } from "@/hooks/use-user-context";
 import { TaskDialog } from "./form/task-form-dialog";
 import { Id } from "@/convex/_generated/dataModel";
 import { Project } from "@/convex/projects/models";

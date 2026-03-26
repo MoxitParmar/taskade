@@ -13,12 +13,12 @@ export default function Dashboard() {
   const userId = userData?.userId as Id<"users">;
   const orgId = userData?.orgId as Id<"organizations">;
   return (
-    <div>
+    <div className="app-page">
       <DashboardHeader userId={userId} orgId={orgId} />
-      <div className="grid gap-4 px-4 mt-8 grid-cols-2 lg:grid-cols-4 sm:px-8">
+      <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
         <DashboardCard userId={userId} orgId={orgId} />
       </div>
-      <div className="grid grid-cols-1 gap-4 px-4 mt-6 sm:px-8 md:grid-cols-[2fr_1fr]">
+      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-[2fr_1fr]">
         <div className="flex flex-col gap-4">
           <ProjectOverview userId={userId} orgId={orgId} />
           <RecentActivity orgId={orgId} />
