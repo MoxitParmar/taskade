@@ -1,7 +1,7 @@
 // features/projects/forms/use-project-form.ts
 import { api } from "@/convex/_generated/api";
-import { useMutation } from "convex/react";
 import { useSmartForm } from "@/hooks/use-smart-form";
+import { useMutationAction } from "@/hooks/use-mutation-action";
 import {
   formSchema,
   toCreatePayload,
@@ -28,8 +28,14 @@ export const useTaskForm = ({
   orgId: Id<"organizations">;
   projectId: Id<"projects">;
 }) => {
-  const create = useMutation(api.tasks.mutations.createTask);
-  const update = useMutation(api.tasks.mutations.updateTask);
+  const { execute: createTask } = useMutationAction(api.tasks.mutations.createTask, {
+    successMessage: "Task created",
+    errorMessage: "Failed to create task",
+  });
+  const { execute: updateTask } = useMutationAction(api.tasks.mutations.updateTask, {
+    successMessage: "Task updated",
+    errorMessage: "Failed to update task",
+  });
 
   return useSmartForm<FormInput, FormOutput>({
     schema: formSchema,
@@ -37,19 +43,13 @@ export const useTaskForm = ({
 
     onSubmit: async (values) => {
       if (type === "create") {
-        await create(toCreatePayload(values, userId, orgId, projectId, userId));
+        await createTask(toCreatePayload(values, userId, orgId, projectId, userId));
       } else if (!initialData?._id && type === "update") {
         throw new Error("Missing task id for update");
       } else if (initialData?._id) {
-        await update(toUpdatePayload(values, initialData._id, userId, orgId));
+        await updateTask(toUpdatePayload(values, initialData._id, userId, orgId));
       }
     },
 
-    successMessage: type === "create" ? "Task created" : "Task updated",
-
-    errorMessage:
-      type === "create"
-        ? "Failed to create task"
-        : "Failed to update task",
   });
 };

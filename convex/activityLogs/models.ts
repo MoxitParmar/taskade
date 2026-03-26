@@ -8,6 +8,7 @@ type Ctx = QueryCtx | MutationCtx;
 type ActivityLogsI = Doc<"activityLogs">;
 export type ActivityType = "task" | "comment" ;
 export type ActivityStatus = "TODO" | "IN_PROGRESS" | "DONE";
+export type Type = "task_created" | "task_updated" | "task_assigned" | "task_status_changed" | "comment_added"
 export interface ActivityLogs {
   _id: Id<"activityLogs">;
   _creationTime: number;
@@ -26,8 +27,7 @@ export interface ActivityLogs {
 
 export async function getEntitySafe(
     ctx: Ctx,
-    //eslint-disable-next-line
-  entityId: any
+  entityId: Id<"tasks"> | Id<"taskComments"> 
 ) {
   if (!entityId) return null;
 
@@ -63,8 +63,7 @@ export function buildActivityLogsQuery(
     return ctx.db
       .query("activityLogs")
         .withIndex("by_org_entity", (q) =>
-          //eslint-disable-next-line
-        q.eq("orgId", orgId).eq("entityType", entityType as any)
+        q.eq("orgId", orgId).eq("entityType", entityType as ActivityType)
       )
       .order("desc");
   }
@@ -73,8 +72,7 @@ export function buildActivityLogsQuery(
     return ctx.db
       .query("activityLogs")
         .withIndex("by_org_type", (q) =>
-          //eslint-disable-next-line
-        q.eq("orgId", orgId).eq("type", type as any)
+        q.eq("orgId", orgId).eq("type", type as Type)
       )
       .order("desc");
   }

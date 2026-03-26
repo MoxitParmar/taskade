@@ -116,7 +116,6 @@ React.useEffect(() => {
           : ({ ...defaults } as T),
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultsSignature, resetOnDefaultsChange]);
 
   // initial state from URL + defaults

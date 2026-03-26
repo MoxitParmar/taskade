@@ -20,32 +20,23 @@ export default function ProjectPage({
   orgId: Id<"organizations">;
 }) {
 
-  const { data, isLoading, page, hasNext, hasPrev, goPrev, goNext, setPage } =
-    useProjectsData({
+  const queryArgs = React.useMemo(
+    () => ({
       search,
       status,
       userId,
       orgId,
-    });
+    }),
+    [search, status, userId, orgId],
+  );
 
-  const [showLoading, setShowLoading] = React.useState(isLoading);
-
-  React.useEffect(() => {
-    if (isLoading) {
-      setShowLoading(true);
-      return;
-    }
-
-    const timeoutId = window.setTimeout(() => {
-      setShowLoading(false);
-    }, 70);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [isLoading]);
+  const { data, isLoading, page, hasNext, hasPrev, goPrev, goNext, setPage } = useProjectsData(queryArgs);
+  const safeGoPrev = goPrev ?? (() => {});
+  const safeGoNext = goNext ?? (() => {});
 
   return (
     <div>
-      {showLoading ? (
+      {isLoading ? (
         <CardSkeleton />
       ) : (
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
@@ -59,8 +50,8 @@ export default function ProjectPage({
         page={page}
         isFirstPage={!hasPrev}
         hasNextPage={hasNext}
-        goPrev={goPrev as () => void}
-        goNext={goNext as () => void}
+        goPrev={safeGoPrev}
+        goNext={safeGoNext}
         syncWithUrl
         urlPageParam="page"
         onPageFromUrl={setPage}

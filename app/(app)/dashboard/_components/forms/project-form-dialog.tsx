@@ -16,6 +16,7 @@ import {  ProjectForm } from "./project-form";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Id } from "@/convex/_generated/dataModel";
 import { useOrgMembersData } from "../../_hooks/useDashboard";
+import { Membership } from "@/convex/memberships/models";
 
 export function ProjectDialog({
   orgId,
@@ -29,12 +30,10 @@ export function ProjectDialog({
     const memberOptions = React.useMemo(() => {
       return (
         (data?.page ?? [])
-          //eslint-disable-next-line
-          .filter((m: any) => m?.user?.id && m?.user?.name)
-          //eslint-disable-next-line
-          .map((m: any) => ({
-            value: m.user.id,
-            label: m.user.name,
+          .filter((m: Membership) => m?.user?._id && m?.user?.name)
+          .map((m: Membership) => ({
+            value: m.user ? m.user._id : "",
+            label: m.user ? m.user.name : "",
           }))
       );
     }, [data?.page]);

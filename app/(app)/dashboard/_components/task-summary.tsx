@@ -10,11 +10,12 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { type TaskSummaryConfig, type TaskPriority, mapUserTasksToSummary } from "../_config/task-summary";
+import { type TaskSummaryConfig,  mapUserTasksToSummary } from "../_config/task-summary";
 import { useRouter } from 'next/navigation'
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUserTasksData } from "../_hooks/useDashboard";
+import { TaskPriority } from "@/convex/tasks/models";
 
 const MAX_VISIBLE = 3;
 
@@ -67,7 +68,7 @@ export function TaskSummaryCard({ config }: { config: TaskSummaryConfig }) {
           <div
             key={`${item.title}-${i}`}
                 className="border-t border-border px-2 py-3.5 mx-2  transition-colors duration-150 hover:bg-accent/50 cursor-pointer"
-                onClick={() => {router.push(`task/${item.id}`)}}
+                onClick={() => {router.push(`task/${item._id}`)}}
           >
             <h4 className="text-sm font-semibold">{item.title}</h4>
             <p className="mt-0.5 text-xs text-muted-foreground">
@@ -75,7 +76,7 @@ export function TaskSummaryCard({ config }: { config: TaskSummaryConfig }) {
                 {item.priority} Priority
               </span>
               <span className="mx-1.5">•</span>
-              Due: {new Date(item.dueDate).toLocaleDateString()}
+              Due: {item.dueDate ? new Date(item.dueDate).toLocaleDateString() : "No due date"}
             </p>
           </div>
         ))}

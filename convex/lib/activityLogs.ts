@@ -19,7 +19,6 @@ export interface ActivityLogParams {
   userId: Id<"users">;
   orgId: Id<"organizations">;
   taskId?: Id<"tasks">; // Optional, only for task-related activities
-  // eslint-disable-next-line
   metadata?: Record<string, any>;
 }
 

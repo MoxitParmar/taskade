@@ -23,9 +23,10 @@ export default function ProjectDetail({
         <ProjectHeader project={data} userId={userId} orgId={orgId} projectId={id as Id<"projects">} />
       )}
 
-      <div className="mt-8">
+      <div className="my-8">
         <ProjectCards orgId={orgId} projectId={id as Id<"projects">} />
       </div>
+      
 
     </div>
   )

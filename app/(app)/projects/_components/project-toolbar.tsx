@@ -10,36 +10,29 @@ import {
   SelectItem,
   Select,
 } from "@/components/ui/select";
-import { useSmartFilters } from "@/hooks/use-smart-filters";
 import { Search } from "lucide-react";
 
 interface ProjectToolbarProps {
-  setSearch: (value: string) => void;
-  setStatus: (value: string) => void;
+  search: string;
+  status: string;
+  onSearchChange: (value: string) => void;
+  onStatusChange: (value: string) => void;
+  onReset: () => void;
 }
 
-export default function ProjectToolbar({ setSearch, setStatus }: ProjectToolbarProps) {
-  const defaults = React.useMemo(
-    () => ({
-      search: "",
-      status: "",
-    }),
-    [],
-  );
+export default function ProjectToolbar({
+  search,
+  status,
+  onSearchChange,
+  onStatusChange,
+  onReset,
+}: ProjectToolbarProps) {
+  const [isMounted, setIsMounted] = React.useState(false);
 
-  const { filters, setFilter, resetFilters } = useSmartFilters({
-    defaults,
-    debouncedKeys: ["search"],
-    debounceMs: 350,
-    method: "replace",
-    onChange: (next) => {
-      setSearch(String(next.search ?? ""));
-      setStatus(String(next.status ?? ""));
-    },
-  });
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
-  const search = String(filters.search ?? "");
-  const status = String(filters.status ?? "");
   const filtersActive = search.trim() !== "" || status !== "";
 
   return (
@@ -49,25 +42,31 @@ export default function ProjectToolbar({ setSearch, setStatus }: ProjectToolbarP
         <Input
           placeholder="Search projects..."
           value={search}
-          onChange={(e) => setFilter("search", e.target.value)}
+          onChange={(e) => onSearchChange(e.target.value)}
           className="pl-9"
         />
       </div>
 
-      <Select value={status} onValueChange={(value) => setFilter("status", value)}>
-        <SelectTrigger className="w-full cursor-pointer sm:w-fit">
-          <SelectValue placeholder="All Status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="planning">Planning</SelectItem>
-          <SelectItem value="active">Active</SelectItem>
-          <SelectItem value="on-hold">On Hold</SelectItem>
-          <SelectItem value="completed">Completed</SelectItem>
-        </SelectContent>
-      </Select>
+      {isMounted ? (
+        <Select value={status} onValueChange={onStatusChange}>
+          <SelectTrigger className="w-full cursor-pointer sm:w-fit">
+            <SelectValue placeholder="All Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="planning">Planning</SelectItem>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="on-hold">On Hold</SelectItem>
+            <SelectItem value="completed">Completed</SelectItem>
+          </SelectContent>
+        </Select>
+      ) : (
+        <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-muted-foreground sm:w-fit">
+          All Status
+        </div>
+      )}
 
       {filtersActive && (
-        <Button variant="outline" onClick={resetFilters} className="ml-2">
+        <Button variant="outline" onClick={onReset} className="ml-2">
           Clear
         </Button>
       )}

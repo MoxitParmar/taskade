@@ -9,6 +9,7 @@ export const useProjectsData = ({search, status, userId, orgId}: {search: string
         args: {userId, orgId, search, status },
         mode: "paginated",
         pageSize: 9,
+        resetDeps: [search, status],
     });
 
 
