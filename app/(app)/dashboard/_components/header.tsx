@@ -2,7 +2,7 @@
 import { Id } from "@/convex/_generated/dataModel";
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { ReactNode } from "react";
-import { ProjectDialog } from "./forms/project-form-dialog";
+import { ProjectDialog } from "./form/project-form-dialog";
 import { HeaderSkeleton } from "./skeleton/header";
 import { Badge } from "@/components/ui/badge";
 import { projectStatusStyles } from "../_config/projects";

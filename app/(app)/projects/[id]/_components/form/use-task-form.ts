@@ -9,6 +9,7 @@ import {
 } from "./task-form-schema";
 import { type z } from "zod";
 import { Id } from "@/convex/_generated/dataModel";
+import { useCreateTask, useUpdateTask } from "../../_hooks/useProject";
 
 type Type = "create" | "update";
 type FormInput = z.input<typeof formSchema>;
@@ -28,15 +29,8 @@ export const useTaskForm = ({
   orgId: Id<"organizations">;
   projectId: Id<"projects">;
 }) => {
-  const { execute: createTask } = useMutationAction(api.tasks.mutations.createTask, {
-    successMessage: "Task created",
-    errorMessage: "Failed to create task",
-  });
-  const { execute: updateTask } = useMutationAction(api.tasks.mutations.updateTask, {
-    successMessage: "Task updated",
-    errorMessage: "Failed to update task",
-  });
-
+  const { execute: createTask } = useCreateTask();
+  const { execute: updateTask } = useUpdateTask();
   return useSmartForm<FormInput, FormOutput>({
     schema: formSchema,
     defaultValues: initialData,

@@ -1,6 +1,6 @@
 "use client"
 import { useOrganization } from "@clerk/nextjs";
-import { ProjectDialog } from "../../dashboard/_components/forms/project-form-dialog";
+import { ProjectDialog } from "../../dashboard/_components/form/project-form-dialog";
 import { PageHeader } from "../../dashboard/_components/header";
 import { Id } from "@/convex/_generated/dataModel";
 import { HeaderSkeleton } from "../../dashboard/_components/skeleton/header";

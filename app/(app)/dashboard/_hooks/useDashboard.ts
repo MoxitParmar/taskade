@@ -1,4 +1,5 @@
 import { api } from "@/convex/_generated/api";
+import { useMutationAction } from "@/hooks/use-mutation-action";
 
 import { useSmartQuery } from "@/hooks/use-smart-query";
 
@@ -75,3 +76,17 @@ export const useUserTasksData = ({userId, orgId}: {userId: string, orgId: string
       isLoading,
     };
 }
+
+  export const useCreateProject=() => {
+  return useMutationAction(api.projects.mutations.createProject, {
+    successMessage: "Project created",
+    errorMessage: "Failed to create project",
+  });
+};
+
+  export const useUpdateProject= () => {
+  return useMutationAction(api.projects.mutations.updateProject, {
+    successMessage: "Project updated",
+    errorMessage: "Failed to update project",
+  });
+};

@@ -49,7 +49,6 @@ const organizationUpdateFormSchema = z.object({
     .mime(ACCEPTED_IMAGE_TYPES, "Image must be .jpeg, .jpg, .png, or .webp.")
     .optional(),
   name: z.string(),
-  slug: z.string(),
 });
 
 export type OrganizationUpdateFormValues = z.infer<
@@ -79,7 +78,6 @@ export default function OrganizationForm1({
       id: organization?.id,
       picture: undefined,
       name: organization?.name ?? "",
-      slug: organization?.slug ?? "",
     },
   });
 
@@ -92,10 +90,6 @@ export default function OrganizationForm1({
         .replace(/\s+/g, " ") // Replace multiple spaces with a single space
         .replace(/[:\-\.]{2,}/g, (match) => match[0]) // Replace multiple ":" or "-" or "." with a single instance
     );
-    form.setValue(
-      "slug",
-      enteredName.toLowerCase().replace(/[:.']/g, "").replace(/\s+/g, "-")
-    );
   }, [form, enteredName]);
 
   useEffect(() => {
@@ -104,7 +98,6 @@ export default function OrganizationForm1({
         id: organization?.id,
         picture: undefined,
         name: organization?.name ?? "",
-        slug: organization?.slug ?? "",
       });
       setPreviewUrl(organization.imageUrl ?? null);
     }
@@ -144,8 +137,8 @@ export default function OrganizationForm1({
   }
 
   return (
-    <Card className="w-full">
-      <CardContent className="mx-auto w-full lg:max-w-4/5 xl:max-w-3/4">
+    <Card className="w-full bg-transparent border-0 py-0">
+      <CardContent className=" w-full">
         <form
           id="form-organization-update-1"
           className="flex flex-col gap-y-8 px-3 sm:px-5 py-5"
@@ -231,33 +224,6 @@ export default function OrganizationForm1({
                         placeholder="Acme, Inc."
                         autoComplete="organization"
                         disabled={!isLoaded}
-                      />
-                    ) : (
-                      <Skeleton className="w-20 h-5 ml-1.5" />
-                    )}
-                  </InputGroup>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-            <Controller
-              name="slug"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className="gap-1">
-                  <FieldLabel htmlFor="form-organization-update-1-name">
-                    Slug
-                  </FieldLabel>
-                  <InputGroup>
-                    {isLoaded ? (
-                      <InputGroupInput
-                        {...field}
-                        id="form-organization-update-1-slug"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="acme-inc"
-                        disabled
                       />
                     ) : (
                       <Skeleton className="w-20 h-5 ml-1.5" />

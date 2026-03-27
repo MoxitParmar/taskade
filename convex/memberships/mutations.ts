@@ -121,7 +121,7 @@ export const updateMembershipRole = mutation({
   },
 });
 
-export const deleteMembership = mutation({
+export const deleteMembershipByClerkId = mutation({
   args: {
     clerkUserId: v.string(),
     clerkOrgId: v.string(),
@@ -142,5 +142,16 @@ export const deleteMembership = mutation({
     if (!org) throw new Error("Organization not found");
 
     return await deleteMembershipInternal(ctx, user._id, org._id);
+  },
+});
+
+export const deleteMembership = mutation({
+  args: {
+    userId: v.id("users"),
+    orgId: v.id("organizations"),
+  },
+
+  handler: async (ctx, args) => {
+    return await deleteMembershipInternal(ctx, args.userId, args.orgId);
   },
 });

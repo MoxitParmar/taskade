@@ -9,6 +9,7 @@ import {
 import { type z } from "zod";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutationAction } from "@/hooks/use-mutation-action";
+import { useCreateProject, useUpdateProject } from "../../_hooks/useDashboard";
 
 type Type = "create" | "update";
 type FormInput = z.input<typeof formSchema>;
@@ -26,14 +27,8 @@ export const useProjectForm = ({
   userId: Id<"users">;
   orgId: Id<"organizations">;
 }) => {
-  const { execute: createProject } = useMutationAction(api.projects.mutations.createProject, {
-    successMessage: "Project created",
-    errorMessage: "Failed to create project",
-  });
-  const { execute: updateProject } = useMutationAction(api.projects.mutations.updateProject, {
-    successMessage: "Project updated",
-    errorMessage: "Failed to update project",
-  });
+  const { execute: createProject } = useCreateProject();
+  const { execute: updateProject } = useUpdateProject();
   return useSmartForm<FormInput, FormOutput>({
     schema: formSchema,
     defaultValues: initialData,

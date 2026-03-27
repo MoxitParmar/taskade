@@ -11,6 +11,7 @@
 import type * as _dashboard_queries from "../_dashboard/queries.js";
 import type * as _project_id_queries from "../_project_id/queries.js";
 import type * as _projects_queries from "../_projects/queries.js";
+import type * as _settings_queries from "../_settings/queries.js";
 import type * as _sidebar_queries from "../_sidebar/queries.js";
 import type * as activityLogs_models from "../activityLogs/models.js";
 import type * as activityLogs_queries from "../activityLogs/queries.js";
@@ -49,6 +50,7 @@ declare const fullApi: ApiFromModules<{
   "_dashboard/queries": typeof _dashboard_queries;
   "_project_id/queries": typeof _project_id_queries;
   "_projects/queries": typeof _projects_queries;
+  "_settings/queries": typeof _settings_queries;
   "_sidebar/queries": typeof _sidebar_queries;
   "activityLogs/models": typeof activityLogs_models;
   "activityLogs/queries": typeof activityLogs_queries;
