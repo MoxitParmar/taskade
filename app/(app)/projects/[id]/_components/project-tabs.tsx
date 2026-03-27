@@ -1,0 +1,96 @@
+"use client";
+
+import * as React from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Settings, SquareKanban, UserPlus, Users } from "lucide-react";
+import { useSmartUrlSync } from "@/hooks/use-smart-url-sync";
+import { Id } from "@/convex/_generated/dataModel";
+import TaskTab from "./task-tab";
+
+type TasksTabQueryState = {
+  tab: "Tasks" | "Calendar" | "Kanban" | "Settings";
+};
+
+const TAB_VALUES: TasksTabQueryState["tab"][] = ["Tasks", "Calendar", "Kanban", "Settings"];
+
+export default function ProjectTabs({isLead, userId, orgId, projectId}: {isLead: boolean; userId: Id<"users">; orgId: Id<"organizations">; projectId: Id<"projects">}) {
+  const defaultQueryState = React.useMemo<TasksTabQueryState>(
+    () => ({ tab: "Tasks" }),
+    [],
+  );
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const [queryState, setQueryState] =
+    React.useState<TasksTabQueryState>(defaultQueryState);
+
+  const { setQueryValue } = useSmartUrlSync<TasksTabQueryState>({
+    state: queryState,
+    setState: setQueryState,
+    keys: ["tab"],
+    defaultState: defaultQueryState,
+    method: "replace",
+  });
+
+  const currentTab = TAB_VALUES.includes(queryState.tab)
+    ? queryState.tab
+    : defaultQueryState.tab;
+
+  return (
+    <div>
+      {isMounted && (
+        <Tabs
+          value={currentTab}
+          onValueChange={(value) =>
+            setQueryValue("tab", value as TasksTabQueryState["tab"])
+          }
+        >
+          <TabsList variant="default" className="">
+            <TabsTrigger value="Tasks" className="cursor-pointer">
+              <Users className="size-4" />
+              Tasks
+            </TabsTrigger>
+            <TabsTrigger value="Calendar" className="cursor-pointer">
+              <UserPlus className="size-4" />
+              Calendar
+            </TabsTrigger>
+              <TabsTrigger value="Kanban" className="cursor-pointer">
+            <SquareKanban className="size-4" />
+            Kanban
+          </TabsTrigger>
+          {(isLead) && (
+            <TabsTrigger value="Settings" className="cursor-pointer">
+              <Settings className="size-4" />
+              Settings
+            </TabsTrigger>
+          )}
+          </TabsList>
+
+          <TabsContent value="Tasks">
+            <div className="flex flex-col  justify-center rounded-xl border-border/60">
+              <TaskTab  orgId={orgId} userId={userId} projectId={projectId}/>
+            </div>
+          </TabsContent>
+          <TabsContent value="Calendar">
+            <div className="flex flex-col  justify-center rounded-xl border-border/60">
+              {/* <Calendar /> */}
+            </div>
+          </TabsContent>
+          <TabsContent value="Kanban">
+            <div className="flex flex-col  justify-center rounded-xl border-border/60">
+              {/* <Kanban /> */}
+            </div>
+          </TabsContent>
+          <TabsContent value="Settings">
+            <div className="flex flex-col  justify-center rounded-xl border-border/60">
+              {/* <Settings /> */}
+            </div>
+          </TabsContent>
+        </Tabs>
+      )}
+    </div>
+  );
+}

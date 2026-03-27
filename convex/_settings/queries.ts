@@ -3,7 +3,6 @@ import { query } from "../_generated/server";
 import { getOrgMembers } from "../memberships/queries";
 import { formatDate } from "@/lib/utils";
 
-
 const args = {
   userId: v.optional(v.id("users")),
   orgId: v.id("organizations"),
@@ -17,10 +16,6 @@ export const getMembersData = query({
     const members = await getOrgMembers(ctx, { orgId,cursor,limit, paginate: true });
     return {
         ...members,
-        page: members.page.map((m) => ({
-            ...m,
-            createdAt: formatDate(m ? m?.createdAt : 0),
-        })),
     };
   },
 });

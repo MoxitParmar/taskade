@@ -102,7 +102,9 @@ export default defineSchema({
   .index("by_assignee", ["assignee"])
   // .index("by_project_assignee", ["projectId","assignee"])
   .index("by_org_project", ["orgId","projectId"])
-  .index("by_org_assignee", ["orgId","assignee"]),
+  .index("by_org_assignee", ["orgId","assignee"])
+  .index("by_org_status", ["orgId","status"])
+  .index("by_org_priority", ["orgId","priority"]),
 
   taskComments: defineTable({
     orgId: v.id("organizations"),

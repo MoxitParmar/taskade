@@ -24,7 +24,7 @@ export const useSmartQuery = <TData, TArgs extends object>({
   args,
   pageSize = 10,
   resetDeps = [],
-  mode = "paginated", 
+  mode = "simple", 
 }: Options<TArgs>) => {
   const resetKey = JSON.stringify(resetDeps);
 
@@ -47,7 +47,7 @@ export const useSmartQuery = <TData, TArgs extends object>({
 
   const hasInvalidArgs =
     !args ||
-    Object.values(args).some((v) => v === undefined || v === null) ;
+    Object.values(args).some((v) => v === null) ;
 
     const shouldFetch = !!query && !hasInvalidArgs;
 

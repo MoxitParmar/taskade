@@ -27,7 +27,7 @@ export function ProjectCards({
   const values = [totalTasks, completed, inProgress, teamMembers];
 
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 my-8 lg:grid-cols-4">
       {isLoading ? (
         <DashboardCardsSkeleton />
       ) : (

@@ -10,7 +10,6 @@ export const useProjectMembersData = ({ projectId, orgId }: { projectId: string;
     const { data, isLoading } = useSmartQuery({
         query: api._project_id.queries.getMembersData,
         args: { orgId, projectId },
-      mode: "simple",
     });
 
     return {
@@ -25,7 +24,6 @@ export const useProjectData = ({ projectId, orgId }: { projectId: string; orgId:
     const { data, isLoading } = useSmartQuery({
         query: api._project_id.queries.getProject,
         args: { projectId, orgId },
-      mode: "simple",
     });
 
     return {
@@ -40,7 +38,6 @@ export const useProjectCardData = ({ projectId, orgId }: { projectId: string; or
     const { data, isLoading } = useSmartQuery({
         query: api._project_id.queries.getCardData,
         args: { projectId, orgId },
-      mode: "simple",
     });
 
     return {
@@ -63,3 +60,41 @@ export const useProjectCardData = ({ projectId, orgId }: { projectId: string; or
     errorMessage: "Failed to update task",
   });
 };
+
+export const useDeleteTask= () => {
+  return useMutationAction(api.tasks.mutations.deleteTask);
+}
+
+export const useProjectTasksData = ({orgId, projectId,status, priority, assigneeId}: {orgId: string; projectId: string, status?: string, priority?: string, assigneeId?: string}) => {
+  const normalizeFilter = (value?: string) => {
+    if (!value) return undefined;
+    const trimmed = value.trim();
+    return trimmed === "" ? undefined : trimmed;
+  };
+
+  const args = {
+    orgId,
+    projectId,
+    status: normalizeFilter(status) as typeof status,
+    priority: normalizeFilter(priority) as typeof priority,
+    assigneeId: normalizeFilter(assigneeId),
+  };
+
+  const { data, isLoading, page, hasNext, hasPrev, setPage, goPrev, goNext } = useSmartQuery({
+    query: api._project_id.queries.getProjectTaskData,
+    args,
+    mode: "paginated",
+    resetDeps: [priority, status, assigneeId],
+  });
+
+  return {
+    data,
+    isLoading,
+    page,
+    hasNext,
+    hasPrev,
+    setPage,
+    goPrev,
+    goNext,
+  };
+}

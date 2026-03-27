@@ -19,7 +19,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const formatedProjects = React.useMemo(() => {
     const items = projects?.page.map((p: { name: string; _id: string }) => ({
       title: p.name,
-      url: `/project/${p._id}`,
+      url: `/projects/${p._id}`,
     }));
 
     return [
@@ -35,7 +35,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const formatedTasks = React.useMemo(() => {
     const items = tasks?.page.map((p: { name: string; _id: string }) => ({
       title: p.name,
-      url: `/task/${p._id}`,
+      url: `/tasks/${p._id}`,
     }));
 
     return [

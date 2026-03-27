@@ -4,11 +4,18 @@ import { getProjectById, getProjectMembers } from "../projects/queries";
 import { getTasks } from "../tasks/queries";
 import { buildTasksQuery } from "../tasks/models";
 import { buildProjectMembers } from "../projects/models";
+import { formatDate } from "@/lib/utils";
 
 
 const args = {
   userId: v.optional(v.id("users")),
   orgId: v.id("organizations"),
+  cursor: v.optional(v.string()),
+  limit: v.optional(v.number()),
+  status: v.optional(v.union(v.literal("todo"), v.literal("in-progress"), v.literal("done"))),
+  priority: v.optional(v.union(v.literal("high"), v.literal("medium"), v.literal("low"))),
+  assigneeId: v.optional(v.id("users")),
+  projectId: v.optional(v.id("projects")),
 };
 
 export const getMembersData = query({
@@ -67,5 +74,22 @@ export const getCardData = query({
     ]);
 
     return { projectTasks, activeTasks, completedTasks, projectMembers };
+  },
+});
+
+
+
+export const getProjectTaskData = query({
+  args,
+  handler: async (ctx, { orgId, projectId, cursor, limit, status, priority, assigneeId }) => {
+    const tasks = await getTasks(ctx, { orgId, projectId, cursor, limit, paginate: true, status, priority, assigneeId });
+     return {
+      ...tasks,
+      page: tasks?.page?.map((p) => ({
+        ...p,
+        createdAt: formatDate(p ? p?.createdAt : 0),
+        dueDate: formatDate(p ? p?.dueDate : 0),
+      })),
+    };
   },
 });

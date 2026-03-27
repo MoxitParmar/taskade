@@ -7,14 +7,15 @@ import { formatProject, getProjectOrThrow } from "../projects/models";
 
 type Ctx = QueryCtx | MutationCtx;
 
-export type TaskPriority = "HIGH" | "MEDIUM" | "LOW";
+export type TaskPriority = "high" | "medium" | "low";
+export type TaskStatus = "todo" | "in-progress" | "done";
 type TaskI = Doc<"tasks">;
 export interface Task {
   _id: Id<"tasks">;
   createdAt: number;
   name: string;
   description?: string;
-  status: string;
+  status: TaskStatus;
   priority: TaskPriority;
   isOverdue: boolean;
   dueDate?: number;
@@ -65,23 +66,30 @@ export async function buildTasksQuery(
   args: {
     orgId: Id<"organizations">;
     userId?: Id<"users">;
-    projectId?: Id<"projects">;
-    assigneeId?: Id<"users">;
+      projectId?: Id<"projects">;
+      assigneeId?: Id<"users">;
+      status?: TaskStatus;
+      priority?: TaskPriority;
   }
 ) {
-  const { orgId, userId, projectId, assigneeId } = args;
-
+  const { orgId, userId, projectId, assigneeId, status, priority } = args;
   if (projectId) {
     await getProjectOrThrow(ctx, projectId, orgId);
 
-    return ctx.db
+    let q =ctx.db
       .query("tasks")
       .withIndex("by_org_project", (q) =>
         q.eq("orgId", orgId).eq("projectId", projectId)
       )
       .order("desc");
+
+      if (status) q = q.filter((q) => q.eq(q.field("status"), status));
+  if (priority) q = q.filter((q) => q.eq(q.field("priority"), priority));
+  if (assigneeId) q = q.filter((q) => q.eq(q.field("assignee"), assigneeId));
+
+  return q;
   }
-    
+
     if ( userId) {
         return ctx.db
             .query("tasks")
@@ -89,14 +97,7 @@ export async function buildTasksQuery(
                 q.eq("orgId", orgId).eq("assignee", userId)
             )
             .order("desc");
-    } else if (assigneeId) {
-        return ctx.db
-            .query("tasks")
-            .withIndex("by_org_assignee", (q) =>
-                q.eq("orgId", orgId).eq("assignee", assigneeId)
-            )
-            .order("desc");
-    }
+          }
     
     return ctx.db
         .query("tasks")

@@ -1,7 +1,7 @@
 import { Id } from "../_generated/dataModel";
 import { QueryCtx } from "../_generated/server";
 import { paginateOrTake } from "../lib/paginateOrTake";
-import { buildTasksQuery, formatTask, getTaskOrThrow } from "./models";
+import { buildTasksQuery, formatTask, getTaskOrThrow, Task, TaskPriority, TaskStatus } from "./models";
 
 export async function getTasks(
     ctx: QueryCtx,
@@ -12,12 +12,14 @@ export async function getTasks(
         userId?: Id<"users">;
         projectId?: Id<"projects">;
         assigneeId?: Id<"users">;
+        status?: TaskStatus;
+        priority?: TaskPriority;
         paginate?: boolean;
     }
 ) {
     const query = await buildTasksQuery(ctx, args);
 
-    return await paginateOrTake({
+    const tasks = await paginateOrTake({
       query,
       ctx,
       limit: args.limit,
@@ -25,6 +27,7 @@ export async function getTasks(
       paginate: args.paginate,
       map: (task) => formatTask(ctx, task),
     });
+    return tasks;
 
 }
 

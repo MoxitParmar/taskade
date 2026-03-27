@@ -15,7 +15,6 @@ export const useAppSidebar = () => {
     const { data, isLoading } = useSmartQuery({
         query: api._sidebar.queries.getSidebarData,
         args: {userId: user?.userId , orgId: user?.orgId },
-      mode: "simple",
     });
     const { projects, tasks} = data ?? {};
 

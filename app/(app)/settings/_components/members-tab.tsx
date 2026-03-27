@@ -2,17 +2,26 @@
 
 import React from "react";
 
-
 import { Id } from "@/convex/_generated/dataModel";
 import { BulkDelete } from "./bulk-delete";
 import { useDeleteMembership } from "../_hooks/useSettings";
 import { UpdateOrganizationForm } from "./updateProjectForm";
 import { ProjectMemberList } from "./member-list";
 
-const Members = ({ organization, orgId, userId }: { organization: any, orgId: Id<"organizations">, userId: Id<"users"> }) => {
+const Members = ({
+  organization,
+  orgId,
+  userId,
+}: {
+  organization: any;
+  orgId: Id<"organizations">;
+  userId: Id<"users">;
+}) => {
   const { execute: deleteMembership } = useDeleteMembership();
 
-  const [selectedMemberIds, setSelectedMemberIds] = React.useState<string[]>([]);
+  const [selectedMemberIds, setSelectedMemberIds] = React.useState<string[]>(
+    [],
+  );
 
   const onDeleteMember = async (id: string) => {
     if (!orgId) {
@@ -23,17 +32,15 @@ const Members = ({ organization, orgId, userId }: { organization: any, orgId: Id
 
   return (
     <div className="space-y-6">
-
       <div className="flex flex-col gap-2 md:flex-row md:items-start">
         <UpdateOrganizationForm organization={organization} />
+        <BulkDelete
+          selectedIds={selectedMemberIds}
+          onDeleteItem={onDeleteMember}
+          onClearSelection={() => setSelectedMemberIds([])}
+          itemLabel="member"
+        />
       </div>
-
-      <BulkDelete
-        selectedIds={selectedMemberIds}
-        onDeleteItem={onDeleteMember}
-        onClearSelection={() => setSelectedMemberIds([])}
-        itemLabel="member"
-      />
 
       <ProjectMemberList
         orgId={orgId}
