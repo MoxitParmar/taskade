@@ -47,7 +47,7 @@ export const useSmartQuery = <TData, TArgs extends object>({
 
   const hasInvalidArgs =
     !args ||
-    Object.values(args).some((v) => v === null) ;
+    Object.values(args).some((v) => v === null || v === undefined) ;
 
     const shouldFetch = !!query && !hasInvalidArgs;
 

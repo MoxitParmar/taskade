@@ -72,13 +72,21 @@ export const useProjectTasksData = ({orgId, projectId,status, priority, assignee
     return trimmed === "" ? undefined : trimmed;
   };
 
-  const args = {
-    orgId,
-    projectId,
-    status: normalizeFilter(status) as typeof status,
-    priority: normalizeFilter(priority) as typeof priority,
-    assigneeId: normalizeFilter(assigneeId),
-  };
+  const statusValue = normalizeFilter(status);
+  const priorityValue = normalizeFilter(priority);
+  const assigneeValue = normalizeFilter(assigneeId);
+
+  const args: {
+    orgId: string;
+    projectId: string;
+    status?: string;
+    priority?: string;
+    assigneeId?: string;
+  } = { orgId, projectId };
+
+  if (statusValue) args.status = statusValue;
+  if (priorityValue) args.priority = priorityValue;
+  if (assigneeValue) args.assigneeId = assigneeValue;
 
   const { data, isLoading, page, hasNext, hasPrev, setPage, goPrev, goNext } = useSmartQuery({
     query: api._project_id.queries.getProjectTaskData,

@@ -7,15 +7,10 @@ import { Id } from "@/convex/_generated/dataModel";
 import TaskToolbar from "./task-toolbar";
 import { useSmartUrlSync } from "@/hooks/use-smart-url-sync";
 import { useDeleteTask, useUpdateTask, useProjectMembersData } from "../_hooks/useProject";
-import { Membership } from "@/convex/memberships/models";
 import { User } from "@/convex/users/models";
 import { BulkDelete } from "@/app/(app)/settings/_components/bulk-delete";
 import { ProjectTaskList } from "./projectTaskList";
 import { TaskPriority, TaskStatus } from "@/convex/tasks/models";
-// import { BulkDelete } from "./bulk-delete";
-// import { useDeleteMembership } from "../_hooks/useSettings";
-// import { UpdateOrganizationForm } from "./updateProjectForm";
-// import { ProjectMemberList } from "./member-list";
 type TaskQueryState = {
   priority: string;
   assignee: string;
