@@ -4,20 +4,40 @@ import { useMutationAction } from "@/hooks/use-mutation-action";
 import { useSmartQuery } from "@/hooks/use-smart-query";
 
 
-export const useProjectMembersData = ({ projectId, orgId }: { projectId: string; orgId: string }) => {
+// export const useProjectMembersData = ({ projectId, orgId }: { projectId: string; orgId: string }) => {
 
     
-    const { data, isLoading } = useSmartQuery({
+//     const { data, isLoading } = useSmartQuery({
+//         query: api._project_id.queries.getMembersData,
+//         args: { orgId, projectId },
+//     });
+
+//     return {
+//         data,
+//         isLoading,
+//     };
+// }
+export const useProjectMembersData = ({orgId, projectId}: {orgId: string; projectId: string}) => {
+
+    
+    const { data, isLoading, page, hasNext,hasPrev,setPage, goPrev, goNext} = useSmartQuery({
         query: api._project_id.queries.getMembersData,
-        args: { orgId, projectId },
+        args: {orgId, projectId},
+      mode: "paginated",
     });
+    console.log("Project members data:", data, "Loading:", isLoading, "Page:", page, "HasNext:", hasNext, "HasPrev:", hasPrev);
 
     return {
         data,
         isLoading,
+        page,
+        hasNext,
+        hasPrev,
+        setPage,
+        goPrev,
+        goNext
     };
 }
-
 export const useProjectData = ({ projectId, orgId }: { projectId: string; orgId: string }) => {
 
     
@@ -60,9 +80,22 @@ export const useProjectCardData = ({ projectId, orgId }: { projectId: string; or
     errorMessage: "Failed to update task",
   });
 };
+  export const useUpdateProject= () => {
+  return useMutationAction(api.projects.mutations.updateProject, {
+    successMessage: "Project updated",
+    errorMessage: "Failed to update project",
+  });
+};
 
 export const useDeleteTask= () => {
   return useMutationAction(api.tasks.mutations.deleteTask);
+}
+export const useDeleteProject= () => {
+  return useMutationAction(api.projects.mutations.deleteProject);
+}
+
+export const useDeleteProjectMembership = () => {
+  return useMutationAction(api.projects.mutations.removeProjectMember);
 }
 
 export const useProjectTasksData = ({orgId, projectId,status, priority, assigneeId}: {orgId: string; projectId: string, status?: string, priority?: string, assigneeId?: string}) => {

@@ -6,7 +6,7 @@ import React from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import TaskToolbar from "./task-toolbar";
 import { useSmartUrlSync } from "@/hooks/use-smart-url-sync";
-import { useDeleteTask, useUpdateTask, useProjectMembersData } from "../_hooks/useProject";
+import { useDeleteTask, useUpdateTask, useProjectMembersData, useProjectTasksData } from "../_hooks/useProject";
 import { User } from "@/convex/users/models";
 import { BulkDelete } from "@/app/(app)/settings/_components/bulk-delete";
 import { ProjectTaskList } from "./projectTaskList";
@@ -18,7 +18,17 @@ type TaskQueryState = {
   page: string;
 };
 
-const TaskTab = ({  orgId, userId, projectId }: { orgId: Id<"organizations">, userId: Id<"users">, projectId: Id<"projects"> }) => {
+const TaskTab = ({
+  orgId,
+  userId,
+  projectId,
+  tasksData,
+}: {
+  orgId: Id<"organizations">;
+  userId: Id<"users">;
+  projectId: Id<"projects">;
+  tasksData: ReturnType<typeof useProjectTasksData>;
+}) => {
   const { execute: deleteTask } = useDeleteTask();
   const { execute: updateTask } = useUpdateTask();
 
@@ -91,6 +101,7 @@ const TaskTab = ({  orgId, userId, projectId }: { orgId: Id<"organizations">, us
 
 
       <ProjectTaskList
+        tasksData={tasksData}
         orgId={orgId}
         assigneeId={queryState?.assignee as Id<"users">}
         priority={queryState?.priority as TaskPriority}

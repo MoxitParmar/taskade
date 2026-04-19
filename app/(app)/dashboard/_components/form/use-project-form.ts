@@ -13,8 +13,13 @@ import { useCreateProject, useUpdateProject } from "../../_hooks/useDashboard";
 
 type Type = "create" | "update";
 type FormInput = z.input<typeof formSchema>;
-type FormOutput = z.output<typeof formSchema>;
-export type initialData = (FormInput & { _id: Id<"projects"> }) | undefined;
+ type FormOutput = z.output<typeof formSchema>;
+type ProjectFormInitialData = Omit<FormInput, "lead"> & {
+  _id: Id<"projects">;
+  lead: string | { _id: Id<"users"> };
+};
+
+export type initialData = ProjectFormInitialData | undefined;
 
 export const useProjectForm = ({
   type,
@@ -23,15 +28,25 @@ export const useProjectForm = ({
   orgId,
 }: {
   type: Type;
-  initialData?: (FormInput & { _id: Id<"projects"> }) | undefined;
+  initialData?: initialData ;
   userId: Id<"users">;
   orgId: Id<"organizations">;
 }) => {
+    const defaultValues = initialData
+    ? {
+        ...initialData,
+        lead:
+          typeof initialData.lead === "string"
+            ? initialData.lead
+            : initialData.lead?._id ?? "",
+      }
+    : undefined;
+
   const { execute: createProject } = useCreateProject();
   const { execute: updateProject } = useUpdateProject();
   return useSmartForm<FormInput, FormOutput>({
     schema: formSchema,
-    defaultValues: initialData,
+    defaultValues,
 
     onSubmit: async (values) => {
       if (type === "create") {

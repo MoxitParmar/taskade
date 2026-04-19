@@ -17,13 +17,17 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Id } from "@/convex/_generated/dataModel";
 import { useOrgMembersData } from "../../_hooks/useDashboard";
 import { Membership } from "@/convex/memberships/models";
+import { initialData } from "./use-project-form";
 
-export function ProjectDialog({
+
+export function UpdateProjectDialog({
   orgId,
   userId,
+  initialData,
 }: {
   orgId: Id<"organizations">;
   userId: Id<"users">;
+  initialData: initialData;
 }) {
   const [open, setOpen] = React.useState(false);
   const { data} = useOrgMembersData({orgId, userId});
@@ -41,21 +45,21 @@ export function ProjectDialog({
   return (
     <Dialog open={open} onOpenChange={(next) => setOpen(next)}>
       <DialogTrigger asChild>
-        <Button variant="default" className="cursor-pointer">
-          <Plus />
-          New Project
+        <Button variant="outline" className="cursor-pointer">
+          update Project
         </Button>
       </DialogTrigger>
 
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg p-0">
         <VisuallyHidden>
-            <DialogTitle>Create New Project</DialogTitle>
+            <DialogTitle>Update New Project</DialogTitle>
         </VisuallyHidden>
         <ProjectForm
-          type="create"
+          type="update"
           orgId={orgId}
           userId={userId}
           members={memberOptions}
+          initialData={initialData}
         />
       </DialogContent>
     </Dialog>

@@ -1,6 +1,6 @@
 "use client"
 import { useOrganization } from "@clerk/nextjs";
-import { ProjectDialog } from "../../dashboard/_components/form/project-form-dialog";
+import { CreateProjectDialog } from "../../dashboard/_components/form/create-project-dialog";
 import { PageHeader } from "../../dashboard/_components/header";
 import { Id } from "@/convex/_generated/dataModel";
 import { HeaderSkeleton } from "../../dashboard/_components/skeleton/header";
@@ -21,7 +21,7 @@ export default function ProjectHeader({userId, orgId}: { userId: Id<"users">; or
           subtitle="Manage and track your projects"
           action={
             isAdmin && userId && orgId ? (
-              <ProjectDialog
+              <CreateProjectDialog
                 userId={userId }
                 orgId={orgId}
               />

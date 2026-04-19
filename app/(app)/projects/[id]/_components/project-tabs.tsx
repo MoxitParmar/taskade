@@ -6,14 +6,38 @@ import { Settings, SquareKanban, UserPlus, Users } from "lucide-react";
 import { useSmartUrlSync } from "@/hooks/use-smart-url-sync";
 import { Id } from "@/convex/_generated/dataModel";
 import TaskTab from "./task-tab";
+import {
+  useDeleteTask,
+  useProjectMembersData,
+  useProjectTasksData,
+  useUpdateTask,
+} from "../_hooks/useProject";
+import ProjectCalendarShadcn, { CalendarTab } from "./calendarTab";
+import Kanban from "./kanban";
+import SettingsTab from "./settingTab";
 
 type TasksTabQueryState = {
   tab: "Tasks" | "Calendar" | "Kanban" | "Settings";
 };
 
-const TAB_VALUES: TasksTabQueryState["tab"][] = ["Tasks", "Calendar", "Kanban", "Settings"];
+const TAB_VALUES: TasksTabQueryState["tab"][] = [
+  "Tasks",
+  "Calendar",
+  "Kanban",
+  "Settings",
+];
 
-export default function ProjectTabs({isLead, userId, orgId, projectId}: {isLead: boolean; userId: Id<"users">; orgId: Id<"organizations">; projectId: Id<"projects">}) {
+export default function ProjectTabs({
+  isLead,
+  userId,
+  orgId,
+  projectId,
+}: {
+  isLead: boolean;
+  userId: Id<"users">;
+  orgId: Id<"organizations">;
+  projectId: Id<"projects">;
+}) {
   const defaultQueryState = React.useMemo<TasksTabQueryState>(
     () => ({ tab: "Tasks" }),
     [],
@@ -39,6 +63,13 @@ export default function ProjectTabs({isLead, userId, orgId, projectId}: {isLead:
     ? queryState.tab
     : defaultQueryState.tab;
 
+  const taskData = useProjectTasksData({
+    orgId: String(orgId),
+    projectId: String(projectId),
+  });
+  const membersData  = useProjectMembersData({orgId: String(orgId), projectId: String(projectId)});
+  const { execute: deleteTask } = useDeleteTask();
+  const { execute: updateTask } = useUpdateTask();
   return (
     <div>
       {isMounted && (
@@ -57,36 +88,54 @@ export default function ProjectTabs({isLead, userId, orgId, projectId}: {isLead:
               <UserPlus className="size-4" />
               Calendar
             </TabsTrigger>
-              <TabsTrigger value="Kanban" className="cursor-pointer">
-            <SquareKanban className="size-4" />
-            Kanban
-          </TabsTrigger>
-          {(isLead) && (
-            <TabsTrigger value="Settings" className="cursor-pointer">
-              <Settings className="size-4" />
-              Settings
+            <TabsTrigger value="Kanban" className="cursor-pointer">
+              <SquareKanban className="size-4" />
+              Kanban
             </TabsTrigger>
-          )}
+            {isLead && (
+              <TabsTrigger value="Settings" className="cursor-pointer">
+                <Settings className="size-4" />
+                Settings
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="Tasks">
             <div className="flex flex-col  justify-center rounded-xl border-border/60">
-              <TaskTab  orgId={orgId} userId={userId} projectId={projectId}/>
+              <TaskTab
+                orgId={orgId}
+                userId={userId}
+                projectId={projectId}
+                tasksData={taskData}
+              />
             </div>
           </TabsContent>
           <TabsContent value="Calendar">
             <div className="flex flex-col  justify-center rounded-xl border-border/60">
-              {/* <Calendar /> */}
+              <CalendarTab
+                tasks={taskData.data}
+                isLoading={taskData?.isLoading}
+              />
             </div>
           </TabsContent>
           <TabsContent value="Kanban">
             <div className="flex flex-col  justify-center rounded-xl border-border/60">
-              {/* <Kanban /> */}
+              <Kanban
+                onDeleteTask={
+                  async (taskId) => {
+                    await deleteTask({ taskId: taskId as Id<"tasks">, orgId });
+                  }
+                }
+                onStatusChange={async (taskId, status) => {
+                  await updateTask({ taskId, status, orgId, userId });
+                }}
+                tasks={taskData.data}
+              />
             </div>
           </TabsContent>
           <TabsContent value="Settings">
             <div className="flex flex-col  justify-center rounded-xl border-border/60">
-              {/* <Settings /> */}
+              <SettingsTab orgId={orgId} userId={userId} projectId={projectId} membersData={membersData} />
             </div>
           </TabsContent>
         </Tabs>

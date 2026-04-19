@@ -14,7 +14,6 @@ import {
 
 import { Task, TaskPriority, TaskStatus } from "@/convex/tasks/models";
 import React from "react";
-import { useProjectTasksData } from "../_hooks/useProject";
 import TaskTableSkeleton from "./taskTableSkeleton";
 import { taskPriorityConfig, taskStatusConfig } from "../config/project-data";
 import { useRouter } from 'next/navigation'
@@ -35,6 +34,7 @@ export function ProjectTaskList({
   selectedTaskIds: selectedTasksIdsProp,
   onStatusChange,
   onSelectionChange,
+  tasksData,
 }: {
   status?: TaskStatus;
   priority?: TaskPriority;
@@ -42,20 +42,20 @@ export function ProjectTaskList({
   orgId: Id<"organizations">;
   projectId: Id<"projects">;
   selectedTaskIds: Id<"tasks">[];
-    onStatusChange: (taskId: string, status: TaskStatus) => void;
+  onStatusChange: (taskId: string, status: TaskStatus) => void;
   onSelectionChange: (ids: Id<"tasks">[]) => void;
+  tasksData: {
+    data: Task[];
+    isLoading: boolean;
+    page: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+    setPage: (p: number) => void;
+    goPrev?: () => void;
+    goNext?: () => void;
+  };
 }) {
-    const queryArgs = React.useMemo(
-    () => ({
-      priority,
-      status,
-      assigneeId,
-      projectId,
-      orgId,
-    }),
-    [status, priority, assigneeId, orgId, projectId],
-  );
-    const { data: tasks, isLoading, page, hasNext, hasPrev, goPrev, goNext, setPage } = useProjectTasksData(queryArgs);
+  const { data: tasks, isLoading, page, hasNext, hasPrev, setPage, goPrev, goNext } = tasksData;
   const safeGoPrev = goPrev ?? (() => {});
   const safeGoNext = goNext ?? (() => {});
   const router = useRouter();
@@ -65,7 +65,7 @@ export function ProjectTaskList({
   const allSelected = tasks.length > 0 && selectedTasksIdsProp?.length === tasks.length;
 
   const toggleSelectAll = () => {
-    const allIds = tasks.map((m: Task) => String(m?._id));
+    const allIds = tasks.map((m: Task) => m._id);
     if (onSelectionChange) {
       if (allSelected) onSelectionChange([]);
       else onSelectionChange(allIds);

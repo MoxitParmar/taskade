@@ -7,6 +7,7 @@ import { useSmartUrlSync } from "@/hooks/use-smart-url-sync";
 import Members from "./members-tab";
 import Invitations from "./Invititions-tab";
 import { Id } from "@/convex/_generated/dataModel";
+import { useOrgMembersData } from "../_hooks/useSettings";
 
 type SettingTabsQueryState = {
   tab: "Members" | "Invitations";
@@ -40,6 +41,8 @@ export default function SettingTabs({organization, invitations, userId, orgId}: 
     ? queryState.tab
     : defaultQueryState.tab;
 
+  const membersData = useOrgMembersData({ orgId: String(orgId) });
+
   return (
     <div>
       {isMounted && (
@@ -62,7 +65,12 @@ export default function SettingTabs({organization, invitations, userId, orgId}: 
 
           <TabsContent value="Members">
             <div className="flex flex-col  justify-center rounded-xl border-border/60">
-              <Members organization={organization} orgId={orgId} userId={userId} />
+              <Members
+                organization={organization}
+                orgId={orgId}
+                userId={userId}
+                membersData={membersData}
+              />
             </div>
           </TabsContent>
           <TabsContent value="Invitations">

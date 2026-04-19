@@ -24,7 +24,8 @@ export const getMembersData = query({
     projectId: v.id("projects"),
 } ,
   handler: async (ctx, { orgId , projectId}) => {
-    return getProjectMembers(ctx, { orgId, paginate: false, projectId });
+    const pro = await getProjectMembers(ctx, { orgId, paginate: false, projectId });
+    return pro;
   },
 });
 

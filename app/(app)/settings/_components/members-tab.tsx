@@ -12,10 +12,12 @@ const Members = ({
   organization,
   orgId,
   userId,
+  membersData,
 }: {
   organization: any;
   orgId: Id<"organizations">;
   userId: Id<"users">;
+  membersData: ReturnType<typeof import("../_hooks/useSettings").useOrgMembersData>;
 }) => {
   const { execute: deleteMembership } = useDeleteMembership();
 
@@ -43,8 +45,8 @@ const Members = ({
       </div>
 
       <ProjectMemberList
-        orgId={orgId}
         userId={userId}
+        membersData={membersData}
         selectedMemberIds={selectedMemberIds}
         onSelectionChange={(ids: string[]) =>
           setSelectedMemberIds(

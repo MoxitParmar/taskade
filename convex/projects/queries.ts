@@ -1,6 +1,7 @@
 import { Id } from "../_generated/dataModel";
 import { QueryCtx } from "../_generated/server";
 import { paginateOrTake } from "../lib/paginateOrTake";
+import { getMembership } from "../memberships/models";
 import { formatUser, getUserSafe } from "../users/models";
 import { buildOrgProjectsQuery, buildProjectMembers,   formatProject, getProjectOrThrow, getUserProjectMemberships } from "./models";
 
@@ -98,8 +99,9 @@ export async function getProjectMembers(
             return null;
           }
         }
+          const orgMembership = await getMembership(ctx, membership.userId, membership.orgId);
   
-        return formatUser(user);
+         return { user: formatUser(user),role: orgMembership?.role };
       },
     });
   

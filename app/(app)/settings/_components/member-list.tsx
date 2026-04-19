@@ -12,25 +12,43 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useOrgMembersData } from "../_hooks/useSettings";
 import { Membership } from "@/convex/memberships/models";
 import PaginationControls from "../../_components/paginate";
 import { getAvatarColor } from "../_config/avatar-colors";
 
 export function ProjectMemberList({
   userId,
-  orgId,
+  membersData,
   selectedMemberIds: selectedMemberIdsProp,
   onSelectionChange,
 }: {
-  userId?:   string|null;
-  orgId?: string|null;
+  userId?: string | null;
+  membersData: {
+    data: any[];
+    isLoading: boolean;
+    page: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+    setPage: (p: number) => void;
+    goPrev?: () => void;
+    goNext?: () => void;
+  };
   selectedMemberIds?: string[];
   onSelectionChange?: (ids: string[]) => void;
 }) {
-    const { data: members, isLoading, page, hasNext, hasPrev, goPrev, goNext, setPage } = useOrgMembersData( { orgId } as {orgId: string});
+  const {
+    data: members = [],
+    isLoading,
+    page,
+    hasNext,
+    hasPrev,
+    goPrev,
+    goNext,
+    setPage,
+  } = membersData;
   const safeGoPrev = goPrev ?? (() => {});
   const safeGoNext = goNext ?? (() => {});
+  console.log("Members data in ProjectMemberList:", members);
 
   const selectableMembers = userId
     ? members.filter((m: Membership) => String(m?.user?._id) !== userId)
@@ -127,7 +145,7 @@ export function ProjectMemberList({
                       />
                     </button>
                   </TableHead>
-                  <TableHead className="min-w-[200px] text-xs font-semibold uppercase tracking-wider text-muted-foreground">Name</TableHead>
+                  <TableHead className="min-w-50 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Name</TableHead>
                   <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Email</TableHead>
                   <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Role</TableHead>
                 </TableRow>
