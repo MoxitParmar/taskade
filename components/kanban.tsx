@@ -423,7 +423,7 @@ export function KanbanBoard({
   return (
     <div
       className={cn(
-        'flex h-full flex-grow items-start gap-x-2 overflow-x-auto py-1 ',
+        'flex h-full grow items-start gap-x-2 overflow-x-auto py-1 ',
         className,
       )}
       ref={ref}
@@ -593,7 +593,7 @@ export function KanbanBoardColumnList({
 }: ComponentProps<'ul'>) {
   return (
     <ul
-      className={cn('min-h-0.5 flex-grow overflow-y-auto', className)}
+      className={cn('min-h-0.5 grow overflow-y-auto', className)}
       ref={ref}
       {...props}
     />

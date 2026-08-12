@@ -21,9 +21,9 @@ export interface TaskSummaryConfig {
 
 // Map server-side tasks pagination result -> TaskSummaryConfig-like structure
 function mapPriority(priority: string | undefined): TaskPriority {
-  const p = priority?.toUpperCase();
-  if (p === "HIGH" || p === "MEDIUM" || p === "LOW") return p;
-  return "LOW";
+  const p = priority?.toLowerCase();
+  if (p === "high" || p === "medium" || p === "low") return p;
+  return "low";
 }
 
 

@@ -106,7 +106,6 @@ export default function ProjectTabs({
                 orgId={orgId}
                 userId={userId}
                 projectId={projectId}
-                tasksData={taskData}
               />
             </div>
           </TabsContent>

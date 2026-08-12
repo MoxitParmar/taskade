@@ -20,9 +20,9 @@ import { TaskPriority } from "@/convex/tasks/models";
 const MAX_VISIBLE = 3;
 
 const priorityColor: Record<TaskPriority, string> = {
-  HIGH: "text-accent-foreground",
-  MEDIUM: "text-muted-foreground",
-  LOW: "text-muted-foreground/70",
+  high: "text-accent-foreground",
+  medium: "text-muted-foreground",
+  low: "text-muted-foreground/70",
 };
 
 export function TaskSummaryCard({ config }: { config: TaskSummaryConfig }) {

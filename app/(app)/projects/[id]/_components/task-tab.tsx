@@ -22,18 +22,15 @@ const TaskTab = ({
   orgId,
   userId,
   projectId,
-  tasksData,
 }: {
   orgId: Id<"organizations">;
   userId: Id<"users">;
   projectId: Id<"projects">;
-  tasksData: ReturnType<typeof useProjectTasksData>;
 }) => {
   const { execute: deleteTask } = useDeleteTask();
   const { execute: updateTask } = useUpdateTask();
 
   const [selectedTaskIds, setSelectedTaskIds] = React.useState<Id<"tasks">[]>([]);
-
   const onDeleteTask = async (id: string) => {
     if (!orgId) {
       throw new Error("Organization ID is required to delete Tasks.");
@@ -101,7 +98,6 @@ const TaskTab = ({
 
 
       <ProjectTaskList
-        tasksData={tasksData}
         orgId={orgId}
         assigneeId={queryState?.assignee as Id<"users">}
         priority={queryState?.priority as TaskPriority}

@@ -23,6 +23,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import PaginationControls from "@/app/(app)/_components/paginate";
 import { getAvatarColor } from "@/app/(app)/settings/_config/avatar-colors";
 import { Calendar } from "lucide-react";
+import { useProjectTasksData } from "../_hooks/useProject";
 
 
 export function ProjectTaskList({
@@ -34,7 +35,6 @@ export function ProjectTaskList({
   selectedTaskIds: selectedTasksIdsProp,
   onStatusChange,
   onSelectionChange,
-  tasksData,
 }: {
   status?: TaskStatus;
   priority?: TaskPriority;
@@ -44,17 +44,14 @@ export function ProjectTaskList({
   selectedTaskIds: Id<"tasks">[];
   onStatusChange: (taskId: string, status: TaskStatus) => void;
   onSelectionChange: (ids: Id<"tasks">[]) => void;
-  tasksData: {
-    data: Task[];
-    isLoading: boolean;
-    page: number;
-    hasNext: boolean;
-    hasPrev: boolean;
-    setPage: (p: number) => void;
-    goPrev?: () => void;
-    goNext?: () => void;
-  };
 }) {
+    const tasksData = useProjectTasksData({
+      orgId: String(orgId),
+      projectId: String(projectId),
+      status: status,
+      priority: priority,
+      assigneeId: assigneeId,
+    });
   const { data: tasks, isLoading, page, hasNext, hasPrev, setPage, goPrev, goNext } = tasksData;
   const safeGoPrev = goPrev ?? (() => {});
   const safeGoNext = goNext ?? (() => {});
