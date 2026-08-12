@@ -85,3 +85,10 @@ export const useUserTasksData = ({userId, orgId}: {userId: string, orgId: string
     errorMessage: "Failed to update project",
   });
 };
+
+export const useAddProjectMember = () => {
+  return useMutationAction(api.projects.mutations.addProjectMember, {
+    successMessage: "Member added",
+    errorMessage: "Failed to add member",
+  });
+};

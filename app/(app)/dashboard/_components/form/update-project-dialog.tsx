@@ -18,29 +18,32 @@ import { Id } from "@/convex/_generated/dataModel";
 import { useOrgMembersData } from "../../_hooks/useDashboard";
 import { Membership } from "@/convex/memberships/models";
 import { initialData } from "./use-project-form";
+import { useProjectMembersData } from "@/app/(app)/projects/[id]/_hooks/useProject";
 
 
 export function UpdateProjectDialog({
   orgId,
   userId,
   initialData,
+  projectId
 }: {
   orgId: Id<"organizations">;
   userId: Id<"users">;
   initialData: initialData;
+  projectId: Id<"projects">;
 }) {
   const [open, setOpen] = React.useState(false);
-  const { data} = useOrgMembersData({orgId, userId});
+  const { data} = useProjectMembersData({orgId, projectId});
     const memberOptions = React.useMemo(() => {
       return (
-        (data?.page ?? [])
+        (data ?? [])
           .filter((m: Membership) => m?.user?._id && m?.user?.name)
           .map((m: Membership) => ({
             value: m.user ? m.user._id : "",
             label: m.user ? m.user.name : "",
           }))
       );
-    }, [data?.page]);
+    }, [data]);
     
   return (
     <Dialog open={open} onOpenChange={(next) => setOpen(next)}>

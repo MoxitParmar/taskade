@@ -25,7 +25,7 @@ export const useProjectMembersData = ({orgId, projectId}: {orgId: string; projec
         args: {orgId, projectId},
       mode: "paginated",
     });
-    console.log("Project members data:", data, "Loading:", isLoading, "Page:", page, "HasNext:", hasNext, "HasPrev:", hasPrev);
+    // console.log("Project members data:", data, "Loading:", isLoading, "Page:", page, "HasNext:", hasNext, "HasPrev:", hasPrev);
 
     return {
         data,

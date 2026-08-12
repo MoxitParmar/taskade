@@ -10,6 +10,7 @@ import { ProjectMemberList } from "@/app/(app)/settings/_components/member-list"
 import { UpdateProjectDialog } from "@/app/(app)/dashboard/_components/form/update-project-dialog";
 import { BulkDelete } from "@/app/(app)/settings/_components/bulk-delete";
 import { DeleteProjectDialog } from "./deleteProjectDialog";
+import { AddProjectMemberDialog } from "@/app/(app)/dashboard/_components/form/add-project-member-dialog";
 
 const SettingsTab = ({
 
@@ -45,8 +46,13 @@ const SettingsTab = ({
         <UpdateProjectDialog
               orgId={orgId}
               userId={userId}
+              projectId={projectId}
               initialData={initialData}
         />
+        <AddProjectMemberDialog
+          orgId={orgId}
+          userId={userId}
+          projectId={projectId}/>
 
         <BulkDelete
           selectedIds={selectedMemberIds}
