@@ -18,6 +18,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { TaskForm } from "./task-form";
 import { useOrgMembersData } from "@/app/(app)/dashboard/_hooks/useDashboard";
 import { Membership } from "@/convex/memberships/models";
+import { useProjectMembersData } from "../../_hooks/useProject";
 
 
 export function TaskDialog({
@@ -31,10 +32,10 @@ export function TaskDialog({
 
 }) {
   const [open, setOpen] = React.useState(false);
-  const { data} = useOrgMembersData({orgId, userId});
+  const { data} = useProjectMembersData({orgId, projectId});
     const memberOptions = React.useMemo(() => {
       return (
-        (data?.page ?? [])
+        (data ?? [])
           .filter((m: Membership) => m?.user?._id && m?.user?.name)
           .map((m: Membership) => ({
             value: m.user ? m.user._id : "",

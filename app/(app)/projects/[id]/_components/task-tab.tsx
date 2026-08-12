@@ -7,10 +7,10 @@ import { Id } from "@/convex/_generated/dataModel";
 import TaskToolbar from "./task-toolbar";
 import { useSmartUrlSync } from "@/hooks/use-smart-url-sync";
 import { useDeleteTask, useUpdateTask, useProjectMembersData, useProjectTasksData } from "../_hooks/useProject";
-import { User } from "@/convex/users/models";
 import { BulkDelete } from "@/app/(app)/settings/_components/bulk-delete";
 import { ProjectTaskList } from "./projectTaskList";
 import { TaskPriority, TaskStatus } from "@/convex/tasks/models";
+import { Membership } from "@/convex/memberships/models";
 type TaskQueryState = {
   priority: string;
   assignee: string;
@@ -40,14 +40,14 @@ const TaskTab = ({
   const { data} = useProjectMembersData({orgId, projectId});
     const memberOptions = React.useMemo(() => {
       return (
-        (data?.page ?? [])
-          .filter((m: User) => m?._id && m?.name)
-          .map((m: User) => ({
-            value: m._id,
-            label: m.name,
+        (data ?? [])
+          .filter((m: Membership) => m?.user?._id && m?.user?.name)
+          .map((m: Membership) => ({
+            value: m?.user?._id,
+            label: m?.user?.name,
           }))
       );
-    }, [data?.page]);
+    }, [data]);
 
     const defaultQueryState = React.useMemo<TaskQueryState>(
       () => ({
