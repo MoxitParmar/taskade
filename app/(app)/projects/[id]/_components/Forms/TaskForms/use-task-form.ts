@@ -9,7 +9,7 @@ import {
 } from "./task-form-schema";
 import { type z } from "zod";
 import { Id } from "@/convex/_generated/dataModel";
-import { useCreateTask, useUpdateTask } from "../../_hooks/useProject";
+import { useCreateTask, useUpdateTask } from "../../../_hooks/useProject";
 
 type Type = "create" | "update";
 type FormInput = z.input<typeof formSchema>;

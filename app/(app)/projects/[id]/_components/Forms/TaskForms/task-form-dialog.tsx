@@ -18,7 +18,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { TaskForm } from "./task-form";
 import { useOrgMembersData } from "@/app/(app)/dashboard/_hooks/useDashboard";
 import { Membership } from "@/convex/memberships/models";
-import { useProjectMembersData } from "../../_hooks/useProject";
+import { useProjectMembersData } from "../../../_hooks/useProject";
 
 
 export function TaskDialog({

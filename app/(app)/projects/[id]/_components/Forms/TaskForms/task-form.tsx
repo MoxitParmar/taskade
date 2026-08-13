@@ -35,7 +35,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Calendar as CalendarIcon, X } from "lucide-react";
 import { formSchema } from "./task-form-schema";
 import { initialData,useTaskForm } from "./use-task-form";
-import { options } from "@/app/(app)/dashboard/_components/form/project-form";
+import { options } from "@/app/(app)/dashboard/_components/form/ProjectForm/project-form";
 import { Id } from "@/convex/_generated/dataModel";
 
 type Schema = z.infer<typeof formSchema>;

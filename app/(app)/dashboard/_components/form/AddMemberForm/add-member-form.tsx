@@ -95,7 +95,7 @@ export function AddMemberForm({
                 onValueChange={(value) => {
                   const current = field.value ?? [];
                   if (current.includes(value)) {
-                    field.onChange(current.filter((v) => v !== value));
+                    field.onChange(current.filter((v: string) => v !== value));
                   } else {
                     field.onChange([...current, value]);
                   }
@@ -126,7 +126,7 @@ export function AddMemberForm({
               </Select>
               {field.value && field.value.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  {field.value.map((memberId) => {
+                  {field.value.map((memberId: string) => {
                     const member = members.find((m) => m.value === memberId);
                     return (
                       <span
@@ -139,7 +139,7 @@ export function AddMemberForm({
                           className="ml-0.5 text-primary/60 hover:text-primary"
                           onClick={() =>
                             field.onChange(
-                              (field.value ?? []).filter((v) => v !== memberId),
+                              (field.value ?? []).filter((v: string) => v !== memberId),
                             )
                           }
                           aria-label={`Remove ${member?.label ?? memberId}`}

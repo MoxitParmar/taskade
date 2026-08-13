@@ -1,9 +1,10 @@
 "use client"
 import { useOrganization } from "@clerk/nextjs";
-import { CreateProjectDialog } from "../../dashboard/_components/form/create-project-dialog";
+
 import { PageHeader } from "../../dashboard/_components/header";
 import { Id } from "@/convex/_generated/dataModel";
 import { HeaderSkeleton } from "../../dashboard/_components/skeleton/header";
+import { CreateProjectDialog } from "../../dashboard/_components/form/ProjectForm/create-project-dialog";
 
 export default function ProjectHeader({userId, orgId}: { userId: Id<"users">; orgId: Id<"organizations"> }) {
 

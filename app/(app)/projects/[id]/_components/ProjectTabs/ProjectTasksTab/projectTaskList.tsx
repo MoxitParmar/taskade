@@ -15,15 +15,16 @@ import {
 import { Task, TaskPriority, TaskStatus } from "@/convex/tasks/models";
 import React from "react";
 import TaskTableSkeleton from "./taskTableSkeleton";
-import { taskPriorityConfig, taskStatusConfig } from "../config/project-data";
+import { taskPriorityConfig, taskStatusConfig } from "../../../_config/project-data";
 import { useRouter } from 'next/navigation'
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import PaginationControls from "@/app/(app)/_components/paginate";
+import PaginationControls from "@/components/paginate";
 import { getAvatarColor } from "@/app/(app)/settings/_config/avatar-colors";
 import { Calendar } from "lucide-react";
-import { useProjectTasksData } from "../_hooks/useProject";
+import { useProjectTasksData } from "../../../_hooks/useProject";
+
 
 
 export function ProjectTaskList({

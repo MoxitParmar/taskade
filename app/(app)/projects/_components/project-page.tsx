@@ -3,7 +3,7 @@
 import React from "react";
 import { useProjectsData } from "../_hooks/useProjects";
 import { ProjectCard } from "./project-card";
-import PaginationControls from "../../_components/paginate";
+import PaginationControls from "../../../../components/paginate";
 import CardSkeleton from "./card-skeleton";
 import { Id } from "@/convex/_generated/dataModel";
 import { Project } from "@/convex/projects/models";

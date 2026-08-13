@@ -3,9 +3,9 @@
 import React from "react";
 
 import { Id } from "@/convex/_generated/dataModel";
-import { BulkDelete } from "./bulk-delete";
-import { useDeleteMembership } from "../_hooks/useSettings";
-import { UpdateOrganizationForm } from "./updateProjectForm";
+import { BulkDelete } from "../../../../../../components/bulk-delete";
+import { useDeleteMembership } from "../../../_hooks/useSettings";
+import { UpdateOrganizationForm } from "./updateOrgForm";
 import { ProjectMemberList } from "./member-list";
 
 const Members = ({
@@ -17,7 +17,7 @@ const Members = ({
   organization: any;
   orgId: Id<"organizations">;
   userId: Id<"users">;
-  membersData: ReturnType<typeof import("../_hooks/useSettings").useOrgMembersData>;
+  membersData: ReturnType<typeof import("../../../_hooks/useSettings").useOrgMembersData>;
 }) => {
   const { execute: deleteMembership } = useDeleteMembership();
 

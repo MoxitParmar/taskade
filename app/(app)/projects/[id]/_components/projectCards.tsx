@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 import { Id } from "@/convex/_generated/dataModel";
 import { useProjectCardData } from "../_hooks/useProject";
-import { projectCardStats } from "../config/project-data";
+import { projectCardStats } from "../_config/project-data";
 import { DashboardCardsSkeleton } from "@/app/(app)/dashboard/_components/skeleton/dashboardCard";
 
 export function ProjectCards({

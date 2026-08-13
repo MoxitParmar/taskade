@@ -5,12 +5,14 @@ import React from "react";
 import { Id } from "@/convex/_generated/dataModel";
 
 
-import { useDeleteProject, useDeleteProjectMembership, useProjectData, useProjectMembersData } from "../_hooks/useProject";
-import { ProjectMemberList } from "@/app/(app)/settings/_components/member-list";
-import { UpdateProjectDialog } from "@/app/(app)/dashboard/_components/form/update-project-dialog";
-import { BulkDelete } from "@/app/(app)/settings/_components/bulk-delete";
+import { useDeleteProject, useDeleteProjectMembership, useProjectData, useProjectMembersData } from "../../../_hooks/useProject";
+
+import { UpdateProjectDialog } from "@/app/(app)/dashboard/_components/form/ProjectForm/update-project-dialog";
+import { BulkDelete } from "@/components/bulk-delete";
 import { DeleteProjectDialog } from "./deleteProjectDialog";
-import { AddProjectMemberDialog } from "@/app/(app)/dashboard/_components/form/add-project-member-dialog";
+import { AddProjectMemberDialog } from "@/app/(app)/dashboard/_components/form/AddMemberForm/add-project-member-dialog";
+import { ProjectMemberList } from "@/app/(app)/settings/_components/SettingTabs/MembersTab/member-list";
+
 
 const SettingsTab = ({
 

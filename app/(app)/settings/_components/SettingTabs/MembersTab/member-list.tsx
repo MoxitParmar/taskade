@@ -13,8 +13,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Membership } from "@/convex/memberships/models";
-import PaginationControls from "../../_components/paginate";
-import { getAvatarColor } from "../_config/avatar-colors";
+
+import { getAvatarColor } from "../../../_config/avatar-colors";
+import PaginationControls from "@/components/paginate";
 
 export function ProjectMemberList({
   userId,

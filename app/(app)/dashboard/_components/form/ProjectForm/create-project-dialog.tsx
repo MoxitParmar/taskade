@@ -15,7 +15,7 @@ import {
 import {  ProjectForm } from "./project-form";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Id } from "@/convex/_generated/dataModel";
-import { useOrgMembersData } from "../../_hooks/useDashboard";
+import { useOrgMembersData } from "../../../_hooks/useDashboard";
 import { Membership } from "@/convex/memberships/models";
 
 export function CreateProjectDialog({

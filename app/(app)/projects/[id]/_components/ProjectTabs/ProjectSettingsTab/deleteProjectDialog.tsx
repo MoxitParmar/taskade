@@ -3,8 +3,8 @@ import { Id } from "@/convex/_generated/dataModel";
 
 import React from "react";
 import { toast } from "sonner";
-import { useDeleteProject } from "../_hooks/useProject";
 import { Button } from "@/components/ui/button";
+import { useDeleteProject } from "../../../_hooks/useProject";
 
 export function DeleteProjectDialog({ projectId, userId, orgId }: { projectId: Id<"projects"> | undefined; userId: Id<"users">; orgId: Id<"organizations"> }) {
     const { execute: deleteProject } = useDeleteProject();

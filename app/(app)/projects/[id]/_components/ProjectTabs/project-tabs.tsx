@@ -5,16 +5,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings, SquareKanban, UserPlus, Users } from "lucide-react";
 import { useSmartUrlSync } from "@/hooks/use-smart-url-sync";
 import { Id } from "@/convex/_generated/dataModel";
-import TaskTab from "./task-tab";
+import TaskTab from "./ProjectTasksTab/task-tab";
 import {
   useDeleteTask,
   useProjectMembersData,
   useProjectTasksData,
   useUpdateTask,
-} from "../_hooks/useProject";
-import ProjectCalendarShadcn, { CalendarTab } from "./calendarTab";
-import Kanban from "./kanban";
-import SettingsTab from "./settingTab";
+} from "../../_hooks/useProject";
+
+import Kanban from "./KanbanTab/kanban";
+
+import CalendarTab from "./CalendarTab/calendarTab";
+import SettingsTab from "./ProjectSettingsTab/settingTab";
 
 type TasksTabQueryState = {
   tab: "Tasks" | "Calendar" | "Kanban" | "Settings";

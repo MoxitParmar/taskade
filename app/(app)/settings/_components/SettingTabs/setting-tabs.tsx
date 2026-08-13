@@ -4,10 +4,12 @@ import * as React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserPlus, Users } from "lucide-react";
 import { useSmartUrlSync } from "@/hooks/use-smart-url-sync";
-import Members from "./members-tab";
-import Invitations from "./Invititions-tab";
+
+
 import { Id } from "@/convex/_generated/dataModel";
-import { useOrgMembersData } from "../_hooks/useSettings";
+import { useOrgMembersData } from "../../_hooks/useSettings";
+import Invitations from "./InvititionTab/Invititions-tab";
+import Members from "./MembersTab/members-tab";
 
 type SettingTabsQueryState = {
   tab: "Members" | "Invitations";

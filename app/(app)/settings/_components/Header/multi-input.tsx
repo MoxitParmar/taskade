@@ -74,7 +74,7 @@ export default function MultiInput({ organization, setOpen }: any) {
                           {...field}
                           placeholder="Enter an email"
                           tags={tags}
-                          className="sm:min-w-[450px]"
+                          className="sm:min-w-112.5"
                           // Make tags look like outlined pill buttons and enlarge input
                           variant="outline"
                           shape="pill"

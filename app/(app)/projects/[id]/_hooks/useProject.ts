@@ -4,19 +4,6 @@ import { useMutationAction } from "@/hooks/use-mutation-action";
 import { useSmartQuery } from "@/hooks/use-smart-query";
 
 
-// export const useProjectMembersData = ({ projectId, orgId }: { projectId: string; orgId: string }) => {
-
-    
-//     const { data, isLoading } = useSmartQuery({
-//         query: api._project_id.queries.getMembersData,
-//         args: { orgId, projectId },
-//     });
-
-//     return {
-//         data,
-//         isLoading,
-//     };
-// }
 export const useProjectMembersData = ({orgId, projectId}: {orgId: string; projectId: string}) => {
 
     
@@ -25,7 +12,6 @@ export const useProjectMembersData = ({orgId, projectId}: {orgId: string; projec
         args: {orgId, projectId},
       mode: "paginated",
     });
-    // console.log("Project members data:", data, "Loading:", isLoading, "Page:", page, "HasNext:", hasNext, "HasPrev:", hasPrev);
 
     return {
         data,

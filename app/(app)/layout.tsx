@@ -1,10 +1,11 @@
 
 
-import { HeaderUserSection } from './_components/header-user-section'
+import { HeaderUserSection } from './_components/Header/header-user-section'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { ThemeToggleButton } from './_components/theme-toggle'
+import { ThemeToggleButton } from '../../components/theme-toggle'
 import React from 'react'
-import { AppSidebar } from './_components/app-sidebar'
+import { AppSidebar } from './_components/Sidebar/app-sidebar'
+
 
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (

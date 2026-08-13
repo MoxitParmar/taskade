@@ -6,7 +6,8 @@ import { useUserContext } from '@/hooks/use-user-context';
 import { useProjectData } from './_hooks/useProject';
 import { HeaderSkeleton } from '../../dashboard/_components/skeleton/header';
 import { ProjectCards } from './_components/projectCards';
-import ProjectTabs from './_components/project-tabs';
+import ProjectTabs from './_components/ProjectTabs/project-tabs';
+
 
 export default function ProjectDetail({
   params,
@@ -26,9 +27,6 @@ export default function ProjectDetail({
       )}
         <ProjectCards orgId={orgId} projectId={id as Id<"projects">} />
         <ProjectTabs isLead={isLead} userId={userId} orgId={orgId} projectId={id as Id<"projects">} />
-
-      
-
     </div>
   )
 }

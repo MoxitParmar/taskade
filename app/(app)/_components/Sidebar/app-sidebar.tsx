@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/sidebar";
 import { NavPages } from "./nav-pages";
 
-import { useAppSidebar } from "../_hooks/useAppSidebar";
+import { useAppSidebar } from "../../_hooks/useAppSidebar";
 import SidebarSkeleton from "./sidebar-skeleton";
 import { OrgSwitcher } from "./org-switcher";
 import { FolderOpen, ListChecks } from "lucide-react";

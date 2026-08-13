@@ -1,10 +1,10 @@
 "use client";
 
 import { Id } from "@/convex/_generated/dataModel";
-import SettingHeader from "./_components/setting-header";
 import { useUserContext } from "@/hooks/use-user-context";
 import { useOrganization } from "@clerk/nextjs";
-import SettingTabs from "./_components/setting-tabs";
+import SettingTabs from "./_components/SettingTabs/setting-tabs";
+import SettingHeader from "./_components/Header/setting-header";
 
 
 
