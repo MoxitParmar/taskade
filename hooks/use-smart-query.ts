@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "convex/react";
 
-type PaginatedResult<T> = {
+export type PaginatedResult<T> = {
   page: T[];
   continueCursor: string | null;
   isDone: boolean;

@@ -3,14 +3,14 @@ import { ArrowRight, Users, CalendarDays } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardAction } from "@/components/ui/card";
 
 import { cn } from "@/lib/utils";
-import { projectStatusStyles } from "../_config/projects";
+import { BadgeStyles } from "../_config/projects";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDashboardProjectData } from "../_hooks/useDashboard";
 import { Project } from "@/convex/projects/models";
 
 
 function ProjectItem({ project }: { project: Project }) {
-  const config = projectStatusStyles[project.status];
+  const config = BadgeStyles[project.status];
 
   return (
     <div className="border-t border-border px-6 py-5 w-full transition-colors duration-150 hover:bg-accent/50 cursor-pointer">

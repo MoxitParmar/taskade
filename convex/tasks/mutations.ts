@@ -155,8 +155,9 @@ export const deleteTask = mutation({
         
         // delete task
         await ctx.db.delete("tasks",task._id);
-        await deleteActivityLogs(ctx, { orgId }, args.taskId);
+        await deleteActivityLogs(ctx, { orgId }, args.taskId, "task");
         await Promise.all(comments.page.map(comment => ctx.db.delete("taskComments", comment._id)));
+    
 
         return true;
     },

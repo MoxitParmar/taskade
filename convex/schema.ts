@@ -151,6 +151,7 @@ export default defineSchema({
   })
   .index("by_org", ["orgId"])
       .index("by_org_task", ["orgId", "taskId"])
+      .index("by_org_comment", ["orgId", "entityId"])
       .index("by_org_type", ["orgId","type"])
   .index("by_org_user", ["orgId","userId"])
   .index("by_org_entity", ["orgId","entityType","entityId"])

@@ -1,0 +1,60 @@
+import { api } from "@/convex/_generated/api";
+import { useMutationAction } from "@/hooks/use-mutation-action";
+
+import { useSmartQuery } from "@/hooks/use-smart-query";
+
+
+// export const useProjectMembersData = ({orgId, projectId}: {orgId: string; projectId: string}) => {
+
+    
+//     const { data, isLoading, page, hasNext,hasPrev,setPage, goPrev, goNext} = useSmartQuery({
+//         query: api._project_id.queries.getMembersData,
+//         args: {orgId, projectId},
+//       mode: "paginated",
+//     });
+
+//     return {
+//         data,
+//         isLoading,
+//         page,
+//         hasNext,
+//         hasPrev,
+//         setPage,
+//         goPrev,
+//         goNext
+//     };
+// }
+export const useTaskData = ({  orgId, taskId }: { orgId: string; taskId: string }) => {
+
+    
+    const { data, isLoading } = useSmartQuery({
+        query: api._task_id.queries.getTask,
+        args: { taskId, orgId },
+    });
+
+    return {
+        data,
+        isLoading,
+    };
+}
+
+
+
+  export const useCreateTask=() => {
+  return useMutationAction(api.tasks.mutations.createTask, {
+    successMessage: "Task created",
+    errorMessage: "Failed to create task",
+  });
+};
+
+  export const useUpdateTask= () => {
+  return useMutationAction(api.tasks.mutations.updateTask, {
+    successMessage: "Task updated",
+    errorMessage: "Failed to update task",
+  });
+};
+
+export const useDeleteTask= () => {
+  return useMutationAction(api.tasks.mutations.deleteTask);
+}
+

@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { mutation } from "../_generated/server";
 
-import { logActivity, createCommentMetadata } from "../lib/activityLogs";
+import { logActivity, createCommentMetadata, deleteActivityLogs } from "../lib/activityLogs";
 import { getCommentOrThrow } from "./models";
 
 // create comment
@@ -84,6 +84,7 @@ export const deleteComment = mutation({
         commentId: v.id("taskComments"),
         userId: v.id("users"),
         orgId: v.id("organizations"),
+        taskId: v.id("tasks"),
     },
 
     handler: async (ctx, args) => {
@@ -98,6 +99,7 @@ export const deleteComment = mutation({
 
         // delete comment
         await ctx.db.delete("taskComments", args.commentId);
+        await deleteActivityLogs(ctx, { orgId }, args.commentId, "comment");
 
         return args.commentId;
     },

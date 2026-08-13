@@ -8,15 +8,17 @@
  * @module
  */
 
+import type * as _comments_queries from "../_comments/queries.js";
 import type * as _dashboard_queries from "../_dashboard/queries.js";
 import type * as _project_id_queries from "../_project_id/queries.js";
 import type * as _projects_queries from "../_projects/queries.js";
 import type * as _settings_queries from "../_settings/queries.js";
 import type * as _sidebar_queries from "../_sidebar/queries.js";
+import type * as _task_id_queries from "../_task_id/queries.js";
 import type * as activityLogs_models from "../activityLogs/models.js";
 import type * as activityLogs_queries from "../activityLogs/queries.js";
 import type * as comments_models from "../comments/models.js";
-import type * as comments_mutation from "../comments/mutation.js";
+import type * as comments_mutations from "../comments/mutations.js";
 import type * as comments_queries from "../comments/queries.js";
 import type * as http from "../http.js";
 import type * as lib_activityLogs from "../lib/activityLogs.js";
@@ -47,15 +49,17 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "_comments/queries": typeof _comments_queries;
   "_dashboard/queries": typeof _dashboard_queries;
   "_project_id/queries": typeof _project_id_queries;
   "_projects/queries": typeof _projects_queries;
   "_settings/queries": typeof _settings_queries;
   "_sidebar/queries": typeof _sidebar_queries;
+  "_task_id/queries": typeof _task_id_queries;
   "activityLogs/models": typeof activityLogs_models;
   "activityLogs/queries": typeof activityLogs_queries;
   "comments/models": typeof comments_models;
-  "comments/mutation": typeof comments_mutation;
+  "comments/mutations": typeof comments_mutations;
   "comments/queries": typeof comments_queries;
   http: typeof http;
   "lib/activityLogs": typeof lib_activityLogs;

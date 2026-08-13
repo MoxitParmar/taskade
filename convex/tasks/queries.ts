@@ -37,9 +37,11 @@ export async function getTasks(
 
 export async function getTaskById(
   ctx: QueryCtx,
+  args: {
     taskId: Id<"tasks">,
   orgId: Id<"organizations">
+  }
 ) {
-  const task = await getTaskOrThrow(ctx, taskId, orgId);
+  const task = await getTaskOrThrow(ctx, args.taskId, args.orgId);
   return await formatTask(ctx, task);
 }

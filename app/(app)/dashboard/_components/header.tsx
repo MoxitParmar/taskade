@@ -5,23 +5,24 @@ import { ReactNode } from "react";
 
 import { HeaderSkeleton } from "./skeleton/header";
 import { Badge } from "@/components/ui/badge";
-import { projectStatusStyles } from "../_config/projects";
+import { BadgeStyles } from "../_config/projects";
 import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 import { ProjectStatus } from "@/convex/projects/models";
+import { TaskPriority } from "@/convex/tasks/models";
 import { CreateProjectDialog } from "./form/ProjectForm/create-project-dialog";
 
 type PageHeaderProps = {
   title: string;
   subtitle?: string;
     action?: ReactNode;
-    badge?: ProjectStatus;
+    badge?: ProjectStatus | TaskPriority;
     back?: boolean;
 };
 
 export function PageHeader({ title, subtitle, action, badge, back }: PageHeaderProps) {
   
-  const config = badge ? projectStatusStyles[badge] : undefined;
+  const config = badge ? BadgeStyles[badge] : undefined;
 
 return (
   <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

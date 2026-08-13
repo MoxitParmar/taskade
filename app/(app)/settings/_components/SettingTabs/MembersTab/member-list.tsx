@@ -49,7 +49,6 @@ export function ProjectMemberList({
   } = membersData;
   const safeGoPrev = goPrev ?? (() => {});
   const safeGoNext = goNext ?? (() => {});
-  console.log("Members data in ProjectMemberList:", members);
 
   const selectableMembers = userId
     ? members.filter((m: Membership) => String(m?.user?._id) !== userId)

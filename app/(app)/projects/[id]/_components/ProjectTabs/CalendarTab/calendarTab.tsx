@@ -55,7 +55,6 @@ export function CalendarTab({ tasks, isLoading }: Props) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const today = new Date();
-  console.log("tasks", tasks)
 
   const getTasksForDate = (date: Date) =>
     tasks.filter(

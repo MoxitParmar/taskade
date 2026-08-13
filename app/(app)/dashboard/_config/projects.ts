@@ -1,11 +1,12 @@
 import { ProjectStatus } from "@/convex/projects/models";
+import { TaskPriority } from "@/convex/tasks/models";
 
 // ---------------------------------------------------------------------------
 // Centralized style configs — used by project-card, detail-header, overview
 // ---------------------------------------------------------------------------
 
-export const projectStatusStyles: Record<
-  ProjectStatus,
+export const BadgeStyles: Record<
+  ProjectStatus | TaskPriority,
   {
     label: string;
     badgeClass: string;
@@ -36,5 +37,23 @@ export const projectStatusStyles: Record<
     badgeClass: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
     dotClass: "bg-blue-400",
     progressBarClass: "[&>[data-slot=progress-indicator]]:bg-cyan-500",
+  },
+  "low": {
+    label: "LOW",
+    badgeClass: "bg-green-500/20 text-green-400 border-green-500/30",
+    dotClass: "bg-green-400",
+    progressBarClass: "[&>[data-slot=progress-indicator]]:bg-green-500",
+  },
+  "medium": {
+    label: "MEDIUM",
+    badgeClass: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+    dotClass: "bg-yellow-400",
+    progressBarClass: "[&>[data-slot=progress-indicator]]:bg-yellow-500",
+  },
+  "high": {
+    label: "HIGH",
+    badgeClass: "bg-red-500/20 text-red-400 border-red-500/30",
+    dotClass: "bg-red-400",
+    progressBarClass: "[&>[data-slot=progress-indicator]]:bg-red-500",
   },
 };

@@ -30,9 +30,15 @@ function ActivityRow({ item }: { item: ActivityLogs }) {
   return (
     <div
       className="border-t border-border cursor-pointer px-4 py-4 sm:px-6 sm:py-5 transition-colors duration-150 hover:bg-accent/50 "
-      onClick={() => {
-        router.push(`task/${item._id}`);
-      }}
+onClick={() => {
+  // item is an ActivityLogs doc — its _id is an activityLogs ID, not a task ID.
+  // Navigate to the task the activity refers to instead.
+  const taskId =
+    item.entityType === "task"
+      ? item.entityId
+      : item.entityDetails?.taskId;
+  if (taskId) router.push(`/task/${taskId}`);
+}}
     >
       <div className="flex items-start sm:items-center justify-between gap-3 sm:gap-4">
         {/* Left: Icon + Info */}
@@ -53,7 +59,7 @@ function ActivityRow({ item }: { item: ActivityLogs }) {
           {/* Title + Meta */}
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-2 sm:justify-start">
-              <h4 className="text-sm font-semibold truncate">{item?.metadata?.name}</h4>
+              <h4 className="text-sm font-semibold truncate">{item?.metadata?.name ?? item?.metadata?.content}</h4>
               {/* Badge visible only on small screens, inline with title */}
               <span
                 className={cn(
@@ -67,7 +73,7 @@ function ActivityRow({ item }: { item: ActivityLogs }) {
             <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <span className="hidden xs:inline sm:inline">
-                  {item?.metadata?.assigneeName}
+                  {item?.metadata?.assigneeName ?? item?.user?.name}
                 </span>
               </span>
               <span>{formatDate(item?.createdAt ?? 0)}</span>

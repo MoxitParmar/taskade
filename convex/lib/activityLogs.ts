@@ -106,15 +106,30 @@ export async function deleteActivityLogs(
   params: {
     orgId: Id<"organizations">;
   },
-  taskId: Id<"tasks"> 
+  entityId: Id<"tasks"> | Id<"taskComments">,
+  entityType: EntityType
 ) {
-  const logs = await ctx.db
-    .query("activityLogs")
-    .withIndex("by_org_task", (q) => q.eq("orgId", params.orgId).eq("taskId", taskId))
-    .first();
+  // const logs = await ctx.db
+  //   .query("activityLogs")
+  //   .withIndex("by_org_task", (q) => q.eq("orgId", params.orgId).eq("taskId", taskId))
+  //   .first();
+  if (entityType === "task") {
+    const logs = await ctx.db
+      .query("activityLogs")
+      .withIndex("by_org_task", (q) => q.eq("orgId", params.orgId).eq("taskId", entityId as Id<"tasks">))
+      .collect();
 
+   for (const log of logs) {
+      await ctx.db.delete(log._id);
+    }
+  } else if (entityType === "comment") {
+    const logs = await ctx.db
+      .query("activityLogs")
+      .withIndex("by_org_comment", (q) => q.eq("orgId", params.orgId).eq("entityId", entityId))
+      .collect();
 
-  if (logs) {
-    await ctx.db.delete(logs._id);
+    for (const log of logs) {
+      await ctx.db.delete(log._id);
+    }
   }
 }

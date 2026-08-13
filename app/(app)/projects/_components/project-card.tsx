@@ -12,11 +12,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Project } from "@/convex/projects/models";
-import { projectStatusStyles } from "../../dashboard/_config/projects";
+import { BadgeStyles } from "../../dashboard/_config/projects";
 
 
 export function ProjectCard( {project } : { project: Project }) {
-  const status = projectStatusStyles[project.status];
+  const status = BadgeStyles[project.status];
   const leadName = project?.lead?.name;
 
   return (
