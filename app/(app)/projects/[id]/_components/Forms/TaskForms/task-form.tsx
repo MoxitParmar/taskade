@@ -45,7 +45,7 @@ export function TaskForm({
   initialData,
   userId,
   orgId,
-    projectId,
+  projectId,
   members,
 }: {
   type: "create" | "update";

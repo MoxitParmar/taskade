@@ -42,7 +42,7 @@ export default function ProjectDetail({
               </CardContent>
             </Card>
           </div>
-            <TaskDetailsCard task={data} isLoading={isLoading} />
+            <TaskDetailsCard task={data} isLoading={isLoading} orgId={orgId} userId={userId} />
         </div>
       )}
       {/* <ProjectCards orgId={orgId} projectId={id as Id<"projects">} />

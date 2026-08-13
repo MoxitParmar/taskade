@@ -10,18 +10,25 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { Task } from "@/convex/tasks/models";
 import { taskPriorityConfig } from "@/app/(app)/projects/[id]/_config/project-data";
+import { UpdateTaskDialog } from "./dialogs/update-task-dialog";
+import { Id } from "@/convex/_generated/dataModel";
+import { DeleteTaskDialog } from "./dialogs/delete-task-dialog";
 // import { NewTaskDialog } from "./dialogs/new-task-dialog";
 // import { DeleteTaskDialog } from "./dialogs/delete-task-dialog";
 
 export function TaskDetailsCard({
   task,
   isLoading,
+  orgId,
+  userId
 }: {
   task: Task | null;
   isLoading: boolean;
+  orgId: Id<"organizations">;
+  userId: Id<"users">;
 }) {
   const priorityConf = task ? taskPriorityConfig[task.priority] : undefined;
-
+  console.log("orgId", orgId);
   return (
     <div className="space-y-6">
       {/* Task Details */}
@@ -53,7 +60,7 @@ export function TaskDetailsCard({
                 <Badge
                   variant="outline"
                   className={cn(
-                    "rounded-md px-2 py-0.5 text-xs font-semibold",
+                    "rounded-md px-2 py-0.5 text-xs font-semibold h-6",
                     priorityConf?.className
                   )}
                 >
@@ -144,15 +151,17 @@ export function TaskDetailsCard({
       </Card>
 
       {/* Actions */}
-      {/* <div className="flex justify-between">
+      <div className="flex justify-between">
         <div className="flex gap-2">
           <UpdateTaskDialog
-            projectId={task?.project._id}
-            taskId={task?._id}
+            orgId={orgId}
+            userId={userId}
+            projectId={task?.project?._id as Id<"projects">} 
+            taskId={task?._id as Id<"tasks">}
           />
-          <DeleteTaskDialog taskId={task?._id} />
+          <DeleteTaskDialog taskId={task?._id as Id<"tasks">} orgId={orgId as Id<"organizations">}  />
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }
