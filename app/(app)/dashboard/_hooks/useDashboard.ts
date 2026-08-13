@@ -43,7 +43,19 @@ export const useOrgActivityData = ({orgId}: {orgId: string}) => {
       isLoading,
     };
 }
+export const useUserActivityData = ({orgId, userId}: {orgId: string, userId: string}) => {
 
+    
+    const { data, isLoading } = useSmartQuery({
+        query: api._dashboard.queries.getUserActivityData,
+        args: { orgId, userId },
+    });
+
+    return {
+        data,
+      isLoading,
+    };
+}
 export const useOrgMembersData = ({orgId, userId}: {orgId: string, userId: string}) => {
 
     

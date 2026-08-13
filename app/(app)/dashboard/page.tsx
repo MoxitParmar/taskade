@@ -21,7 +21,7 @@ export default function Dashboard() {
       <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-[2fr_1fr]">
         <div className="flex flex-col gap-4">
           <ProjectOverview userId={userId} orgId={orgId} />
-          <RecentActivity orgId={orgId} />
+          <RecentActivity orgId={orgId} userId={userId} />
         </div>
         <TaskSummary userId={userId} orgId={orgId} />
       </div>

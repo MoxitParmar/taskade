@@ -9,7 +9,7 @@ import { TaskDialog } from "./Forms/TaskForms/task-form-dialog";
 export default function ProjectHeader({ project , projectId, userId, orgId }: { project: Project; projectId: Id<"projects">; userId: Id<"users">; orgId: Id<"organizations"> }) {
 
   const { membership } = useOrganization();
-  const isAdmin = membership?.role === "org:admin";
+  // const isAdmin = membership?.role === "org:admin";
 
   return (
     <>
@@ -19,7 +19,7 @@ export default function ProjectHeader({ project , projectId, userId, orgId }: { 
           back={true}
           badge={project?.status as ProjectStatus}
           action={
-            isAdmin && userId && orgId ? (
+             userId && orgId ? (
               <TaskDialog
                 userId={userId}
                 orgId={orgId}

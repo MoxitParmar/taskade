@@ -88,6 +88,13 @@ export const getOrgActivityData = query({
   },
 });
 
+export const getUserActivityData = query({
+  args,
+  handler: async (ctx, { orgId, userId }) => {
+    return await getActivityLogs(ctx, { orgId, userIdFilter: userId, limit: 8, paginate: false });
+  },
+});
+
 export const getUserTasksData = query({
   args,
   handler: async (ctx, { orgId, userId }) => {

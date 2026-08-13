@@ -15,7 +15,7 @@ import {
 } from "../_config/recent-activity";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useOrgActivityData } from "../_hooks/useDashboard";
+import { useOrgActivityData, useUserActivityData } from "../_hooks/useDashboard";
 import { ActivityLogs } from "@/convex/activityLogs/models";
 
 
@@ -73,7 +73,8 @@ onClick={() => {
             <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <span className="hidden xs:inline sm:inline">
-                  {item?.metadata?.assigneeName ?? item?.user?.name}
+                  {/* {item?.metadata?.assigneeName ?? item?.user?.name} */}
+                  { item?.entityType == "comment" ? `from: ${item?.user?.name} | task: ${item?.metadata?.taskName}` : `from: ${item?.user?.name} to: ${item?.metadata?.assigneeName}` }
                 </span>
               </span>
               <span>{formatDate(item?.createdAt ?? 0)}</span>
@@ -95,9 +96,10 @@ onClick={() => {
   );
 }
 
-export function RecentActivity({orgId}: {orgId: string}) {
-    const {data, isLoading} = useOrgActivityData({orgId});
-    
+export function RecentActivity({orgId, userId}: {orgId: string, userId: string}) {
+
+    const {data, isLoading} = useUserActivityData({orgId, userId});
+    console.log("RecentActivity data:", data);
   return (
     <>
       {isLoading ? (
