@@ -14,7 +14,8 @@ export interface ActivityLogs {
   _creationTime: number;
   orgId: Id<"organizations">;
   status?: ActivityStatus;
-  userId: Id<"users">;
+  assigneeId?: Id<"users">;
+  createdById: Id<"users">;
   entityId: string;
   entityType: ActivityType;
   type: string;
@@ -80,8 +81,8 @@ export function buildActivityLogsQuery(
   if (userIdFilter) {
     return ctx.db
       .query("activityLogs")
-      .withIndex("by_org_user", (q) =>
-        q.eq("orgId", orgId).eq("userId", userIdFilter)
+      .withIndex("by_org_created", (q) =>
+        q.eq("orgId", orgId).eq("createdById", userIdFilter)
       )
       .order("desc");
   }
@@ -93,12 +94,68 @@ export function buildActivityLogsQuery(
 }
 
 /* -------------------------------------------------- */
+/* 🎯 "Involving me" feed (actor ∪ assignee ∪ creator) */
+/* -------------------------------------------------- */
+
+/**
+ * Returns the most recent activity logs that involve the given user:
+ *  - things the user did (actor),
+ *  - tasks assigned to the user by someone else,
+ *  - comments on tasks the user created or is assigned to.
+ *
+ * Convex can't OR across indexes in a single query, so we run one query per
+ * relevance branch, then merge, dedupe by `_id`, and re-sort by recency.
+ */
+export async function getActivityLogsForUser(
+  ctx: QueryCtx,
+  args: {
+    orgId: Id<"organizations">;
+    userId: Id<"users">;
+    limit?: number;
+  }
+): Promise<ActivityLogsI[]> {
+  const { orgId, userId, limit = 50 } = args;
+  // Per-branch cap: enough to produce a correct global top-N after merging.
+  const cap = Math.min(Math.max(limit * 2, 100), 1000);
+
+  const [asAssignee, asCreator] = await Promise.all([
+    ctx.db
+      .query("activityLogs")
+      .withIndex("by_org_assignee", (q) =>
+        q.eq("orgId", orgId).eq("assigneeId", userId)
+      )
+      .order("desc")
+      .take(cap),
+    ctx.db
+      .query("activityLogs")
+      .withIndex("by_org_created", (q) =>
+        q.eq("orgId", orgId).eq("createdById", userId)
+      )
+      .order("desc")
+      .take(cap),
+  ]);
+
+  const seen = new Set<Id<"activityLogs">>();
+  const merged: ActivityLogsI[] = [];
+
+  for (const log of [...asAssignee, ...asCreator]) {
+    if (seen.has(log._id)) continue;
+    seen.add(log._id);
+    merged.push(log);
+  }
+
+  merged.sort((a, b) => b.createdAt - a.createdAt);
+
+  return merged.slice(0, limit);
+}
+
+/* -------------------------------------------------- */
 /* 📦 Formatting */
 /* -------------------------------------------------- */
 
 export async function formatActivityLog(ctx: Ctx, log: ActivityLogsI) {
   const [user, entityDetails] = await Promise.all([
-    getUserSafe(ctx, log.userId),
+    getUserSafe(ctx, log.createdById || log.assigneeId),
     getEntitySafe(ctx,  log.entityId),
   ]);
 

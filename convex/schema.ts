@@ -143,7 +143,13 @@ export default defineSchema({
       v.id("taskComments")
     ),
 
-    userId: v.id("users"),
+
+
+    // Denormalized from the task at write time so we can query "who is this
+    // activity about" (assigned to / created by), not just who acted.
+    assigneeId: v.optional(v.id("users")),
+    createdById: v.optional(v.id("users")),
+
     metadata: v.string(),
 
     createdAt: v.number(),
@@ -153,7 +159,8 @@ export default defineSchema({
       .index("by_org_task", ["orgId", "taskId"])
       .index("by_org_comment", ["orgId", "entityId"])
       .index("by_org_type", ["orgId","type"])
-  .index("by_org_user", ["orgId","userId"])
+  .index("by_org_assignee", ["orgId","assigneeId"])
+  .index("by_org_created", ["orgId","createdById"])
   .index("by_org_entity", ["orgId","entityType","entityId"])
 
 });

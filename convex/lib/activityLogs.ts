@@ -16,7 +16,6 @@ export interface ActivityLogParams {
   type: ActivityType;
   entityType: EntityType;
   entityId: Id<"tasks"> | Id<"taskComments">;
-  userId: Id<"users">;
   orgId: Id<"organizations">;
   taskId?: Id<"tasks">; // Optional, only for task-related activities
   metadata?: Record<string, any>;
@@ -45,6 +44,12 @@ export async function logActivity(
 ): Promise<Id<"activityLogs">> {
   const now = Date.now();
 
+  // Resolve the task's assignee & creator so the log is queryable by "who this
+  // activity is about" (assigned to / created by), not just who acted. All
+  // current call sites pass `taskId`; for task_assigned logs the task has
+  // already been patched, so this captures the NEW assignee.
+  const task = params.taskId ? await ctx.db.get(params.taskId) : null;
+
   // Create the activity log
   const activityLogId = await ctx.db.insert("activityLogs", {
     orgId: params.orgId,
@@ -52,7 +57,8 @@ export async function logActivity(
     entityType: params.entityType,
       entityId: params.entityId,
       taskId: params.taskId,
-      userId: params.userId,
+    assigneeId: task?.assignee,
+    createdById: task?.createdBy,
     metadata: JSON.stringify(params.metadata || {}),
     createdAt: now,
     updatedAt: now,

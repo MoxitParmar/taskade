@@ -49,7 +49,6 @@ export const createTask = mutation({
       type: "task_created",
       entityType: "task",
       entityId: taskId,
-      userId: args.userId,
       taskId,
       orgId: args.orgId,
       metadata: createTaskMetadata({
@@ -127,7 +126,6 @@ export const updateTask = mutation({
                  type: "task_assigned",
                  entityType: "task",
                  entityId: task._id,
-                 userId: userId,
                  taskId: task._id,
                  orgId,
                  metadata: createTaskMetadata({
