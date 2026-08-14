@@ -14,6 +14,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import CalendarSkeleton from "./calendar-skeleton";
+import { useProjectTasksData } from "../../../_hooks/useProject";
 
 type Task = {
   _id: string;
@@ -47,10 +48,13 @@ const priorityBorders: Record<string, string> = {
 };
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-export function CalendarTab({ tasks, isLoading }: Props) {
-  if (isLoading) {
-    return <CalendarSkeleton />;
-  }
+export function CalendarTab({ orgId, projectId }: { orgId: string; projectId: string }) {
+    const taskData = useProjectTasksData({
+    orgId: String(orgId),
+    projectId: String(projectId),
+  });
+  const isLoading = taskData?.isLoading;
+  const tasks: Task[] = taskData?.data || [];
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
@@ -62,24 +66,6 @@ export function CalendarTab({ tasks, isLoading }: Props) {
         task.dueDate &&
         isSameDay(new Date(task.dueDate as string | Date), date)
     );
-
-  const upcomingTasks = useMemo(
-    () =>
-      tasks
-        .filter(
-          (task) =>
-            task.dueDate &&
-            !isBefore(new Date(task.dueDate as string | Date), today) &&
-            task.status?.toLowerCase() !== "done"
-        )
-        .sort(
-          (a, b) =>
-            +new Date(a.dueDate as string | Date) -
-            +new Date(b.dueDate as string | Date)
-        )
-        .slice(0, 5),
-    [tasks, today]
-  );
 
   const overdueTasks = useMemo(
     () =>
@@ -97,6 +83,10 @@ export function CalendarTab({ tasks, isLoading }: Props) {
   const handleMonthChange = (direction: "next" | "prev") => {
     setCurrentMonth((prev) => (direction === "next" ? addMonths(prev, 1) : subMonths(prev, 1)));
   };
+
+  if (isLoading) {
+    return <CalendarSkeleton />;
+  }
 
   return (
     <div className="grid lg:grid-cols-3 gap-6">

@@ -61,7 +61,7 @@ export default function SignInStart({
       <Card className="w-full sm:w-96 p-3">
         <CardContent className="flex flex-col gap-y-6 p-5">
           <div className="flex flex-col gap-y-2">
-            <CardTitle>Acme, Inc.</CardTitle>
+            <CardTitle>Taskade</CardTitle>
             <CardDescription>
               Please enter your credentials to continue.
             </CardDescription>

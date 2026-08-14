@@ -1,6 +1,6 @@
 "use client"
-import { PageHeader } from "@/app/(app)/dashboard/_components/header";
 
+import { PageHeader } from "@/components/PageHeader";
 import { Task } from "@/convex/tasks/models";
 
 export default function TaskHeader({ task }: { task: Task }) {

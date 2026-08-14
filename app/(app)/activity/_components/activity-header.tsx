@@ -1,5 +1,7 @@
 "use client"
-import { PageHeader } from "@/app/(app)/dashboard/_components/header";
+
+import { PageHeader } from "@/components/PageHeader";
+
 
 
 export default function ActivityHeader() {

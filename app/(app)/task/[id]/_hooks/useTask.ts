@@ -4,26 +4,6 @@ import { useMutationAction } from "@/hooks/use-mutation-action";
 import { useSmartQuery } from "@/hooks/use-smart-query";
 
 
-// export const useProjectMembersData = ({orgId, projectId}: {orgId: string; projectId: string}) => {
-
-    
-//     const { data, isLoading, page, hasNext,hasPrev,setPage, goPrev, goNext} = useSmartQuery({
-//         query: api._project_id.queries.getMembersData,
-//         args: {orgId, projectId},
-//       mode: "paginated",
-//     });
-
-//     return {
-//         data,
-//         isLoading,
-//         page,
-//         hasNext,
-//         hasPrev,
-//         setPage,
-//         goPrev,
-//         goNext
-//     };
-// }
 export const useTaskData = ({  orgId, taskId }: { orgId: string; taskId: string }) => {
 
     

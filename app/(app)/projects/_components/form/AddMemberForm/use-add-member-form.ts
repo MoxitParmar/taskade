@@ -7,7 +7,8 @@ import {
   type FormOutput,
 } from "./add-member-form-schema";
 import { Id } from "@/convex/_generated/dataModel";
-import { useAddProjectMember } from "../../../_hooks/useDashboard";
+import { useAddProjectMember } from "../../../_hooks/useProjects";
+
 
 export const useAddMemberForm = ({
   projectId,

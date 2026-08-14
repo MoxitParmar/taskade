@@ -38,11 +38,18 @@ export default function ProjectPage({
     <div>
       {isLoading ? (
         <CardSkeleton />
-      ) : (
+      ) : data?.length ? (
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
           {data?.map((p: Project) => (
             <ProjectCard key={p._id} project={p} />
           ))}
+        </div>
+      ) : (
+        <div className="mt-8 flex flex-col items-center justify-center rounded-lg border border-gray-600 py-16 text-center">
+          <p className="text-lg font-medium text-gray-300">No projects found</p>
+          <p className="mt-1 text-sm text-gray-500">
+            Try adjusting your search or filter criteria.
+          </p>
         </div>
       )}
 

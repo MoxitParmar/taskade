@@ -1,16 +1,11 @@
 "use client"
-import { PageHeader } from "@/app/(app)/dashboard/_components/header";
-import { useOrganization } from "@clerk/nextjs";
 
 import { Id } from "@/convex/_generated/dataModel";
 import { Project, ProjectStatus } from "@/convex/projects/models";
-import { TaskDialog } from "./Forms/TaskForms/task-form-dialog";
+import { TaskDialog } from "../../../task/[id]/_components/Forms/TaskForms/dialogs/task-form-dialog";
+import { PageHeader } from "@/components/PageHeader";
 
 export default function ProjectHeader({ project , projectId, userId, orgId }: { project: Project; projectId: Id<"projects">; userId: Id<"users">; orgId: Id<"organizations"> }) {
-
-  const { membership } = useOrganization();
-  // const isAdmin = membership?.role === "org:admin";
-
   return (
     <>
         <PageHeader

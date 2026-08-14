@@ -35,7 +35,7 @@ export function TaskSummaryCard({ config }: { config: TaskSummaryConfig }) {
       
     <Card className="gap-0 py-0 overflow-hidden cursor-pointer transition-colors duration-200 hover:border-accent-foreground/40">
       {/* Header */}
-      <CardHeader className="py-4">
+      <CardHeader className="pt-4">
         <div className="flex items-center gap-3">
           <div
             className={cn(
@@ -64,22 +64,28 @@ export function TaskSummaryCard({ config }: { config: TaskSummaryConfig }) {
 
       {/* Items */}
       <CardContent className="px-4 pb-0" >
-        {visibleItems.map((item, i) => (
-          <div
-            key={`${item.title}-${i}`}
+        {visibleItems.length === 0 ? (
+          <div className="border-t border-border px-2 py-8 mx-2 text-center">
+            <p className="text-sm text-muted-foreground">No tasks yet</p>
+          </div>
+        ) : (
+          visibleItems.map((item, i) => (
+            <div
+              key={`${item.title}-${i}`}
                 className="border-t border-border px-2 py-3.5 mx-2  transition-colors duration-150 hover:bg-accent/50 cursor-pointer"
                 onClick={() => {router.push(`task/${item._id}`)}}
-          >
-            <h4 className="text-sm font-semibold">{item.title}</h4>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              <span className={priorityColor[item.priority]}>
-                {item.priority} Priority
-              </span>
-              <span className="mx-1.5">•</span>
-              Due: {item.dueDate ? new Date(item.dueDate).toLocaleDateString() : "No due date"}
-            </p>
-          </div>
-        ))}
+            >
+              <h4 className="text-sm font-semibold">{item.title}</h4>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                <span className={priorityColor[item.priority]}>
+                  {item.priority} Priority
+                </span>
+                <span className="mx-1.5">•</span>
+                Due: {item.dueDate ? new Date(item.dueDate).toLocaleDateString() : "No due date"}
+              </p>
+            </div>
+          ))
+        )}
       </CardContent>
 
       {/* View more footer */}

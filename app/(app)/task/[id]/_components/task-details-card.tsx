@@ -10,9 +10,9 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { Task } from "@/convex/tasks/models";
 import { taskPriorityConfig } from "@/app/(app)/projects/[id]/_config/project-data";
-import { UpdateTaskDialog } from "./dialogs/update-task-dialog";
+import { UpdateTaskDialog } from "./Forms/TaskForms/dialogs/update-task-dialog";
 import { Id } from "@/convex/_generated/dataModel";
-import { DeleteTaskDialog } from "./dialogs/delete-task-dialog";
+import { DeleteTaskDialog } from "./Forms/TaskForms/dialogs/delete-task-dialog";
 // import { NewTaskDialog } from "./dialogs/new-task-dialog";
 // import { DeleteTaskDialog } from "./dialogs/delete-task-dialog";
 

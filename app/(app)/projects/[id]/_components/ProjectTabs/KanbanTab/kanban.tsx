@@ -37,6 +37,7 @@ import { useRouter } from "next/navigation";
 import { useJsLoaded } from "@/hooks/use-js-loaded";
 import { KanbanBoardDropDirection } from "@/components/kanban";
 import { KanbanBoardCircleColor } from "@/components/kanban";
+import { useProjectTasksData } from "../../../_hooks/useProject";
 
 // Types
 export type Card = {
@@ -67,17 +68,25 @@ export type KanbanTask = {
 };
 
 export default function KanbanBoardPage({
-  tasks,
+
   onStatusChange,
   onDeleteTask,
+  orgId,
+  projectId
 }: {
-  tasks: KanbanTask[];
+  orgId: string;
+  projectId: string;
   onStatusChange?: (
     taskId: string,
     newStatus: "todo" | "in-progress" | "done",
   ) => Promise<void> | void;
   onDeleteTask?: (taskId: string) => Promise<void> | void;
 }) {
+    const taskData = useProjectTasksData({
+    orgId: String(orgId),
+    projectId: String(projectId),
+  });
+  const tasks: KanbanTask[] = taskData?.data || [];
   const normalizedTasks: Card[] = tasks.map((task) => ({
     id: task._id as Id<"tasks">,
     name: task.name,

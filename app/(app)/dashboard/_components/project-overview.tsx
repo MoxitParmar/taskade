@@ -70,31 +70,30 @@ export function ProjectOverview({userId, orgId}: {userId: string, orgId: string}
               </Link>
             </CardAction>
           </CardHeader>
-          {data?.page?.slice(0, 3).map((project: Project) => (
-            <Link
-              key={project._id}
-              href={`/projects/${project._id}`}
-              className="w-full"
-            >
-              <ProjectItem key={project._id} project={project} />
-            </Link>
-          ))}
+          {data?.page?.length ? (
+            data.page.slice(0, 3).map((project: Project) => (
+              <Link
+                key={project._id}
+                href={`/projects/${project._id}`}
+                className="w-full"
+              >
+                <ProjectItem key={project._id} project={project} />
+              </Link>
+            ))
+          ) : (
+            <div className="border-t border-border px-6 py-5 w-full">
+              <div className="flex flex-col items-center justify-center gap-2 py-8 text-center">
+                <p className="text-sm font-medium text-foreground">
+                  No projects yet
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Create your first project to get started.
+                </p>
+              </div>
+            </div>
+          )}
         </Card>
       )}
     </>
   );
 }
-//         <div className="grid grid-cols-1 gap-4 px-4 mt-6 sm:px-8 md:grid-cols-[2fr_1fr]">
-//           {/* Left Column */}
-//           <div className="flex flex-col gap-4">
-//             {isLoading ? (
-//               <Skeleton className="h-64 w-full rounded-xl" />
-//             ) : (
-//               <ProjectOverview data={projects?.page} />
-//             )}
-//             {isLoading ? (
-//               <Skeleton className="h-64 w-full rounded-xl" />
-//             ) : (
-//               <RecentActivity data={orgActivity?.page} />
-//             )}
-//           </div>

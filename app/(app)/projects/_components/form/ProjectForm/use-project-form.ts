@@ -6,7 +6,8 @@ import {
 } from "./project-form-schema";
 import { type z } from "zod";
 import { Id } from "@/convex/_generated/dataModel";
-import { useCreateProject, useUpdateProject } from "../../../_hooks/useDashboard";
+import { useCreateProject, useUpdateProject } from "../../../_hooks/useProjects";
+
 
 type Type = "create" | "update";
 type FormInput = z.input<typeof formSchema>;

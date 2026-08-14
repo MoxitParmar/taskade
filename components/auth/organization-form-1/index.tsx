@@ -221,7 +221,7 @@ export default function OrganizationForm1({
                         {...field}
                         id="form-organization-update-1-name"
                         aria-invalid={fieldState.invalid}
-                        placeholder="Acme, Inc."
+                        placeholder="Taskade"
                         autoComplete="organization"
                         disabled={!isLoaded}
                       />

@@ -1,41 +1,36 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardAction,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 import { cn, formatDate } from "@/lib/utils";
-
-import { useRouter } from 'next/navigation'
-import { activityStatusConfig, activityTypeConfig } from "../../dashboard/_config/recent-activity";
+import { useRouter } from "next/navigation";
+import {
+  activityStatusConfig,
+  activityTypeConfig,
+} from "../../dashboard/_config/recent-activity";
 import { ActivityLogs } from "@/convex/activityLogs/models";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useActivityData, useUserActivityData } from "../../dashboard/_hooks/useDashboard";
+
 import { Id } from "@/convex/_generated/dataModel";
 import PaginationControls from "@/components/paginate";
+import { useActivityData } from "../_hooks/useActivity";
 
 function ActivityRow({ item }: { item: ActivityLogs }) {
   const typeConfig = activityTypeConfig[item.entityType];
-  const statusConfig = activityStatusConfig[ item.status ?? "TODO" ];
+  const statusConfig = activityStatusConfig[item.status ?? "TODO"];
   const router = useRouter();
-  const Icon = typeConfig?.icon; 
+  const Icon = typeConfig?.icon;
 
   return (
     <div
       className="border-t border-border cursor-pointer px-4 py-4 sm:px-6 sm:py-5 transition-colors duration-150 hover:bg-accent/50 "
-onClick={() => {
-  // item is an ActivityLogs doc — its _id is an activityLogs ID, not a task ID.
-  // Navigate to the task the activity refers to instead.
-  const taskId =
-    item.entityType === "task"
-      ? item.entityId
-      : item.entityDetails?.taskId;
-  if (taskId) router.push(`/task/${taskId}`);
-}}
+      onClick={() => {
+        // item is an ActivityLogs doc — its _id is an activityLogs ID, not a task ID.
+        // Navigate to the task the activity refers to instead.
+        const taskId =
+          item.entityType === "task"
+            ? item.entityId
+            : item.entityDetails?.taskId;
+        if (taskId) router.push(`/task/${taskId}`);
+      }}
     >
       <div className="flex items-start sm:items-center justify-between gap-3 sm:gap-4">
         {/* Left: Icon + Info */}
@@ -56,7 +51,9 @@ onClick={() => {
           {/* Title + Meta */}
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-2 sm:justify-start">
-              <h4 className="text-sm font-semibold truncate">{item?.metadata?.name ?? item?.metadata?.content}</h4>
+              <h4 className="text-sm font-semibold truncate">
+                {item?.metadata?.name ?? item?.metadata?.content}
+              </h4>
               {/* Badge visible only on small screens, inline with title */}
               <span
                 className={cn(
@@ -71,7 +68,9 @@ onClick={() => {
               <span className="flex items-center gap-1.5">
                 <span className="hidden xs:inline sm:inline">
                   {/* {item?.metadata?.assigneeName ?? item?.user?.name} */}
-                  { item?.entityType == "comment" ? `from: ${item?.user?.name} | task: ${item?.metadata?.taskName}` : `from: ${item?.user?.name} to: ${item?.metadata?.assigneeName}` }
+                  {item?.entityType == "comment"
+                    ? `from: ${item?.user?.name} | task: ${item?.metadata?.taskName}`
+                    : `from: ${item?.user?.name} to: ${item?.metadata?.assigneeName}`}
                 </span>
               </span>
               <span>{formatDate(item?.createdAt ?? 0)}</span>
@@ -105,40 +104,49 @@ export function RecentActivity({
   orgId: Id<"organizations">;
   userId: Id<"users">;
 }) {
-    const activityData = useActivityData({
-      orgId: String(orgId),
-      userId: String(userId),
-      type: type,
-      assignee: assignee,
-    });
-  const { data, isLoading, page, hasNext, hasPrev, setPage, goPrev, goNext } = activityData;
+  const activityData = useActivityData({
+    orgId: String(orgId),
+    userId: String(userId),
+    type: type,
+    assignee: assignee,
+  });
+  const { data, isLoading, page, hasNext, hasPrev, setPage, goPrev, goNext } =
+    activityData;
   const safeGoPrev = goPrev ?? (() => {});
   const safeGoNext = goNext ?? (() => {});
   return (
     <>
       {isLoading ? (
         <Skeleton className="h-64 w-full rounded-xl" />
-      ) : (
+      ) : data && data.length > 0 ? (
         <Card className="gap-0 py-0 overflow-hidden  transition-colors duration-200 hover:border-accent-foreground/40">
-
           <CardContent className="px-0 pb-0">
-            {data?.map((item: ActivityLogs ) => (
+            {data?.map((item: ActivityLogs) => (
               <ActivityRow key={`${item._id}`} item={item} />
             ))}
           </CardContent>
         </Card>
+      ) : (
+        <Card className="gap-0 py-0 overflow-hidden transition-colors duration-200 hover:border-accent-foreground/40">
+          <CardContent className="flex flex-col items-center justify-center gap-2 px-6 py-16 text-center">
+            <p className="text-sm font-semibold">No activity yet</p>
+            <p className="text-xs text-muted-foreground">
+              There are no recent activity logs to display right now.
+            </p>
+          </CardContent>
+        </Card>
       )}
-                  <PaginationControls
-                    page={page}
-                    isFirstPage={!hasPrev}
-                    hasNextPage={hasNext}
-                    goPrev={safeGoPrev}
-                    goNext={safeGoNext}
-                    syncWithUrl
-                    urlPageParam="page"
-                    onPageFromUrl={setPage}
-                    className="mt-8"
-                  />
+      <PaginationControls
+        page={page}
+        isFirstPage={!hasPrev}
+        hasNextPage={hasNext}
+        goPrev={safeGoPrev}
+        goNext={safeGoNext}
+        syncWithUrl
+        urlPageParam="page"
+        onPageFromUrl={setPage}
+        className="mt-8"
+      />
     </>
   );
 }

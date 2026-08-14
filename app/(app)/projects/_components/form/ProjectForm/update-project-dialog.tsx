@@ -12,24 +12,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-
+import {  ProjectForm } from "./project-form";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Id } from "@/convex/_generated/dataModel";
-import { TaskForm } from "./task-form";
-import { useOrgMembersData } from "@/app/(app)/dashboard/_hooks/useDashboard";
 import { Membership } from "@/convex/memberships/models";
-import { useProjectMembersData } from "../../../_hooks/useProject";
+import { initialData } from "./use-project-form";
+import { useProjectMembersData } from "@/app/(app)/projects/[id]/_hooks/useProject";
 
 
-export function TaskDialog({
+export function UpdateProjectDialog({
   orgId,
   userId,
+  initialData,
   projectId
 }: {
   orgId: Id<"organizations">;
   userId: Id<"users">;
+  initialData: initialData;
   projectId: Id<"projects">;
-
 }) {
   const [open, setOpen] = React.useState(false);
   const { data} = useProjectMembersData({orgId, projectId});
@@ -42,27 +42,26 @@ export function TaskDialog({
             label: m.user ? m.user.name : "",
           }))
       );
-    }, [data?.page]);
+    }, [data]);
     
   return (
     <Dialog open={open} onOpenChange={(next) => setOpen(next)}>
       <DialogTrigger asChild>
-        <Button variant="default" className="cursor-pointer">
-          <Plus />
-          New Task
+        <Button variant="outline" className="cursor-pointer">
+          update Project
         </Button>
       </DialogTrigger>
 
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg p-0">
         <VisuallyHidden>
-            <DialogTitle>Create New Task</DialogTitle>
+            <DialogTitle>Update New Project</DialogTitle>
         </VisuallyHidden>
-        <TaskForm
-          type="create"
+        <ProjectForm
+          type="update"
           orgId={orgId}
           userId={userId}
           members={memberOptions}
-          projectId={projectId}
+          initialData={initialData}
         />
       </DialogContent>
     </Dialog>

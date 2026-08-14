@@ -119,9 +119,20 @@ export function RecentActivity({orgId, userId}: {orgId: string, userId: string})
           </CardHeader>
 
           <CardContent className="px-0 pb-0">
-            {data?.page.slice(0, 7).map((item: ActivityLogs ) => (
-              <ActivityRow key={`${item._id}`} item={item} />
-            ))}
+            {data?.page?.length ? (
+              data.page.slice(0, 7).map((item: ActivityLogs) => (
+                <ActivityRow key={`${item._id}`} item={item} />
+              ))
+            ) : (
+              <div className="border-t border-border flex flex-col items-center justify-center gap-2 px-6 py-14 text-center">
+                <p className="text-sm font-medium text-foreground">
+                  No recent activity
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Your activity will show up here as you get things done.
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

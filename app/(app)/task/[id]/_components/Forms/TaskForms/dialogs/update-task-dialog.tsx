@@ -12,29 +12,33 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import {  ProjectForm } from "./project-form";
+
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Id } from "@/convex/_generated/dataModel";
-import { useOrgMembersData } from "../../../_hooks/useDashboard";
+
 import { Membership } from "@/convex/memberships/models";
-import { initialData } from "./use-project-form";
 import { useProjectMembersData } from "@/app/(app)/projects/[id]/_hooks/useProject";
+import { TaskForm } from "@/app/(app)/task/[id]/_components/Forms/TaskForms/task-form";
+import { useTaskData } from "../../../../_hooks/useTask";
 
 
-export function UpdateProjectDialog({
+
+export function UpdateTaskDialog({
   orgId,
   userId,
-  initialData,
-  projectId
+  projectId,
+  taskId
 }: {
   orgId: Id<"organizations">;
   userId: Id<"users">;
-  initialData: initialData;
   projectId: Id<"projects">;
+  taskId: Id<"tasks">;
+
 }) {
   const [open, setOpen] = React.useState(false);
   const { data} = useProjectMembersData({orgId, projectId});
-    const memberOptions = React.useMemo(() => {
+  const { data: initialData} = useTaskData({orgId, taskId: taskId});
+  const memberOptions = React.useMemo(() => {
       return (
         (data ?? [])
           .filter((m: Membership) => m?.user?._id && m?.user?.name)
@@ -49,19 +53,21 @@ export function UpdateProjectDialog({
     <Dialog open={open} onOpenChange={(next) => setOpen(next)}>
       <DialogTrigger asChild>
         <Button variant="outline" className="cursor-pointer">
-          update Project
+          {/* <Plus /> */}
+          Update Task
         </Button>
       </DialogTrigger>
 
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg p-0">
         <VisuallyHidden>
-            <DialogTitle>Update New Project</DialogTitle>
+            <DialogTitle>Update Task</DialogTitle>
         </VisuallyHidden>
-        <ProjectForm
+        <TaskForm
           type="update"
           orgId={orgId}
           userId={userId}
           members={memberOptions}
+          projectId={projectId}
           initialData={initialData}
         />
       </DialogContent>

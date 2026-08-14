@@ -12,7 +12,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog"
-import SignUp1 from '@/components/auth/sign-up-1'
+import SignIn1 from "@/components/auth/sign-in-1";
 
 export function NewHeroSection() {
   const containerVariants: Variants = {
@@ -48,7 +48,7 @@ export function NewHeroSection() {
   const [open, setOpen] = useState(false);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-background via-background to-primary/5 px-4 py-20 md:py-32 w-full">
+    <section className="relative overflow-hidden bg-linear-to-br from-background via-background to-primary/5 px-4 py-20 md:py-32 w-full h-screen">
       <div className="mx-auto max-w-7xl">
         <motion.div
           variants={containerVariants}
@@ -67,18 +67,18 @@ export function NewHeroSection() {
             variants={itemVariants}
             className="mb-6 text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl"
           >
-            Transform Your Business
+Transform Your Business
             <br />
-            <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               With Innovation
             </span>
           </motion.h1>
 
           <motion.p
             variants={itemVariants}
-            className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground md:text-xl"
+            className="mx-auto mb-20 max-w-2xl text-lg text-muted-foreground md:text-xl "
           >
-            We help businesses grow faster with cutting-edge solutions and
+                         We help businesses grow faster with cutting-edge solutions and
             exceptional service. Join thousands of satisfied customers.
           </motion.p>
 
@@ -107,7 +107,7 @@ export function NewHeroSection() {
             <DialogTitle>Sign In</DialogTitle>
           </VisuallyHidden>
         <DialogContent className="p-0 w-fit max-w-none border-none bg-transparent shadow-none" showCloseButton={false}>
-          <SignUp1 enabledOAuthStrategies={["oauth_google", "oauth_github"]} />
+          <SignIn1 enabledOAuthStrategies={["oauth_google", "oauth_github"]} />
         </DialogContent>
       </Dialog>
           
@@ -126,7 +126,7 @@ export function NewHeroSection() {
           <motion.div
             variants={floatingVariants}
             animate="animate"
-            className="mt-16 flex items-center justify-center gap-8 text-sm text-muted-foreground"
+            className="mt-26 flex items-center justify-center gap-8 text-sm text-muted-foreground"
           >
             <div className="text-center">
               <div className="text-2xl font-bold text-foreground">10K+</div>
@@ -148,3 +148,4 @@ export function NewHeroSection() {
     </section>
   );
 }
+

@@ -65,10 +65,6 @@ export default function ProjectTabs({
     ? queryState.tab
     : defaultQueryState.tab;
 
-  const taskData = useProjectTasksData({
-    orgId: String(orgId),
-    projectId: String(projectId),
-  });
   const membersData  = useProjectMembersData({orgId: String(orgId), projectId: String(projectId)});
   const { execute: deleteTask } = useDeleteTask();
   const { execute: updateTask } = useUpdateTask();
@@ -113,10 +109,7 @@ export default function ProjectTabs({
           </TabsContent>
           <TabsContent value="Calendar">
             <div className="flex flex-col  justify-center rounded-xl border-border/60">
-              <CalendarTab
-                tasks={taskData.data}
-                isLoading={taskData?.isLoading}
-              />
+              <CalendarTab orgId={orgId} projectId={projectId} />
             </div>
           </TabsContent>
           <TabsContent value="Kanban">
@@ -130,13 +123,15 @@ export default function ProjectTabs({
                 onStatusChange={async (taskId, status) => {
                   await updateTask({ taskId, status, orgId, userId });
                 }}
-                tasks={taskData.data}
+                orgId={orgId}
+                projectId={projectId}
               />
             </div>
           </TabsContent>
           <TabsContent value="Settings">
             <div className="flex flex-col  justify-center rounded-xl border-border/60">
-              <SettingsTab orgId={orgId} userId={userId} projectId={projectId} membersData={membersData} />
+              <SettingsTab orgId={orgId} userId={userId} projectId={projectId} membersData={membersData}
+              />
             </div>
           </TabsContent>
         </Tabs>

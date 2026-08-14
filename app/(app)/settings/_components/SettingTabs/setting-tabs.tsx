@@ -43,11 +43,9 @@ export default function SettingTabs({organization, invitations, userId, orgId}: 
     ? queryState.tab
     : defaultQueryState.tab;
 
-  const membersData = useOrgMembersData({ orgId: String(orgId) });
-
   return (
     <div>
-      {isMounted && (
+      {isMounted && orgId && (
         <Tabs
           value={currentTab}
           onValueChange={(value) =>
@@ -71,7 +69,6 @@ export default function SettingTabs({organization, invitations, userId, orgId}: 
                 organization={organization}
                 orgId={orgId}
                 userId={userId}
-                membersData={membersData}
               />
             </div>
           </TabsContent>

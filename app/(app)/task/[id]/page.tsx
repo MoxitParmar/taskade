@@ -9,6 +9,7 @@ import TaskHeader from "./_components/task-header";
 import { useTaskComments } from "./_hooks/useTaskComments";
 import { ChatContainer } from "./_components/Chat/chat-container";
 import { TaskDetailsCard } from "./_components/task-details-card";
+import { ChatSkeleton } from "./_components/skeleton/chat";
 import { Card, CardContent } from "@/components/ui/card";
 // import { ProjectCards } from './_components/projectCards';
 // import ProjectTabs from './_components/ProjectTabs/project-tabs';
@@ -32,7 +33,7 @@ export default function ProjectDetail({
     <div className="app-page">
       {isLoading ? <HeaderSkeleton /> : <TaskHeader task={data} />}
       {isCommentLoading ? (
-          <HeaderSkeleton />
+          <ChatSkeleton />
         ) : (
             <div className="grid lg:grid-cols-3 gap-6 mt-4">
           <div className="lg:col-span-2">

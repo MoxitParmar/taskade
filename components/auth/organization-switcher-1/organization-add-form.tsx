@@ -223,7 +223,7 @@ export function OrganizationCreateForm({
                     {...field}
                     id="form-organization-create-1-name"
                     aria-invalid={fieldState.invalid}
-                    placeholder="Acme, Inc."
+                    placeholder="Taskade"
                     type="text"
                     autoComplete="organization"
                   />

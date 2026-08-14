@@ -4,7 +4,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import React from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { useDeleteTask } from "../../_hooks/useTask";
+import { useDeleteTask } from "../../../../_hooks/useTask";
 
 
 export function DeleteTaskDialog({ taskId, orgId }: { taskId: Id<"tasks"> | undefined;  orgId: Id<"organizations"> }) {

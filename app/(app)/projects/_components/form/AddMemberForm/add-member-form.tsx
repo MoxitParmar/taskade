@@ -1,7 +1,7 @@
 "use client";
 import { Controller } from "react-hook-form";
 import { motion } from "motion/react";
-import { Check, Users, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import {
   Field,
   FieldGroup,

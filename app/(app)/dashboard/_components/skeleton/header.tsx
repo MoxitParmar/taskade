@@ -8,9 +8,6 @@ export function HeaderSkeleton() {
         <Skeleton className="h-4 w-56 max-w-[60vw]" />
       </div>
 
-      <div className="shrink-0">
-        <Skeleton className="h-10 w-34" />
-      </div>
     </div>
   );
 }

@@ -15,30 +15,25 @@ import {
 
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Id } from "@/convex/_generated/dataModel";
-
+import { TaskForm } from "../task-form";
+import { useOrgMembersData } from "@/app/(app)/dashboard/_hooks/useDashboard";
 import { Membership } from "@/convex/memberships/models";
-import { useProjectMembersData } from "@/app/(app)/projects/[id]/_hooks/useProject";
-import { TaskForm } from "@/app/(app)/projects/[id]/_components/Forms/TaskForms/task-form";
-import { useTaskData } from "../../_hooks/useTask";
+import { useProjectMembersData } from "../../../../../../projects/[id]/_hooks/useProject";
 
 
-
-export function UpdateTaskDialog({
+export function TaskDialog({
   orgId,
   userId,
-  projectId,
-  taskId
+  projectId
 }: {
   orgId: Id<"organizations">;
   userId: Id<"users">;
   projectId: Id<"projects">;
-  taskId: Id<"tasks">;
 
 }) {
   const [open, setOpen] = React.useState(false);
   const { data} = useProjectMembersData({orgId, projectId});
-  const { data: initialData} = useTaskData({orgId, taskId: taskId});
-  const memberOptions = React.useMemo(() => {
+    const memberOptions = React.useMemo(() => {
       return (
         (data ?? [])
           .filter((m: Membership) => m?.user?._id && m?.user?.name)
@@ -47,28 +42,27 @@ export function UpdateTaskDialog({
             label: m.user ? m.user.name : "",
           }))
       );
-    }, [data]);
+    }, [data?.page]);
     
   return (
     <Dialog open={open} onOpenChange={(next) => setOpen(next)}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="cursor-pointer">
-          {/* <Plus /> */}
-          Update Task
+        <Button variant="default" className="cursor-pointer">
+          <Plus />
+          New Task
         </Button>
       </DialogTrigger>
 
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg p-0">
         <VisuallyHidden>
-            <DialogTitle>Update Task</DialogTitle>
+            <DialogTitle>Create New Task</DialogTitle>
         </VisuallyHidden>
         <TaskForm
-          type="update"
+          type="create"
           orgId={orgId}
           userId={userId}
           members={memberOptions}
           projectId={projectId}
-          initialData={initialData}
         />
       </DialogContent>
     </Dialog>
