@@ -111,14 +111,14 @@ export const deleteUser = mutation({
 
     /* ---------------- ACTIVITY LOGS ---------------- */
 
-    const logs = await ctx.db
-      .query("activityLogs")
-      .withIndex("by_org_user", (q) => q.eq("orgId", memberships[0]?.orgId).eq("userId", args.userId))
-      .collect();
+    // const logs = await ctx.db
+    //   .query("activityLogs")
+    //   .withIndex("by_org_user", (q) => q.eq("orgId", memberships[0]?.orgId).eq("userId", args.userId))
+    //   .collect();
 
-    for (const log of logs) {
-      await ctx.db.delete(log._id);
-    }
+    // for (const log of logs) {
+    //   await ctx.db.delete(log._id);
+    // }
     
 
     /* ---------------- DELETE USER ---------------- */

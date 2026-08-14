@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { useUserContext } from "@/hooks/use-user-context";
 import { useOrganization } from "@clerk/nextjs";
@@ -20,7 +21,9 @@ export default function Settings() {
   return (
     <div className="app-page">
           <SettingHeader organization={organization} />
-          <SettingTabs organization={organization} orgId={orgId} userId={userId} invitations={invitations} />
+          <Suspense fallback={null}>
+            <SettingTabs organization={organization} orgId={orgId} userId={userId} invitations={invitations} />
+          </Suspense>
     </div>
   );
 }

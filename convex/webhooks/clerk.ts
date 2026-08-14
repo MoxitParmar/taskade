@@ -118,13 +118,13 @@ export const clerkWebhook = httpAction(async (ctx, request) => {
       break;
     }
 
-    case "organizationMembership.deleted": {
-      await ctx.runMutation(api.memberships.mutations.deleteMembership, {
-        clerkUserId: data.public_user_data.user_id,
-        clerkOrgId: data.organization.id,
-      });
-      break;
-    }
+    // case "organizationMembership.deleted": {
+    //   await ctx.runMutation(api.memberships.mutations.deleteMembership, {
+    //     clerkUserId: data.public_user_data.user_id,
+    //     clerkOrgId: data.organization.id,
+    //   });
+    //   break;
+    // }
 
     default:
       console.warn(`Unhandled event type: ${event.type}`);

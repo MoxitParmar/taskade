@@ -14,7 +14,6 @@ export async function updateOrganization(data: OrganizationUpdateFormValues) {
 
   await client.organizations.updateOrganization(data.id, {
     name: data.name,
-    slug: data.slug,
   });
 
   if (data.picture && data.picture.size > 0) {

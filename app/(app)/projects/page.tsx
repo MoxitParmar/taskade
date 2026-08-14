@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import ProjectHeader from "./_components/project-header";
 import ProjectToolbar from "./_components/project-toolbar";
 import ProjectPage from "./_components/project-page";
@@ -14,7 +14,7 @@ type ProjectsQueryState = {
   page: string;
 };
 
-export default function Projects() {
+function ProjectsContent() {
     const defaultQueryState = React.useMemo<ProjectsQueryState>(
       () => ({
         search: "",
@@ -60,5 +60,13 @@ export default function Projects() {
             orgId={orgId}
           />
     </div>
+  );
+}
+
+export default function Projects() {
+  return (
+    <Suspense fallback={<div className="app-page" />}>
+      <ProjectsContent />
+    </Suspense>
   );
 }

@@ -3,7 +3,7 @@ import { Id } from "@/convex/_generated/dataModel";
 
 import { useUserContext } from "@/hooks/use-user-context";
 import ActivityHeader from "./_components/activity-header";
-import React from "react";
+import React, { Suspense } from "react";
 import { useSmartUrlSync } from "@/hooks/use-smart-url-sync";
 import ActivityToolbar from "./_components/activity-toolbar";
 import { Membership } from "@/convex/memberships/models";
@@ -14,11 +14,7 @@ type ActivityQueryState = {
   type: string;
   page: string;
 };
-export default function ProjectDetail({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+function ActivityContent() {
   const userData = useUserContext()?.data;
   const userId = userData?.userId as Id<"users">;
   const orgId = userData?.orgId as Id<"organizations">;
@@ -74,5 +70,13 @@ export default function ProjectDetail({
         userId={userId}
       />
     </div>
+  );
+}
+
+export default function ActivityPage() {
+  return (
+    <Suspense fallback={<div className="app-page" />}>
+      <ActivityContent />
+    </Suspense>
   );
 }

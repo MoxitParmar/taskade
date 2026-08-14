@@ -35,7 +35,6 @@ export const createComment = mutation({
       entityType: "comment",
       taskId: args.taskId,
       entityId: commentId,
-      userId,
       orgId,
       metadata: createCommentMetadata({
         content: args.content.substring(0, 100), // Store first 100 chars
