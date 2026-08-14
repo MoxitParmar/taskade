@@ -11,8 +11,12 @@ import { v } from "convex/values";
 
 
 const args = {
-  userId: v.optional(v.id("users")),
+  userId: v.id("users"),
   orgId: v.id("organizations"),
+  assignee: v.optional(v.id("users")),
+  type: v.optional(v.string()),
+  limit: v.optional(v.number()),
+    cursor: v.optional(v.string()),
 };
 
 export const getMembersData = query({
@@ -81,17 +85,18 @@ export const getProjectData = query({
   },
 });
 
-export const getOrgActivityData = query({
-  args,
-  handler: async (ctx, { orgId }) => {
-    return await getActivityLogs(ctx, { orgId, limit: 8, paginate: false });
-  },
-});
 
 export const getUserActivityData = query({
   args,
   handler: async (ctx, { orgId, userId }) => {
-    return await getActivityLogs(ctx, { orgId, involvingUserId: userId, limit: 8, paginate: false });
+    return await getActivityLogs(ctx, { orgId, userId, limit: 8, paginate: false });
+  },
+});
+
+export const getActivity = query({
+  args,
+  handler: async (ctx, { orgId, userId, type, assignee, limit, cursor }) => {
+    return await getActivityLogs(ctx, { orgId, userId, paginate: true, assignee, entityType: type, limit, cursor });
   },
 });
 

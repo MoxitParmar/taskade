@@ -84,12 +84,12 @@ export const useDeleteProjectMembership = () => {
   return useMutationAction(api.projects.mutations.removeProjectMember);
 }
 
+export const normalizeFilter = (value?: string) => {
+  if (!value) return undefined;
+  const trimmed = value.trim();
+  return trimmed === "" ? undefined : trimmed;
+};
 export const useProjectTasksData = ({orgId, projectId,status, priority, assigneeId}: {orgId: string; projectId: string, status?: string, priority?: string, assigneeId?: string}) => {
-  const normalizeFilter = (value?: string) => {
-    if (!value) return undefined;
-    const trimmed = value.trim();
-    return trimmed === "" ? undefined : trimmed;
-  };
 
   const statusValue = normalizeFilter(status);
   const priorityValue = normalizeFilter(priority);

@@ -7,16 +7,16 @@ import {
   CardAction,
   CardContent,
 } from "@/components/ui/card";
+
 import { cn, formatDate } from "@/lib/utils";
 
-import {
-  activityTypeConfig,
-  activityStatusConfig,
-} from "../_config/recent-activity";
-import { useRouter } from "next/navigation";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useUserActivityData } from "../_hooks/useDashboard";
+import { useRouter } from 'next/navigation'
+import { activityStatusConfig, activityTypeConfig } from "../../dashboard/_config/recent-activity";
 import { ActivityLogs } from "@/convex/activityLogs/models";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useActivityData, useUserActivityData } from "../../dashboard/_hooks/useDashboard";
+import { Id } from "@/convex/_generated/dataModel";
+import PaginationControls from "@/components/paginate";
 
 function ActivityRow({ item }: { item: ActivityLogs }) {
   const typeConfig = activityTypeConfig[item.entityType];
@@ -93,38 +93,52 @@ onClick={() => {
   );
 }
 
-export function RecentActivity({orgId, userId}: {orgId: string, userId: string}) {
-
-    const {data, isLoading} = useUserActivityData({orgId, userId});
-    console.log("RecentActivity data:", data);
+// export function RecentActivity({ data, isLoading}: {orgId: string, userId: string, data: any, isLoading: boolean}) {
+export function RecentActivity({
+  type,
+  assignee,
+  userId,
+  orgId,
+}: {
+  type?: "comment" | "task";
+  assignee?: Id<"users">;
+  orgId: Id<"organizations">;
+  userId: Id<"users">;
+}) {
+    const activityData = useActivityData({
+      orgId: String(orgId),
+      userId: String(userId),
+      type: type,
+      assignee: assignee,
+    });
+  const { data, isLoading, page, hasNext, hasPrev, setPage, goPrev, goNext } = activityData;
+  const safeGoPrev = goPrev ?? (() => {});
+  const safeGoNext = goNext ?? (() => {});
   return (
     <>
       {isLoading ? (
         <Skeleton className="h-64 w-full rounded-xl" />
       ) : (
         <Card className="gap-0 py-0 overflow-hidden  transition-colors duration-200 hover:border-accent-foreground/40">
-          <CardHeader className="py-4">
-            <CardTitle className="text-base font-semibold">
-              Recent Activity
-            </CardTitle>
-            <CardAction>
-              <Link
-                href="/activity"
-                className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                View all
-                <ArrowRight className="size-4" />
-              </Link>
-            </CardAction>
-          </CardHeader>
 
           <CardContent className="px-0 pb-0">
-            {data?.page.slice(0, 7).map((item: ActivityLogs ) => (
+            {data?.map((item: ActivityLogs ) => (
               <ActivityRow key={`${item._id}`} item={item} />
             ))}
           </CardContent>
         </Card>
       )}
+                  <PaginationControls
+                    page={page}
+                    isFirstPage={!hasPrev}
+                    hasNextPage={hasNext}
+                    goPrev={safeGoPrev}
+                    goNext={safeGoNext}
+                    syncWithUrl
+                    urlPageParam="page"
+                    onPageFromUrl={setPage}
+                    className="mt-8"
+                  />
     </>
   );
 }

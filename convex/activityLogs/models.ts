@@ -1,7 +1,8 @@
 // convex/activityLogs/model.ts
 
+import { OrderedQuery } from "convex/server";
 import { QueryCtx, MutationCtx } from "../_generated/server";
-import { Doc, Id } from "../_generated/dataModel";
+import { DataModel, Doc, Id } from "../_generated/dataModel";
 import { formatUser, getUserSafe } from "../users/models";
 
 type Ctx = QueryCtx | MutationCtx;
@@ -45,108 +46,39 @@ export function parseMetadata(metadata: string | undefined) {
   }
 }
 
-/* -------------------------------------------------- */
-/* 🧠 Query Builder */
-/* -------------------------------------------------- */
 
-export function buildActivityLogsQuery(
-  ctx: QueryCtx,
-  args: {
-    orgId: Id<"organizations">;
-    entityType?: string;
-    type?: string;
-    userIdFilter?: Id<"users">;
-  }
-) {
-  const { orgId, entityType, type, userIdFilter } = args;
-
-  if (entityType) {
-    return ctx.db
-      .query("activityLogs")
-        .withIndex("by_org_entity", (q) =>
-        q.eq("orgId", orgId).eq("entityType", entityType as ActivityType)
-      )
-      .order("desc");
-  }
-
-  if (type) {
-    return ctx.db
-      .query("activityLogs")
-        .withIndex("by_org_type", (q) =>
-        q.eq("orgId", orgId).eq("type", type as Type)
-      )
-      .order("desc");
-  }
-
-  if (userIdFilter) {
-    return ctx.db
-      .query("activityLogs")
-      .withIndex("by_org_created", (q) =>
-        q.eq("orgId", orgId).eq("createdById", userIdFilter)
-      )
-      .order("desc");
-  }
-
-  return ctx.db
-    .query("activityLogs")
-    .withIndex("by_org", (q) => q.eq("orgId", orgId))
-    .order("desc");
-}
-
-/* -------------------------------------------------- */
-/* 🎯 "Involving me" feed (actor ∪ assignee ∪ creator) */
-/* -------------------------------------------------- */
-
-/**
- * Returns the most recent activity logs that involve the given user:
- *  - things the user did (actor),
- *  - tasks assigned to the user by someone else,
- *  - comments on tasks the user created or is assigned to.
- *
- * Convex can't OR across indexes in a single query, so we run one query per
- * relevance branch, then merge, dedupe by `_id`, and re-sort by recency.
- */
-export async function getActivityLogsForUser(
+export function getActivityLogsForUser(
   ctx: QueryCtx,
   args: {
     orgId: Id<"organizations">;
     userId: Id<"users">;
-    limit?: number;
+    entityType?: string;
+    assignee?: Id<"users">;
   }
-): Promise<ActivityLogsI[]> {
-  const { orgId, userId, limit = 50 } = args;
-  // Per-branch cap: enough to produce a correct global top-N after merging.
-  const cap = Math.min(Math.max(limit * 2, 100), 1000);
+): OrderedQuery<DataModel["activityLogs"]> {
+  const { orgId, userId, entityType, assignee } = args;
 
-  const [asAssignee, asCreator] = await Promise.all([
-    ctx.db
-      .query("activityLogs")
-      .withIndex("by_org_assignee", (q) =>
-        q.eq("orgId", orgId).eq("assigneeId", userId)
+  let query = ctx.db
+    .query("activityLogs")
+    .withIndex("by_org", (q) => q.eq("orgId", orgId))
+    .filter((q) =>
+      q.or(
+        q.eq(q.field("assigneeId"), userId),
+        q.eq(q.field("createdById"), userId)
       )
-      .order("desc")
-      .take(cap),
-    ctx.db
-      .query("activityLogs")
-      .withIndex("by_org_created", (q) =>
-        q.eq("orgId", orgId).eq("createdById", userId)
-      )
-      .order("desc")
-      .take(cap),
-  ]);
+    );
 
-  const seen = new Set<Id<"activityLogs">>();
-  const merged: ActivityLogsI[] = [];
-
-  for (const log of [...asAssignee, ...asCreator]) {
-    if (seen.has(log._id)) continue;
-    seen.add(log._id);
-    merged.push(log);
+  if (entityType) {
+    query = query.filter((q) =>
+      q.eq(q.field("entityType"), entityType as ActivityType)
+    );
   }
 
-  merged.sort((a, b) => b.createdAt - a.createdAt);
+  if (assignee) {
+    query = query.filter((q) => q.or(q.eq(q.field("assigneeId"), assignee), q.eq(q.field("createdById"), assignee)));
+  }
 
-  return merged.slice(0, limit);
+  return query.order("desc");
 }
 
 /* -------------------------------------------------- */

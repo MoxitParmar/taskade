@@ -2,6 +2,7 @@ import { api } from "@/convex/_generated/api";
 import { useMutationAction } from "@/hooks/use-mutation-action";
 
 import { useSmartQuery } from "@/hooks/use-smart-query";
+import { normalizeFilter } from "../../projects/[id]/_hooks/useProject";
 
 export const useDashboardCardData = ({userId, orgId}: {userId: string, orgId: string}) => {
     
@@ -30,19 +31,6 @@ export const useDashboardProjectData = ({userId, orgId}: {userId: string, orgId:
     };
 }
 
-export const useOrgActivityData = ({orgId}: {orgId: string}) => {
-
-    
-    const { data, isLoading } = useSmartQuery({
-        query: api._dashboard.queries.getOrgActivityData,
-        args: { orgId },
-    });
-
-    return {
-        data,
-      isLoading,
-    };
-}
 export const useUserActivityData = ({orgId, userId}: {orgId: string, userId: string}) => {
 
     
@@ -53,6 +41,29 @@ export const useUserActivityData = ({orgId, userId}: {orgId: string, userId: str
 
     return {
         data,
+      isLoading,
+    };
+}
+export const useActivityData = ({orgId, userId, type, assignee}: {orgId: string, userId: string, type?: "comment" | "task", assignee?: string}) => {
+  const typeValue = normalizeFilter(type);
+  const assigneeValue = normalizeFilter(assignee);
+    const args: {
+    orgId: string;
+    userId: string;
+    type?: string;
+    assignee?: string;
+  } = { orgId, userId };
+    if (typeValue) args.type = typeValue;
+    if (assigneeValue) args.assignee = assigneeValue;
+    const { data, isLoading, page, hasNext,hasPrev,setPage, goPrev, goNext } = useSmartQuery({
+        query: api._dashboard.queries.getActivity,
+        args,
+        mode: "paginated",
+        resetDeps: [type, assignee],
+    });
+
+    return {
+        data,page, hasNext, hasPrev,goPrev, goNext,setPage,
       isLoading,
     };
 }

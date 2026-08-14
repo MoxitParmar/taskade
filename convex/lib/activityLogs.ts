@@ -67,7 +67,7 @@ export async function logActivity(
   // Get all activity logs for this user, ordered by creation date (newest first)
   // const userLogs = await getActivityLogs(ctx, {
   //   orgId: params.orgId,
-  //     userIdFilter: params.userId,
+  //     assignee: params.userId,
   //     limit: 500, 
   // });
 
